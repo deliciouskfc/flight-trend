@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>沪广深 周五去·周日回 —— 机票价格趋势与最佳购票窗口</title>
+<style>
+  :root{
+    --bg:#eef2f8; --card:#ffffff; --ink:#0f2340; --ink2:#5b6b83; --line:#e3e9f2;
+    --navy:#12294a; --blue:#2f6fed; --teal:#16a394; --amber:#f59e0b; --warm:#ff7a45;
+    --shadow:0 1px 2px rgba(16,38,73,.05), 0 8px 24px rgba(16,38,73,.06);
+    --r:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,-apple-system,sans-serif;
+    background:var(--bg); color:var(--ink); -webkit-font-smoothing:antialiased;
+    padding:0 0 56px;
+  }
+  .wrap{max-width:1280px;margin:0 auto;padding:0 20px}
+
+  /* ── header ── */
+  header.top{
+    background:linear-gradient(120deg,#0d1f38 0%,#173765 52%,#1f4f86 100%);
+    color:#fff;padding:34px 0 78px;position:relative;overflow:hidden;
+  }
+  header.top:after{
+    content:"";position:absolute;right:-90px;top:-120px;width:420px;height:420px;border-radius:50%;
+    background:radial-gradient(circle,rgba(47,111,237,.42),transparent 62%);
+  }
+  .top h1{margin:0 0 10px;font-size:26px;letter-spacing:.3px;font-weight:700}
+  .top p.sub{margin:0;color:#a9c2e4;font-size:14px;line-height:1.7}
+  .badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+  .badge{
+    display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:5px 11px;border-radius:999px;
+    background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);color:#dce8f8;
+  }
+  .badge.demo{background:rgba(255,122,69,.18);border-color:rgba(255,122,69,.45);color:#ffcdb4}
+  .dot{width:6px;height:6px;border-radius:50%;background:#4ade80;box-shadow:0 0 0 3px rgba(74,222,128,.18)}
+  .badge.demo .dot{background:var(--warm);box-shadow:0 0 0 3px rgba(255,122,69,.2)}
+
+  /* ── direction switch ── */
+  .dirsw{
+    display:flex;gap:6px;width:fit-content;background:var(--card);border-radius:999px;padding:6px;
+    box-shadow:var(--shadow);margin-top:-48px;position:relative;z-index:3;
+  }
+  .dirsw button{
+    border:0;background:transparent;cursor:pointer;font:inherit;font-size:13px;color:var(--ink2);
+    padding:8px 18px;border-radius:999px;transition:.18s;white-space:nowrap;
+  }
+  .dirsw button:hover{background:#f2f6fc}
+  .dirsw button.on{background:linear-gradient(135deg,#12294a,#26456f);color:#fff;font-weight:600}
+
+  /* ── tabs ── */
+  .tabs{
+    display:flex;gap:8px;flex-wrap:wrap;background:var(--card);border-radius:14px;padding:8px;
+    box-shadow:var(--shadow);margin-top:10px;position:relative;z-index:2;
+  }
+  .tab{
+    flex:1 1 0;min-width:190px;border:0;background:transparent;cursor:pointer;text-align:left;
+    padding:11px 14px;border-radius:10px;font-family:inherit;color:var(--ink2);transition:.18s;
+  }
+  .tab:hover{background:#f2f6fc}
+  .tab .code{font-size:11px;letter-spacing:.6px;color:#8fa1ba}
+  .tab .name{font-size:14px;font-weight:650;color:var(--ink);margin-top:3px}
+  .tab.on{background:linear-gradient(135deg,#12294a,#26456f);color:#fff}
+  .tab.on .name{color:#fff}
+  .tab.on .code{color:#9dbbea}
+
+  /* ── cards ── */
+  .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;margin-top:16px}
+  .card{
+    background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:18px 20px 14px;
+    border:1px solid rgba(227,233,242,.9);
+  }
+  .card h2{margin:0;font-size:15px;font-weight:700;letter-spacing:.2px;display:flex;align-items:center;gap:8px}
+  .card h2 .tag{font-size:11px;font-weight:500;color:var(--ink2);background:#f1f5fb;border-radius:6px;padding:2px 7px}
+  .card .hint{margin:4px 0 12px;font-size:12px;color:#7d8ca3;line-height:1.6}
+  .span12{grid-column:span 12}.span8{grid-column:span 8}.span6{grid-column:span 6}.span4{grid-column:span 4}
+
+  /* ── kpi ── */
+  .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:16px}
+  .kpi{background:var(--card);border-radius:14px;padding:15px 16px;box-shadow:var(--shadow);border:1px solid rgba(227,233,242,.9)}
+  .kpi .k{font-size:11.5px;color:#7d8ca3;letter-spacing:.2px}
+  .kpi .v{font-size:22px;font-weight:750;margin-top:7px;letter-spacing:-.3px;font-variant-numeric:tabular-nums}
+  .kpi .s{font-size:11.5px;color:var(--ink2);margin-top:5px}
+  .kpi.hl .v{color:var(--warm)}
+  .kpi.teal .v{color:var(--teal)}
+
+  /* ── charts ── */
+  .chart{width:100%;position:relative}
+  svg{display:block;width:100%;overflow:visible}
+  .axis text{fill:#8fa1ba;font-size:11px}
+  .axis line{stroke:#e8eef7}
+  .gridline{stroke:#eef3fa;stroke-width:1}
+  .lg{display:flex;gap:16px;flex-wrap:wrap;margin:2px 0 6px;font-size:12px;color:var(--ink2)}
+  .lg i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px;vertical-align:1px}
+  .tip{
+    position:fixed;pointer-events:none;background:#0f2340;color:#fff;font-size:12px;line-height:1.55;
+    padding:8px 11px;border-radius:9px;opacity:0;transition:opacity .12s;z-index:99;box-shadow:0 8px 20px rgba(9,22,42,.28);
+    max-width:250px;
+  }
+  .tip b{font-weight:650}
+
+  /* ── heatmap ── */
+  .heat{display:grid;gap:4px;font-size:11px}
+  .hcell{height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-variant-numeric:tabular-nums;font-weight:600}
+  .hcell.empty{background:#f1f5fb;color:#c2cfe0}
+  .hlabel{display:flex;align-items:center;color:#7d8ca3;font-size:11px;white-space:nowrap}
+  .hcol{text-align:center;color:#7d8ca3;font-size:11px;padding-bottom:2px}
+
+  /* ── table ── */
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:9px 8px;text-align:right;border-bottom:1px solid #eef3fa;font-variant-numeric:tabular-nums}
+  th{font-size:11.5px;color:#7d8ca3;font-weight:600;text-align:right;white-space:nowrap}
+  th:first-child,td:first-child{text-align:left}
+  tbody tr:hover{background:#f8fbff}
+  .pill{display:inline-block;padding:1px 7px;border-radius:6px;font-size:11px;background:#eef4ff;color:#2f6fed}
+  .pill.warn{background:#fff2e8;color:#d9660f}
+  .pill.ok{background:#e7f8f4;color:#0f8a7c}
+  .muted{color:#9aabc2}
+
+  /* ── verdict ── */
+  .verdict{background:linear-gradient(135deg,#fff8f2,#fff);border:1px solid #ffe2d2}
+  .verdict .big{font-size:30px;font-weight:800;color:var(--warm);letter-spacing:-.6px;line-height:1.2}
+  .verdict .big small{font-size:15px;font-weight:600;color:#b4571f;margin-left:4px}
+  .verdict ul{margin:12px 0 0;padding-left:18px;color:var(--ink2);font-size:12.5px;line-height:1.85}
+  .verdict li b{color:var(--ink)}
+  .mini{display:grid;grid-template-columns:1fr auto;gap:6px 10px;font-size:12.5px;margin-top:14px;padding-top:12px;border-top:1px dashed #e8dcd2}
+  .mini .m{color:var(--ink2)}
+
+  /* ── confidence ── */
+  .conf-grid{display:grid;grid-template-columns:132px 1fr 250px;gap:20px;align-items:start}
+  .lvl{font-size:38px;font-weight:800;line-height:1;letter-spacing:-1px}
+  .lvl.low{color:#ff7a45}.lvl.mid{color:#2f6fed}.lvl.high{color:#16a394}
+  .cap{font-size:11.5px;color:#9aabc2;margin-top:6px;line-height:1.6}
+  .rt{width:100%;border-collapse:collapse;font-size:12px}
+  .rt td{padding:4px 6px;border-bottom:1px dashed #eef3fa;color:var(--ink2)}
+  .rt td:first-child{font-weight:600;color:var(--ink)}
+  .rt tr.on td{background:#fff7ef;color:#b4571f}
+  .prog{font-size:11.5px;color:var(--ink2);margin-bottom:2px}
+  .bar{height:7px;border-radius:4px;background:#eef3fa;margin:4px 0 12px;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#2f6fed,#16a394)}
+
+  /* ── week accordion ── */
+  details.wk{border:1px solid var(--line);border-radius:12px;margin-bottom:9px;background:#fff;overflow:hidden}
+  details.wk summary{cursor:pointer;padding:11px 14px;display:flex;gap:14px;align-items:center;list-style:none;background:#f8fbff}
+  details.wk summary::-webkit-details-marker{display:none}
+  details.wk[open] summary{background:#eef4ff}
+  .wk-date{font-weight:700;font-size:13.5px;white-space:nowrap}
+  .wk-meta{font-size:12px;color:var(--ink2);margin-left:auto;text-align:right}
+  .wk-meta b{color:var(--warm)}
+  .wk-body{padding:4px 14px 12px}
+  .leg{margin-top:10px}
+  .leg h5{margin:0 0 6px;font-size:12.5px;display:flex;gap:8px;align-items:center;color:var(--ink)}
+  .leg h5 span{font-weight:400;color:#9aabc2;font-size:11.5px}
+  .ft{width:100%;border-collapse:collapse;font-size:12px}
+  .ft th{padding:5px 7px;font-size:11px;color:#8fa1ba;font-weight:600;text-align:right;border-bottom:1px solid #eef3fa;white-space:nowrap}
+  .ft th:first-child,.ft td:first-child,.ft th:nth-child(2),.ft td:nth-child(2){text-align:left}
+  .ft td{padding:5px 7px;border-bottom:1px solid #f5f8fd;text-align:right;color:var(--ink2);font-variant-numeric:tabular-nums}
+  .ft tr.cheap td{background:#fff7ef;color:#7a3b12}
+  .ft tr.cheap td:nth-child(6){font-weight:800;color:var(--warm)}
+  .ft .no{font-variant-numeric:normal}
+
+  /* ── model card ── */
+  .mgrid{display:grid;grid-template-columns:1.05fr 1.35fr .95fr;gap:20px;align-items:start}
+  .mgrid h6{margin:0 0 8px;font-size:11.5px;color:#8fa1ba;font-weight:600;letter-spacing:.3px}
+  .formula{font-family:ui-monospace,Consolas,monospace;font-size:11.5px;line-height:1.9;background:#f7faff;
+    border:1px solid #e8eef7;border-radius:10px;padding:10px 12px;color:#26456f;white-space:pre-wrap}
+  .mstat{display:flex;gap:16px;margin-top:10px;flex-wrap:wrap}
+  .mstat div{font-size:11.5px;color:#7d8ca3}
+  .mstat b{display:block;font-size:18px;color:var(--ink);font-variant-numeric:tabular-nums;margin-top:2px}
+  .prow{display:grid;grid-template-columns:44px 1fr 62px 34px;gap:8px;align-items:center;font-size:11.5px;margin-bottom:4px}
+  .prow .lb{color:#5b6b83;font-variant-numeric:tabular-nums}
+  .prow .bar{height:9px;border-radius:3px;background:#eef3fa;overflow:hidden;margin:0}
+  .prow .bar i{display:block;height:100%;background:#9fbfe8;border-radius:3px}
+  .prow.best .bar i{background:var(--warm)}
+  .prow.best .lb{color:var(--warm);font-weight:700}
+  .prow .pv{text-align:right;color:var(--ink);font-variant-numeric:tabular-nums}
+  .prow .pn{text-align:right;color:#b9c6d8;font-size:10px}
+  .calc{margin-top:4px}
+  .calc input[type=range]{width:100%;accent-color:#2f6fed}
+  .calc .out{font-size:26px;font-weight:800;color:var(--ink);letter-spacing:-.5px;margin-top:6px}
+  .calc .adv{font-size:12px;line-height:1.7;color:var(--ink2);margin-top:6px}
+  .rbtn{display:inline-block;font-size:11px;padding:2px 8px;border-radius:6px;background:#eef4ff;color:#2f6fed;margin-right:4px}
+
+  footer{margin-top:22px;color:#8697ad;font-size:12px;line-height:1.9}
+  .empty{padding:34px 0;text-align:center;color:#9aabc2;font-size:13px}
+
+  @media (max-width:1080px){
+    .kpis{grid-template-columns:repeat(3,1fr)}
+    .span8,.span6,.span4{grid-column:span 12}
+  }
+  @media (max-width:680px){
+    .kpis{grid-template-columns:repeat(2,1fr)}
+    .top h1{font-size:21px}
+    .tab{min-width:0;flex:1 1 45%}
+  }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <h1>沪 ⇄ 广深：周五去、周日回 —— 机票价格趋势 &amp; 最佳购票窗口</h1>
+    <p class="sub">
+      4 条往返线 · 去程周五 13:00 之后起飞 · 返程周日 13:00 之后起飞 · 支持双向对调（上海出发 / 广深出发）<br>
+      数据来源：飞猪官方 PC 机票搜索结果页（最低价，不含税费），按日累积快照
+    </p>
+    <div class="badges" id="badges"></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="dirsw" id="dirsw">
+    <button data-dir="fwd" class="on">周五 上海 → 广深</button>
+    <button data-dir="rev">周五 广深 → 上海</button>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+
+  <section class="kpis" id="kpis"></section>
+
+  <section class="grid" style="margin-top:16px">
+    <article class="card span12">
+      <h2>置信度怎么算 <span class="tag" id="confTag">—</span></h2>
+      <div class="hint">
+        它衡量的不是「数据多不多」，而是<b>「最便宜窗口」这个结论能不能信</b>：只有同一个出发日被多个购买日观察过（纵向样本），
+        提前天数曲线才不会被「哪一周」的日期效应带偏。
+      </div>
+      <div class="conf-grid" id="confBody"></div>
+    </article>
+  </section>
+
+  <div class="grid">
+    <article class="card span8">
+      <h2>月度价格趋势 <span class="tag" id="mTag">均价 / 往返合计</span></h2>
+      <div class="hint">按出发月份聚合（全部含税）：柱＝当月在售最低价均价＋机建燃油，折线＝同一周末「去＋返」含税合计</div>
+      <div class="lg" id="mLegend"></div>
+      <div class="chart" id="chartMonthly"></div>
+    </article>
+
+    <article class="card span4 verdict" id="verdictCard">
+      <h2>最佳购票窗口</h2>
+      <div class="hint" id="verdictHint">按「提前购票天数」分组统计后的结果</div>
+      <div id="verdictBody"></div>
+    </article>
+
+    <article class="card span12">
+      <h2>这一趟该不该现在买 <span class="tag" id="buyTag">—</span></h2>
+      <div class="hint">
+        当前往返含税＝飞猪去程最低＋返程最低＋机建燃油；历史区间＝同一条线、同一「提前天数」区间的价格分位（不含税费口径已换算）。
+        <b>≤P20 便宜</b>、P20–P50 偏低、P50–P80 偏高、<b>＞P80 偏贵</b>。
+      </div>
+      <div style="overflow:auto"><table id="buyTable"></table></div>
+    </article>
+
+    <article class="card span8">
+      <h2>提前多少天买最便宜 <span class="tag" id="leadTag">抢先看</span></h2>
+      <div class="hint">横轴＝距离起飞还有几天；每个点＝某次快照里的最低价；阶梯线＝该区间的均价，橙色区间为最便宜窗口</div>
+      <div class="lg" id="lLegend"></div>
+      <div class="chart" id="chartLead"></div>
+    </article>
+
+    <article class="card span4">
+      <h2>命中率 <span class="tag">该区间是否为全周期最低</span></h2>
+      <div class="hint">在观察完整（≥3 个区间都有数据）的出发日里，该区间拿下最低价的比例</div>
+      <div class="chart" id="chartHit"></div>
+    </article>
+
+    <article class="card span12">
+      <h2>逐周往返价格 <span class="tag">每个周五出发</span></h2>
+      <div class="hint">柱＝去程最低价、返程最低价（均含税）；折线＝往返含税合计。今天之后最近的出发日标了 ●</div>
+      <div class="lg" id="wLegend"></div>
+      <div class="chart" id="chartWeekly"></div>
+    </article>
+
+    <article class="card span8">
+      <h2>价格热力：出发周 × 提前天数 <span class="tag">颜色越绿越便宜</span></h2>
+      <div class="hint">行＝未来出发的周五，列＝当时距起飞的天数区间，格值＝该组合观察到的最低价（含税，¥）。空白＝还没采到</div>
+      <div id="heat"></div>
+    </article>
+
+    <article class="card span4">
+      <h2>四条线对比 <span class="tag">最佳窗口均价</span></h2>
+      <div class="hint">含税口径横向对比：左侧是模型给的窗口均价，右侧是当前去程含税最低价</div>
+      <div id="compare"></div>
+    </article>
+
+    <article class="card span12">
+      <h2>价格预测模型 · 回测 <span class="tag" id="modelTag">—</span></h2>
+      <div class="hint" id="modelHint"></div>
+      <div class="mgrid" id="modelBody"></div>
+    </article>
+
+    <article class="card span12">
+      <h2>全航班明细 · 一周周看 <span class="tag" id="weekTag">时间窗内全部航班</span></h2>
+      <div class="hint">
+        票价＝飞猪最低价（不含税费）；<b>含税</b>＝票价＋机建 ¥<span id="fAir">50</span>＋燃油 ¥<span id="fFuel">90</span>／航段（四线均 &gt;800 公里）。
+        按票价升序，标橙的是当班最便宜。点开某一周看两程全部航班。
+      </div>
+      <div id="weekList"></div>
+    </article>
+
+    <article class="card span12">
+      <h2>周末明细 <span class="tag" id="tblTag"></span></h2>
+      <div class="hint">每一个「周五去 / 周日回」的实际最低价与承运航班</div>
+      <div style="overflow:auto">
+        <table id="table"></table>
+      </div>
+    </article>
+  </div>
+
+  <footer id="footer"></footer>
+</div>
+
+<div class="tip" id="tip"></div>
+
+<script src="data.js"></script>
+<script>
+(function(){
+  const D = window.FLIGHT_DATA;
+  if(!D || !D.routes || !D.routes.length){
+    document.body.innerHTML = '<div class="wrap" style="padding:60px 0;text-align:center">'+
+      '<h2>没有找到 data.js</h2><p style="color:#7d8ca3">先运行 <code>python build_data.py</code> 生成数据文件，再刷新本页。</p></div>';
+    return;
+  }
+
+  const WD = ['周日','周一','周二','周三','周四','周五','周六'];
+  const C = {blue:'#2f6fed', teal:'#16a394', amber:'#f59e0b', warm:'#ff7a45', navy:'#12294a', grey:'#b9c6d8'};
+  const fmt = n => (n==null?'—':'¥'+Math.round(n).toLocaleString('zh-CN'));
+  const fmtN = n => (n==null?'—':Math.round(n).toLocaleString('zh-CN'));
+  const mmdd = s => { if(!s) return '—'; const d=new Date(s+'T00:00:00'); return `${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
+  const wd = s => { if(!s) return ''; return WD[new Date(s+'T00:00:00').getDay()]; };
+  const monthLabel = m => { const [y,mm]=m.split('-'); return `${y.slice(2)}年${+mm}月`; };
+  const tip = document.getElementById('tip');
+  function showTip(e,html){ tip.innerHTML=html; tip.style.opacity=1; moveTip(e); }
+  function moveTip(e){
+    const pad=14; let x=e.clientX+pad, y=e.clientY+pad;
+    const r=tip.getBoundingClientRect();
+    if(x+r.width>innerWidth-8) x=e.clientX-r.width-pad;
+    if(y+r.height>innerHeight-8) y=e.clientY-r.height-pad;
+    tip.style.left=x+'px'; tip.style.top=y+'px';
+  }
+  function hideTip(){ tip.style.opacity=0; }
+
+  const NS='http://www.w3.org/2000/svg';
+  const el=(t,a={})=>{ const n=document.createElementNS(NS,t); for(const k in a) n.setAttribute(k,a[k]); return n; };
+  const text=(x,y,s,a={})=>{ const n=el('text',Object.assign({x,y},a)); n.textContent=s; return n; };
+
+  let state = { dir: 'fwd', key: D.routes[0].key || D.routes[0].id };
+
+  // ───────────── header / footer ─────────────
+  function renderMeta(){
+    const m = D.meta;
+    const b = document.getElementById('badges');
+    const demo = m.is_demo;
+    const h = m.history || { points: 0 };
+    b.innerHTML =
+      `<span class="badge ${demo?'demo':''}"><span class="dot"></span>${demo?'演示数据（非真实抓取）':'飞猪官方实时抓取'}</span>
+       <span class="badge">当前在售 ${m.snapshot_days} 个购买日 · ${m.observations} 条价格</span>
+       ${h.points ? `<span class="badge"><span class="dot" style="background:#16a394"></span>历史纵向 ${h.points} 点（Google Flights 60 天）</span>` : ''}
+       <span class="badge">置信度 ${m.confidence}</span>
+       <span class="badge">抓价 ${(m.last_fetch_at||'').replace('T',' ')}</span>
+       <span class="badge">生成 ${(m.generated_at||'').replace('T',' ').slice(5,16)}</span>`;
+    document.getElementById('footer').innerHTML =
+      `统计口径：① 每个「路线·去/返·出发日·快照日」取时间窗内最低价；② 提前天数＝出发日−购买日；
+       ③ 区间均价先按出发日聚合再平均；④ 最便宜窗口＝区间均价最低者；
+       ⑤ 命中率只统计「≥3 个区间都有数据」的出发日。<br>
+       两套价格：<b>飞猪</b>（当前在售、单程、不含税费，用于月度/逐周/全航班明细）；
+       <b>Google Flights</b>（同一往返行程的近 60 天逐日报价、含税，用于"提前多久买最便宜"的纵向曲线）。两者口径不同，不要直接比大小。<br>
+       时间窗：去程 ${D.meta.windows.out.label}，返程 ${D.meta.windows.back.label}；附加费：机建 ¥${(m.fees||{}).airport}＋燃油 ¥${(m.fees||{}).fuel_over_800}（>800km，2026-10-10 起）。`;
+  }
+
+  // ───────────── tabs ─────────────
+  function renderDirSwitch(){
+    const host = document.getElementById('dirsw');
+    if(!host) return;
+    host.querySelectorAll('button').forEach(b=>{
+      b.classList.toggle('on', b.dataset.dir === state.dir);
+      b.onclick = ()=>{
+        if(state.dir === b.dataset.dir) return;
+        const baseId = (current().id || 'ALL');
+        state.dir = b.dataset.dir;
+        const target = D.routes.find(r=>(r.dir||'fwd')===state.dir && r.id===baseId)
+          || D.routes.find(r=>(r.dir||'fwd')===state.dir);
+        state.key = target.key;
+        renderDirSwitch(); renderTabs(); renderAll();
+      };
+    });
+  }
+
+  function renderTabs(){
+    const t = document.getElementById('tabs');
+    const list = D.routes.filter(r=>(r.dir||'fwd')===state.dir);
+    t.innerHTML = list.map(r=>{
+      const rev = (r.dir||'fwd')==='rev';
+      const code = rev ? `${r.arr_code} ⇄ ${r.dep_code}` : `${r.dep_code} ⇄ ${r.arr_code}`;
+      const name = rev ? `${r.arr_city} — ${r.dep_city}` : r.label;
+      return `<button class="tab ${r.key===state.key?'on':''}" data-key="${r.key}">
+         <div class="code">${code}</div>
+         <div class="name">${name}</div>
+       </button>`;
+    }).join('');
+    t.querySelectorAll('.tab').forEach(btn=>{
+      btn.onclick=()=>{ state.key=btn.dataset.key; renderTabs(); renderAll(); };
+    });
+  }
+
+  const current = () => D.routes.find(r=>r.key===state.key) || D.routes.find(r=>(r.dir||'fwd')===state.dir) || D.routes[0];
+
+  // ───────────── 费用：机建 + 燃油 ─────────────
+  const FEES = D.meta.fees || {airport:50, fuel_over_800:90, fuel_under_800:50, route_km:{}};
+  function feeFor(r){
+    const km = (FEES.route_km||{})[r.id] || 1200;
+    return (FEES.airport||0) + (km > 800 ? FEES.fuel_over_800 : FEES.fuel_under_800);
+  }
+
+  // ───────────── 置信度 ─────────────
+  function renderConfidence(){
+    const m = D.meta, ci = m.confidence_inputs || {}, rules = m.confidence_rules || [];
+    const lv = m.confidence || '低';
+    const isHist = m.confidence_basis === 'history';
+    const cls = lv === '高' ? 'high' : lv === '中' ? 'mid' : 'low';
+    document.getElementById('confTag').textContent = '当前：' + lv;
+    const hp = ci.hist_points || 0, hs = ci.hist_span || 0, hd = ci.hist_departures || 0;
+    const cap = isHist
+      ? `纵向样本 ${hp} 点，覆盖 ${hd} 个出发日、提前 ${hs} 天的跨度。<br>来源：Google Flights 同一行程 60 天价格记录。`
+      : `只有 ${ci.snapshot_days||0} 个购买日、${ci.long_obs||0} 条纵向样本。<br>当前曲线是横截面近似。`;
+    const rowsRules = rules.map(x=>{
+      const on = x.level === lv;
+      return `<tr class="${on?'on':''}"><td>${x.level}</td><td style="text-align:left">${x.desc}</td></tr>`;
+    }).join('');
+    const pP = Math.min(100, Math.round(hp/200*100));
+    const pS = Math.min(100, Math.round(hs/30*100));
+    const pD = Math.min(100, Math.round((ci.snapshot_days||0)/8*100));
+    const pL = Math.min(100, Math.round((ci.long_obs||0)/200*100));
+    const bars = isHist
+      ? `<div class="prog">历史纵向样本 ${hp} / 200 点</div><div class="bar"><i style="width:${pP}%"></i></div>
+         <div class="prog">覆盖提前天数跨度 ${hs} / 30 天</div><div class="bar"><i style="width:${pS}%"></i></div>
+         <div style="font-size:11.5px;color:#0f8a7c;line-height:1.7">已达标：门槛是 200 点 + 30 天跨度，现在 ${hp} 点 + ${hs} 天。</div>`
+      : `<div class="prog">历史纵向样本 ${hp} / 200 点</div><div class="bar"><i style="width:${pP}%"></i></div>
+         <div class="prog">飞猪购买日快照 ${ci.snapshot_days||0} / 8 天</div><div class="bar"><i style="width:${pD}%"></i></div>
+         <div style="font-size:11.5px;color:#b4571f;line-height:1.7">升到「中」：再采 ${Math.max(0,3-(ci.snapshot_days||0))} 个购买日 + ${Math.max(0,60-(ci.long_obs||0))} 条纵向样本。</div>`;
+    document.getElementById('confBody').innerHTML = `
+      <div>
+        <div class="lvl ${cls}">${lv}</div>
+        <div class="cap">${cap}</div>
+      </div>
+      <div>
+        <table class="rt">
+          <tr><td>历史纵向点</td><td style="text-align:right">${hp}</td><td style="text-align:left">同一出发日、不同购买日的报价</td></tr>
+          <tr><td>覆盖出发日</td><td style="text-align:right">${hd}</td><td style="text-align:left">4 条线 × 若干周五</td></tr>
+          <tr><td>提前天数跨度</td><td style="text-align:right">${hs} 天</td><td style="text-align:left">T-${(D.routes[0].hist||{}).lead_max||'—'} 到 T-${(D.routes[0].hist||{}).lead_min||'—'}</td></tr>
+          <tr><td>飞猪价格点</td><td style="text-align:right">${(ci.observations||m.observations||0).toLocaleString('zh-CN')}</td><td style="text-align:left">当前在售，不含税费</td></tr>
+        </table>
+        <table class="rt" style="margin-top:10px"><tbody>${rowsRules}</tbody></table>
+      </div>
+      <div>${bars}</div>`;
+  }
+
+  // ───────────── 预测模型 · 回测 ─────────────
+  function priceAt(r, lead){
+    const cur = r.mcurve || (((D.model||{}).curves||{})[`${r.id}#${r.dir||'fwd'}`]) || [];
+    if(!cur.length) return null;
+    let best = cur[0];
+    for(const p of cur){ if(Math.abs(p[0]-lead) < Math.abs(best[0]-lead)) best = p; }
+    return best[1];
+  }
+
+  function bindCalc(r, mw){
+    const range = document.getElementById('leadRange');
+    const out = document.getElementById('calcOut');
+    const adv = document.getElementById('calcAdv');
+    if(!range) return;
+    const upd = ()=>{
+      const lead = Number(range.value);
+      const pred = priceAt(r, lead);
+      out.textContent = pred ? `¥${Math.round(pred).toLocaleString('zh-CN')}` : '—';
+      let a = '';
+      if(!pred){ a = '这条线还没有预测曲线，先看下面的决策表。'; }
+      else if(lead > mw.hi) a = `还没到窗口 —— 建议等到 <b>T-${mw.hi}</b> 左右再看（窗口均价 ¥${mw.mean}）。`;
+      else if(lead < mw.lo) a = `已经过了窗口 —— 现在离出发只有 ${lead} 天，尽快下手，晚了要付临期溢价。`;
+      else {
+        const gap = pred / mw.mean - 1;
+        if(gap <= 0.02) a = `正处在最佳窗口（T-${mw.lo}~T-${mw.hi}），预测价不高于窗口均价 ¥${mw.mean}，<b>可以买</b>。`;
+        else if(gap <= 0.06) a = `在窗口内但预测价高 <b>${Math.round(gap*100)}%</b>，能等就再等 2–3 天。`;
+        else a = `在窗口内但预测价高 <b>${Math.round(gap*100)}%</b>，建议先观察，接近 ¥${mw.mean} 再下手。`;
+      }
+      adv.innerHTML = a;
+    };
+    range.oninput = upd; upd();
+  }
+
+  function renderModel(){
+    const r = current();
+    const M = D.model;
+    const tag = document.getElementById('modelTag');
+    const hint = document.getElementById('modelHint');
+    const host = document.getElementById('modelBody');
+    if(!M){ tag.textContent='未训练'; hint.textContent='先跑 python model.py'; host.innerHTML=''; return; }
+    const pol = M.policy_strict || {};
+    const polAll = M.policy_all || {};
+    const leads = Object.keys(pol).map(Number).sort((a,b)=>a-b);
+    if(!leads.length){ host.innerHTML='<div class="empty">模型数据不足</div>'; return; }
+    const maxMean = Math.max(...leads.map(l=>pol[l].mean));
+    const minMean = Math.min(...leads.map(l=>pol[l].mean));
+    const bestLead = leads.reduce((a,l)=>pol[l].mean < pol[a].mean ? l : a, leads[0]);
+    const mw = r.mw || M.window_strict || {lo:14,hi:18,mean:0,width:5};
+    const tight = M.n_strict || 0;
+    tag.textContent = `严格样本 ${tight} 组 · 全样本 ${M.n_groups||0} 组 · 窗口 ≤${M.window_max} 天`;
+    hint.innerHTML = `中间那张表是<b>严格回测</b>：只统计「同一条行程既能观察到 T-${M.strict_near} 以内、又能观察到 T-${M.strict_far} 以外」的样本，`
+      + `所以每一行都是<b>同一批行程</b>在比较，n=${tight}。样本少是因为 Google 的历史窗口只有 60 天、会随出发日滑动，能同时覆盖近端和远端行程的本来就不多。`
+      + ` 窗口按「宽度 ≤${M.window_max} 天、均值与最优差 ≤${Math.round(((M.indistinct||1.02)-1)*100)}%」取最窄：<b>T-${mw.lo} ~ T-${mw.hi}</b>（${mw.width||5} 天）。`;
+    host.innerHTML = `
+      <div>
+        <h6>模型（仅参考线）</h6>
+        <div class="formula">${M.formula||''}</div>
+        <div class="mstat">
+          <div>MAPE<b>${M.accuracy?M.accuracy.mape+'%':'—'}</b></div>
+          <div>MAE<b>${M.accuracy?'¥'+M.accuracy.mae:'—'}</b></div>
+          <div>样本<b>${(M.n_points||0).toLocaleString('zh-CN')}</b></div>
+        </div>
+        <div style="font-size:11px;color:#b4571f;margin-top:8px;line-height:1.7">
+          ⚠ 误差 ±¥${M.accuracy?M.accuracy.mae:'—'} 大于择时能省的 ¥${M.savings?Math.abs(Math.round(mw.mean*M.savings.vs_late_pct/100)):'—'} 左右，
+          所以它只用来画平滑参考线、给试算器，结论以决策表为准。
+        </div>
+      </div>
+      <div>
+        <h6>严格回测：同一批行程（n=${tight}），提前 N 天买的平均成交价</h6>
+        ${leads.map(l=>{
+          const v = pol[l];
+          const w = Math.max(3, Math.round((v.mean-minMean)/(maxMean-minMean||1)*100));
+          return `<div class="prow ${l===bestLead?'best':''}">
+            <span class="lb">T-${l}</span>
+            <span class="bar"><i style="width:${w}%"></i></span>
+            <span class="pv">¥${v.mean.toLocaleString('zh-CN')}</span>
+            <span class="pn">n=${v.n}</span>
+          </div>`;
+        }).join('')}
+        <div style="font-size:11px;color:#b4571f;margin-top:8px">
+          严格样本最低：<b>T-${bestLead}</b>（¥${pol[bestLead].mean}）　窗��� T-${mw.lo}~T-${mw.hi} 均价 ¥${mw.mean}
+        </div>
+        <div style="font-size:10.5px;color:#9aabc2;margin-top:10px;line-height:1.7">
+          <b>脚注·全样本</b>（n 大，但跨不同日期子集比均值不严谨）：${Object.keys(polAll).map(Number).sort((a,b)=>a-b).map(l=>`T-${l} ¥${polAll[l].mean}`).join('　')}
+        </div>
+      </div>
+      <div>
+        <h6>试算：还剩几天</h6>
+        <div class="calc">
+          <input type="range" id="leadRange" min="2" max="70" value="${Math.round((mw.lo+mw.hi)/2)}">
+          <div class="out" id="calcOut">—</div>
+          <div class="adv" id="calcAdv"></div>
+        </div>
+        ${M.savings?`<div style="font-size:11.5px;color:#0f8a7c;margin-top:12px;line-height:1.7">
+          配对回测（同一 ${M.savings.n} 组行程）：窗口内买 比临期(T-${M.savings.win_center?2:2})省 <b>${M.savings.vs_late_pct}%</b>，
+          比 T-30 省 <b>${M.savings.vs_t30_pct}%</b>。
+        </div>`:''}
+      </div>`;
+    bindCalc(r, mw);
+  }
+
+  // ───────────── 这一趟该不该现在买 ─────────────
+  function bandOf(lead){
+    if(lead <= 7) return '1-7';
+    if(lead <= 14) return '8-14';
+    if(lead <= 21) return '15-21';
+    if(lead <= 30) return '22-30';
+    if(lead <= 45) return '31-45';
+    if(lead <= 60) return '46-60';
+    return '61-130';
+  }
+
+  function renderBuy(){
+    const r = current();
+    const F = feeFor(r);
+    const q = r.mquant || {};
+    const ws = r.weekends.filter(w=>!w.past && w.out);
+    document.getElementById('buyTag').textContent = ws.length ? `${ws.length} 个未来周末` : '无未来周末';
+    const tbl = document.getElementById('buyTable');
+    if(!ws.length){ tbl.innerHTML = '<tr><td class="muted">暂无未来出发日</td></tr>'; return; }
+
+    // 只有「同源」才能比：Google 的历史分位 vs Google 序列里最近一次报价。
+    // 飞猪价单独一列，只展示实际待付，不参与分位判断。
+    const gp = (r.hist && r.hist.points) || [];
+    const minLead = gp.length ? Math.min(...gp.map(p=>p[0])) : null;
+    const gCur = gp.length ? gp.filter(p=>p[0]===minLead).map(p=>p[1]) : [];
+    const gPrice = gCur.length ? Math.round(gCur.reduce((a,b)=>a+b,0)/gCur.length) : null;
+    const gHist = minLead!=null ? q[bandOf(minLead)] : null;
+
+    let pos = '—', cls = 'pill', advice = '同源样本不足';
+    if(gPrice && gHist){
+      if(gPrice <= gHist.p20){ pos = 'P20 以下'; cls = 'pill ok'; advice = '便宜，可以买'; }
+      else if(gPrice <= gHist.p50){ pos = 'P20–P50'; cls = 'pill ok'; advice = '偏低，可以下手'; }
+      else if(gPrice <= gHist.p80){ pos = 'P50–P80'; cls = 'pill warn'; advice = '偏高，再等等'; }
+      else { pos = 'P80 以上'; cls = 'pill warn'; advice = '偏贵，不建议'; }
+    }
+    const soon = ws[0];
+    const soonCur = soon.round ? soon.round + F*2 : null;
+    const nowRow = `<tr style="background:#f8fbff">
+      <td><b>现在</b> <span class="muted">T-${minLead!=null?minLead:'—'}</span></td>
+      <td class="muted">最近周末 ${mmdd(soon.dep_date)}</td>
+      <td>${minLead!=null?minLead+' 天':'—'}</td>
+      <td>${soonCur?'<b>'+fmt(soonCur)+'</b>':'<span class="muted">—</span>'}</td>
+      <td><b>${gPrice?fmt(gPrice):'—'}</b></td>
+      <td class="muted">${gHist?('¥'+gHist.p20+' – ¥'+gHist.p80+'（中位 ¥'+gHist.p50+'，n='+gHist.n+'）'):'—'}</td>
+      <td>${pos}</td>
+      <td><span class="${cls}">${advice}</span></td>
+    </tr>`;
+
+    const rows = ws.map(w=>{
+      const d = w.days_until, hist = q[bandOf(d)];
+      const cur = w.round ? w.round + F*2 : null;
+      return `<tr>
+        <td>${mmdd(w.dep_date)} <span class="muted">${wd(w.dep_date)}</span></td>
+        <td>${mmdd(w.back_date)} <span class="muted">${wd(w.back_date)}</span></td>
+        <td>${d} 天 <span class="muted">T-${d}</span></td>
+        <td>${cur?'<b>'+fmt(cur)+'</b>':'<span class="muted">—</span>'}</td>
+        <td class="muted">—</td>
+        <td class="muted">${hist?('¥'+hist.p20+' – ¥'+hist.p80+'（中位 ¥'+hist.p50+'，n='+hist.n+'）'):'样本不足'}</td>
+        <td class="muted">${hist?'参考':'—'}</td>
+        <td class="muted">${hist?('到 T-'+Math.min(14,d)+' 左右再判'):'—'}</td>
+      </tr>`;
+    }).join('');
+
+    const head = `<thead><tr>
+      <th>出发（周五）</th><th>返程（周日）</th><th>还剩</th>
+      <th>实际待付（飞猪含税）</th><th>同源现价（Google）</th><th>同区间历史 P20–P80</th><th>位置</th><th>建议</th>
+    </tr></thead>`;
+    tbl.innerHTML = head + '<tbody>' + nowRow + rows + '</tbody>';
+  }
+
+  // ───────────── 全航班明细 ─────────────
+  function legTable(name, date, rows, F){
+    if(!rows || !rows.length) return `<div class="leg"><h5>${name} · ${mmdd(date)} ${wd(date)} <span>时间窗内没有采到航班</span></h5></div>`;
+    const minP = rows[0][4];
+    return `<div class="leg">
+      <h5>${name} · ${mmdd(date)} ${wd(date)} · ${rows.length} 班 <span>13:00 后起飞 · 按票价升序</span></h5>
+      <table class="ft">
+        <thead><tr><th>起飞</th><th>到达</th><th>航班</th><th>航司</th><th>机型</th><th>票价</th><th>含税</th><th>比最低</th></tr></thead>
+        <tbody>${rows.map((f,i)=>`<tr class="${i===0?'cheap':''}">
+          <td>${f[0]||'—'}</td><td>${f[1]||'—'}</td><td class="no">${f[2]||'—'}</td>
+          <td>${f[3]||'—'}</td><td>${f[5]||'—'}</td>
+          <td>${fmt(f[4])}</td><td>${fmt(f[4]+F)}</td>
+          <td>${i===0?'最低':'+'+fmtN(f[4]-minP)}</td>
+        </tr>`).join('')}</tbody>
+      </table></div>`;
+  }
+
+  function renderFlights(){
+    const host = document.getElementById('weekList');
+    const r = current();
+    const F = feeFor(r);
+    document.getElementById('fAir').textContent = FEES.airport;
+    document.getElementById('fFuel').textContent = F - (FEES.airport||0);
+    if(!r.flights || !Object.keys(r.flights).length){
+      host.innerHTML = '<div class="empty">汇总页不列全航班 —— 切到具体路线（浦东—白云 / 浦东—宝安 / 虹桥—宝安 / 虹桥—白云）就能一班班看。</div>';
+      return;
+    }
+    const ws = r.weekends.filter(w=>w.out);
+    const cntO = ws.reduce((s,w)=>s+(((r.flights[w.dep_date]||{}).out||[]).length),0);
+    const cntB = ws.reduce((s,w)=>s+(((r.flights[w.back_date]||{}).back||[]).length),0);
+    document.getElementById('weekTag').textContent = `${ws.length} 周 · 去程 ${cntO} 班 / 返程 ${cntB} 班`;
+    host.innerHTML = ws.map((w,i)=>{
+      const O = (r.flights[w.dep_date]||{}).out || [];
+      const B = (r.flights[w.back_date]||{}).back || [];
+      const both = O.length && B.length;
+      const totBoth = both ? O[0][4] + B[0][4] + F*2 : null;
+      return `<details class="wk" ${i===0?'open':''}>
+        <summary>
+          <span class="wk-date">${mmdd(w.dep_date)} ${wd(w.dep_date)} → ${mmdd(w.back_date)} ${wd(w.back_date)}</span>
+          <span class="wk-meta">去 ${O.length} 班 · 返 ${B.length} 班 · 含税往返 <b>${totBoth?fmt(totBoth):'—'}</b></span>
+        </summary>
+        <div class="wk-body">
+          ${legTable('去程', w.dep_date, O, F)}
+          ${legTable('返程', w.back_date, B, F)}
+        </div>
+      </details>`;
+    }).join('');
+  }
+
+  // ───────────── KPIs ─────────────
+  function renderKpis(){
+    const r = current();
+    const fut = r.weekends.filter(w=>!w.past && w.out);
+    const soon = fut[0];
+    const roundMin = r.weekends.filter(w=>w.round).sort((a,b)=>a.round-b.round)[0];
+    const best = (r.hist && r.hist.best) || r.best || r.xbest;
+    const F = feeFor(r);                       // 单程附加：机建 + 燃油
+    const kv = [
+      {k:'最近一个周五 去程最低（含税）', v: soon?fmt(soon.out.price+F):'—', s: soon?`${mmdd(soon.dep_date)} ${wd(soon.dep_date)} · 距今 ${soon.days_until} 天 · 裸票 ${fmt(soon.out.price)}`:'暂无数据'},
+      {k:'对应当周 返程最低（含税）', v: soon&&soon.back?fmt(soon.back.price+F):'—', s: soon&&soon.back?`${mmdd(soon.back_date)} ${wd(soon.back_date)} · 裸票 ${fmt(soon.back.price)}`:'返程未采到'},
+      {k:'该周末 往返合计（含税）', v: soon&&soon.round?fmt(soon.round+F*2):'—', s: soon&&soon.round?`含机建 ¥${FEES.airport}×2 + 燃油 ¥${F-FEES.airport}×2`:'—'},
+      {k:'最佳提前天数',
+       v: best ? (r.mw ? ('T-'+r.mw.lo+' ~ T-'+r.mw.hi) : ((r.hist&&r.hist.window) ? ('T-'+r.hist.window.lo+' ~ T-'+r.hist.window.hi) : (best.bucket+' 天'))) : '—',
+       s: best ? `均价 ${fmt((r.mw || (r.hist&&r.hist.window) || best).mean)} · ${r.mw?('严格回测 n='+(r.mw.n||0)):(r.hist?'历史纵向':'横截面信号')}` : '样本不足', cls:'hl'},
+      {k:'最低往返合计（含税）', v: roundMin?fmt(roundMin.round+F*2):'—', s: roundMin?`出现在 ${mmdd(roundMin.dep_date)} ${wd(roundMin.dep_date)} · 裸票 ${fmt(roundMin.round)}`:'—', cls:'teal'},
+    ];
+    document.getElementById('kpis').innerHTML = kv.map(x=>
+      `<div class="kpi ${x.cls||''}"><div class="k">${x.k}</div><div class="v">${x.v}</div><div class="s">${x.s}</div></div>`).join('');
+  }
+
+  // ───────────── monthly chart ─────────────
+  function chartMonthly(){
+    const host = document.getElementById('chartMonthly');
+    const r = current();
+    const F = feeFor(r);
+    const data = r.monthly.filter(m=>m.out_avg||m.back_avg).map(m=>({
+      ...m,
+      out_avg: m.out_avg!=null?m.out_avg+F:null,
+      back_avg: m.back_avg!=null?m.back_avg+F:null,
+      round_avg: m.round_avg!=null?m.round_avg+F*2:null,
+      round_min: m.round_min!=null?m.round_min+F*2:null,
+    }));
+    document.getElementById('mLegend').innerHTML =
+      `<span><i style="background:${C.blue}"></i>去程均价（含税）</span>
+       <span><i style="background:${C.teal}"></i>返程均价（含税）</span>
+       <span><i style="background:${C.warm}"></i>往返合计均价（含税）</span>`;
+    if(!data.length){ host.innerHTML='<div class="empty">暂无月度数据</div>'; return; }
+
+    const W = host.clientWidth || 700, H = 300, P = {l:52,r:58,t:14,b:34};
+    const iw = W-P.l-P.r, ih = H-P.t-P.b;
+    host.innerHTML=''; const svg = el('svg',{viewBox:`0 0 ${W} ${H}`,height:H}); host.appendChild(svg);
+
+    const vals=[].concat(...data.map(d=>[d.out_avg,d.back_avg,d.round_avg])).filter(v=>v!=null);
+    const max = Math.max(...vals)*1.12, min = Math.max(0, Math.min(...vals)*0.72);
+    const y = v => P.t + ih - (v-min)/(max-min)*ih;
+    const bandW = iw/data.length;
+
+    // y grid
+    const ticks=4;
+    for(let i=0;i<=ticks;i++){
+      const v = min + (max-min)*i/ticks, yy=y(v);
+      svg.appendChild(el('line',{x1:P.l,y1:yy,x2:P.l+iw,y2:yy,class:'gridline'}));
+      svg.appendChild(text(P.l-8,yy+4,fmtN(v),{class:'axis', 'text-anchor':'end',fill:'#8fa1ba','font-size':11}));
+    }
+    // bars
+    data.forEach((d,i)=>{
+      const cx = P.l + bandW*(i+.5);
+      const bw = Math.min(26, bandW*0.26);
+      [['out_avg',C.blue,-bw*0.62],['back_avg',C.teal,bw*0.62]].forEach(([k,col,off])=>{
+        if(d[k]==null) return;
+        const h = Math.max(2, y(min)-y(d[k]));
+        const rect = el('rect',{x:cx+off-bw/2, y:y(d[k]), width:bw, height:h, rx:5, fill:col, opacity:.92});
+        rect.addEventListener('mousemove',e=>showTip(e,`<b>${monthLabel(d.month)}</b><br>${k==='out_avg'?'去程':'返程'}均价（含税） <b>${fmt(d[k])}</b><br>当月 ${d.weekends} 个周末`));
+        rect.addEventListener('mouseleave',hideTip);
+        svg.appendChild(rect);
+      });
+      svg.appendChild(text(cx,H-10,monthLabel(d.month),{fill:'#8fa1ba','font-size':11,'text-anchor':'middle'}));
+    });
+    // round-trip line
+    const pts = data.filter(d=>d.round_avg!=null);
+    if(pts.length){
+      const path = pts.map((d,i)=>{
+        const idx = data.indexOf(d);
+        return `${i?'L':'M'}${P.l+bandW*(idx+.5)},${y(d.round_avg)}`;
+      }).join(' ');
+      svg.appendChild(el('path',{d:path,fill:'none',stroke:C.warm,'stroke-width':2.5,'stroke-linejoin':'round','stroke-linecap':'round'}));
+      pts.forEach(d=>{
+        const idx=data.indexOf(d);
+        const c = el('circle',{cx:P.l+bandW*(idx+.5), cy:y(d.round_avg), r:4, fill:'#fff', stroke:C.warm,'stroke-width':2.5});
+        c.addEventListener('mousemove',e=>showTip(e,`<b>${monthLabel(d.month)}</b><br>往返合计均价 <b>${fmt(d.round_avg)}</b><br>最低合计 ${fmt(d.round_min)}`));
+        c.addEventListener('mouseleave',hideTip);
+        svg.appendChild(c);
+      });
+      // right axis label
+      const mid = y(pts[0].round_avg);
+      svg.appendChild(text(P.l+iw+8, mid+4, '合计', {fill:C.warm,'font-size':11}));
+    }
+  }
+
+  // ───────────── lead-time chart ─────────────
+  function chartLead(){
+    const host = document.getElementById('chartLead');
+    const r = current();
+    const H = (r.hist && r.hist.curve && r.hist.curve.length) ? r.hist : null;
+    const isHist = !!H;
+    const isLong = (r.curve||[]).length > 0;
+    const curve = isHist ? H.curve : (isLong ? r.curve : (r.xcurve||[]));
+    const bestBucket = ((isHist ? H.best : (isLong ? r.best : r.xbest))||{}).bucket;
+    const tag = document.getElementById('leadTag');
+    if(tag) tag.textContent = isHist ? '纵向：Google Flights 60 天价格记录' : (isLong ? '纵向：飞猪多日快照' : '横截面：最近一次快照');
+    document.getElementById('lLegend').innerHTML =
+      `<span><i style="background:${C.navy};opacity:.25"></i>单次报价</span>
+       <span><i style="background:${C.blue}"></i>区间均价</span>
+       <span><i style="background:${C.warm};opacity:.28"></i>最便宜窗口</span>
+       <span style="color:${isHist?'#16a394':'#b4571f'}">${isHist?'含税往返价 · 同一行程的历史报价':'⚠ 无纵向样本，仅横截面近似'}</span>`;
+    if(!curve.length){ host.innerHTML='<div class="empty">还没有足够的提前天数样本</div>'; return; }
+    const pts = isHist ? (H.points||[]).map(p=>[p[0], p[1], 'rt']) : (r.scatter||[]);
+    const obsMax = pts.length ? Math.max(...pts.map(p=>p[0])) : 0;
+    const maxLead = Math.max(7, Math.min(75, Math.max(obsMax, ...curve.map(c=>c.lo)) + 3));
+    const prices = pts.map(p=>p[1]).concat(curve.map(c=>c.mean));
+    const maxY = Math.max(...prices)*1.1, minY = Math.min(...prices)*0.9;
+
+    const CW = host.clientWidth || 700, CH = 320, P={l:52,r:16,t:14,b:38};
+    const iw=CW-P.l-P.r, ih=CH-P.t-P.b;
+    const x = v => P.l + (v/Math.max(maxLead,1))*iw;
+    const y = v => P.t + ih - (v-minY)/(maxY-minY)*ih;
+    host.innerHTML=''; const svg=el('svg',{viewBox:`0 0 ${CW} ${CH}`,height:CH}); host.appendChild(svg);
+
+    // best window band：优先用模型给的 ≤15 天窗口
+    const winBand = (r.mw) ? {lo:r.mw.lo, hi:r.mw.hi}
+      : ((isHist && H.window) ? H.window
+      : (()=>{ const c = curve.find(k=>k.bucket===bestBucket); return c?{lo:c.lo,hi:c.hi}:null; })());
+    if(winBand){
+      const lo = Math.max(0, winBand.lo), hi = Math.min(maxLead, winBand.hi);
+      svg.appendChild(el('rect',{x:x(lo), y:P.t, width:Math.max(6,x(hi+1)-x(lo)), height:ih, fill:C.warm, opacity:.13, rx:6}));
+      svg.appendChild(text((x(lo)+x(hi))/2, P.t+13, `T-${winBand.lo}~T-${winBand.hi} 最便宜窗口`,
+        {fill:'#b4571f','font-size':11,'font-weight':700,'text-anchor':'middle'}));
+    }
+    // y grid
+    for(let i=0;i<=4;i++){
+      const v=minY+(maxY-minY)*i/4, yy=y(v);
+      svg.appendChild(el('line',{x1:P.l,y1:yy,x2:P.l+iw,y2:yy,class:'gridline'}));
+      svg.appendChild(text(P.l-8,yy+4,fmtN(v),{fill:'#8fa1ba','font-size':11,'text-anchor':'end'}));
+    }
+    // x ticks
+    const step = maxLead>45?15:(maxLead>20?7:3);
+    for(let v=0; v<=maxLead; v+=step){
+      svg.appendChild(text(x(v),CH-14,`T-${v}`,{fill:'#8fa1ba','font-size':11,'text-anchor':'middle'}));
+    }
+    svg.appendChild(text(P.l+iw, CH-14, '天', {fill:'#8fa1ba','font-size':11,'text-anchor':'end'}));
+
+    // scatter
+    const g = el('g');
+    pts.forEach(p=>{
+      const c=el('circle',{cx:x(p[0]), cy:y(p[1]), r:2.6, fill:p[2]==='out'?C.blue:p[2]==='back'?C.teal:'#7c8db0', opacity:.22});
+      c.addEventListener('mousemove',e=>showTip(e,`提前 <b>${p[0]}</b> 天<br>报价 <b>${fmt(p[1])}</b><br>${p[2]==='out'?'去程在售':p[2]==='back'?'返程在售':'历史含税往返'}`));
+      c.addEventListener('mouseleave',hideTip);
+      g.appendChild(c);
+    });
+    svg.appendChild(g);
+
+    // 模型预测曲线（虚线）
+    const mc = (r.mcurve||[]).filter(p=>p[0]<=maxLead);
+    if(mc.length){
+      const d = mc.map((p,i)=>`${i?'L':'M'}${x(p[0])},${y(p[1])}`).join(' ');
+      svg.appendChild(el('path',{d,fill:'none',stroke:'#12294a','stroke-width':1.8,'stroke-dasharray':'6 4',opacity:.75}));
+      const lp = mc[mc.length-1];
+      svg.appendChild(text(x(lp[0])-4, y(lp[1])-8, '模型预测', {fill:'#12294a','font-size':10.5,'text-anchor':'end'}));
+    }
+    // 回测决策点（每个提前天数一个方块）
+    const pol = r.mpolicy || {};
+    Object.keys(pol).map(Number).sort((a,b)=>a-b).forEach(l=>{
+      if(l>maxLead) return;
+      const p = pol[l];
+      const sq = el('rect',{x:x(l)-3, y:y(p.mean)-3, width:6, height:6, fill:'#ff7a45', opacity:.9, rx:1});
+      sq.addEventListener('mousemove',e=>showTip(e,`<b>提前 ${l} 天买</b><br>平均成交 <b>${fmt(p.mean)}</b><br>样本 ${p.n} 个出发日`));
+      sq.addEventListener('mouseleave',hideTip);
+      svg.appendChild(sq);
+    });
+
+    // step line + area through buckets
+    const sorted = curve.slice().sort((a,b)=>a.lo-b.lo);
+    const base = P.t+ih;
+    const stepPts = [];
+    sorted.forEach(c=>{
+      const hi = Math.min(c.hi, maxLead);
+      stepPts.push([x(c.lo), y(c.mean)], [x(hi), y(c.mean)]);
+    });
+    const line = stepPts.map((p,i)=>`${i?'L':'M'}${p[0]},${p[1]}`).join(' ');
+    const area = `M${stepPts[0][0]},${base} L${stepPts.map(p=>p.join(',')).join(' L')} L${stepPts[stepPts.length-1][0]},${base} Z`;
+    svg.appendChild(el('path',{d:area,fill:C.blue,opacity:.10}));
+    svg.appendChild(el('path',{d:line,fill:'none',stroke:C.blue,'stroke-width':2.2,'stroke-linejoin':'round'}));
+    sorted.forEach(c=>{
+      const hi = Math.min(c.hi, maxLead);
+      const cx=x(c.lo+(hi-c.lo)/2);
+      const hit = bestBucket && c.bucket===bestBucket;
+      const dot=el('circle',{cx,cy:y(c.mean),r:hit?5:3.6,fill:hit?C.warm:'#fff',stroke:hit?C.warm:C.blue,'stroke-width':2.2});
+      dot.addEventListener('mousemove',e=>showTip(e,
+        `<b>提前 ${c.bucket} 天</b><br>均价 <b>${fmt(c.mean)}</b><br>10 分位 ${fmt(c.p10)}<br>样本 ${c.samples} 个出发日${c.hit_rate!=null?`<br>命中率 ${c.hit_rate}%`:''}`));
+      dot.addEventListener('mouseleave',hideTip);
+      svg.appendChild(dot);
+      if(hit) svg.appendChild(text(cx, y(c.mean)-12, '最便宜', {fill:C.warm,'font-size':11,'font-weight':700,'text-anchor':'middle'}));
+    });
+  }
+
+  // ───────────── hit rate chart ─────────────
+  function chartHit(){
+    const host=document.getElementById('chartHit');
+    const r=current();
+    const H0 = (r.hist && r.hist.curve && r.hist.curve.length) ? r.hist : null;
+    const cs=((H0?H0.curve:r.curve)||[]).filter(c=>c.hit_rate!=null);
+    if(!cs.length){ host.innerHTML='<div class="empty">观察期还不够，暂无法计算命中率</div>'; return; }
+    const W=host.clientWidth||320, H=250, P={l:8,r:8,t:12,b:52};
+    const iw=W-P.l-P.r, ih=H-P.t-P.b;
+    host.innerHTML=''; const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,height:H}); host.appendChild(svg);
+    const bw = iw/cs.length;
+    const bestB = ((H0?H0.best:r.best)||{}).bucket;
+    cs.forEach((c,i)=>{
+      const h = Math.max(2, (c.hit_rate/100)*ih);
+      const isBest = c.bucket===bestB;
+      const rect=el('rect',{x:P.l+bw*i+bw*0.18, y:P.t+ih-h, width:bw*0.64, height:h, rx:5, fill:isBest?C.warm:'#9fbfe8'});
+      rect.addEventListener('mousemove',e=>showTip(e,`提前 <b>${c.bucket}</b> 天<br>命中率 <b>${c.hit_rate}%</b><br>均价 ${fmt(c.mean)}`));
+      rect.addEventListener('mouseleave',hideTip);
+      svg.appendChild(rect);
+      if(c.hit_rate>=5) svg.appendChild(text(P.l+bw*i+bw/2, P.t+ih-h-6, c.hit_rate+'%', {fill:isBest?C.warm:'#7d8ca3','font-size':11,'text-anchor':'middle','font-weight':600}));
+      svg.appendChild(text(P.l+bw*i+bw/2, H-32, c.bucket, {fill:'#8fa1ba','font-size':10,'text-anchor':'middle'}));
+    });
+    svg.appendChild(text(P.l, H-10, '提前天数区间', {fill:'#9aabc2','font-size':10}));
+    svg.appendChild(text(P.l+iw, H-10, `样本 ${(H0?H0.hit_days:r.hit_days)} 个出发日`, {fill:'#9aabc2','font-size':10,'text-anchor':'end'}));
+  }
+
+  // ───────────── weekly chart ─────────────
+  function chartWeekly(){
+    const host=document.getElementById('chartWeekly');
+    const r=current();
+    const F=feeFor(r);
+    // 全部换成含税：单程 +F，往返 +2F
+    const ws=r.weekends.filter(w=>w.out).map(w=>({
+      ...w,
+      out: w.out?{...w.out, price:w.out.price+F}:null,
+      back: w.back?{...w.back, price:w.back.price+F}:null,
+      round: w.round!=null?w.round+F*2:null,
+    }));
+    document.getElementById('wLegend').innerHTML =
+      `<span><i style="background:${C.blue}"></i>去程最低（含税）</span>
+       <span><i style="background:${C.teal}"></i>返程最低（含税）</span>
+       <span><i style="background:${C.warm}"></i>往返合计（含税）</span>
+       <span><i style="background:${C.navy}"></i>今天之后最近的出发日</span>`;
+    if(!ws.length){ host.innerHTML='<div class="empty">暂无数据</div>'; return; }
+
+    const W=host.clientWidth||900, H=300, P={l:52,r:14,t:14,b:46};
+    const iw=W-P.l-P.r, ih=H-P.t-P.b;
+    const vals=[]; ws.forEach(w=>{ vals.push(w.out.price); if(w.back) vals.push(w.back.price); if(w.round) vals.push(w.round); });
+    const maxV=Math.max(...vals)*1.1, minV=0;
+    const y=v=>P.t+ih-(v-minV)/(maxV-minV)*ih;
+    const bandW=iw/ws.length;
+    host.innerHTML=''; const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,height:H}); host.appendChild(svg);
+
+    for(let i=0;i<=4;i++){
+      const v=maxV*i/4, yy=y(v);
+      svg.appendChild(el('line',{x1:P.l,y1:yy,x2:P.l+iw,y2:yy,class:'gridline'}));
+      svg.appendChild(text(P.l-8,yy+4,fmtN(v),{fill:'#8fa1ba','font-size':11,'text-anchor':'end'}));
+    }
+    const nextIdx = ws.findIndex(w=>!w.past);
+    ws.forEach((w,i)=>{
+      const cx=P.l+bandW*(i+.5);
+      if(i===nextIdx) svg.appendChild(el('rect',{x:P.l+bandW*i+2, y:P.t, width:bandW-4, height:ih, fill:C.navy, opacity:.05, rx:6}));
+      const bw=Math.min(15, bandW*0.3);
+      [['out',C.blue,-bw*0.62],['back',C.teal,bw*0.62]].forEach(([k,col,off])=>{
+        const o=w[k]; if(!o) return;
+        const h=Math.max(2,y(0)-y(o.price));
+        const rect=el('rect',{x:cx+off-bw/2, y:y(o.price), width:bw, height:h, rx:4, fill:col, opacity:w.past?.45:.95});
+        rect.addEventListener('mousemove',e=>showTip(e,
+          `<b>${mmdd(w.dep_date)} ${wd(w.dep_date)} → ${mmdd(w.back_date)} ${wd(w.back_date)}</b><br>
+           ${k==='out'?'去程':'返程'}最低 <b>${fmt(o.price)}</b><br>
+           ${o.airline||''} ${o.flight_no||''} ${o.dep_time||''}<br>
+           快照 ${o.snap_date||''}（T-${o.lead}）`));
+        rect.addEventListener('mouseleave',hideTip);
+        svg.appendChild(rect);
+      });
+      const lab=`${mmdd(w.dep_date)}`;
+      svg.appendChild(text(cx,H-26,lab,{fill:w.past?'#c2cfe0':'#8fa1ba','font-size':10.5,'text-anchor':'middle'}));
+      if(w.round) svg.appendChild(text(cx,H-12,'¥'+fmtN(w.round),{fill:'#9aabc2','font-size':9.5,'text-anchor':'middle'}));
+    });
+    // round line
+    const pts=ws.filter(w=>w.round);
+    if(pts.length){
+      const d=pts.map((w,i)=>`${i?'L':'M'}${P.l+bandW*(ws.indexOf(w)+.5)},${y(w.round)}`).join(' ');
+      svg.appendChild(el('path',{d,fill:'none',stroke:C.warm,'stroke-width':2.2,'stroke-linejoin':'round'}));
+      pts.forEach(w=>{
+        const c=el('circle',{cx:P.l+bandW*(ws.indexOf(w)+.5), cy:y(w.round), r:3.4, fill:'#fff', stroke:C.warm,'stroke-width':2});
+        svg.appendChild(c);
+      });
+    }
+    if(nextIdx>=0){
+      const cx=P.l+bandW*(nextIdx+.5);
+      svg.appendChild(el('circle',{cx, cy:P.t+6, r:4, fill:C.navy}));
+    }
+  }
+
+  // ───────────── heatmap ─────────────
+  function renderHeat(){
+    const host=document.getElementById('heat');
+    const r=current();
+    const F=feeFor(r);
+    const h=r.heat;
+    if(!h || !h.rows.length){ host.innerHTML='<div class="empty">还没有未来出发日的样本</div>'; return; }
+    const cols=h.cols, rows=h.rows;
+    const flat=[].concat(...h.values).filter(v=>v!=null);
+    if(!flat.length){ host.innerHTML='<div class="empty">样本不足</div>'; return; }
+    const min=Math.min(...flat), max=Math.max(...flat);
+    const color=v=>{
+      if(v==null) return '';
+      const t=(v-min)/(max-min||1);
+      // 绿(便宜) → 黄(中) → 红(贵)
+      const lerp=(a,b,t)=>Math.round(a+(b-a)*t);
+      let c1,c2,tt;
+      if(t<.5){ c1=[22,163,148]; c2=[245,158,11]; tt=t*2; }
+      else { c1=[245,158,11]; c2=[239,68,68]; tt=(t-.5)*2; }
+      return `rgb(${lerp(c1[0],c2[0],tt)},${lerp(c1[1],c2[1],tt)},${lerp(c1[2],c2[2],tt)})`;
+    };
+    const grid = document.createElement('div');
+    grid.className='heat';
+    grid.style.gridTemplateColumns = `70px repeat(${cols.length}, minmax(38px,1fr))`;
+    grid.appendChild(Object.assign(document.createElement('div'),{className:'hcol',textContent:''}));
+    cols.forEach(c=>grid.appendChild(Object.assign(document.createElement('div'),{className:'hcol',textContent:c})));
+    rows.forEach((dep,i)=>{
+      const lab=document.createElement('div');
+      lab.className='hlabel'; lab.textContent=`${mmdd(dep)} ${wd(dep)}`;
+      grid.appendChild(lab);
+      cols.forEach((c,j)=>{
+        const v=h.values[i][j];
+        const cell=document.createElement('div');
+        cell.className='hcell'+(v==null?' empty':'');
+        if(v==null){ cell.textContent='·'; }
+        else { cell.textContent=fmtN(v+F); cell.style.background=color(v); }
+        cell.addEventListener('mousemove',e=>showTip(e,`<b>${mmdd(dep)} 出发</b><br>提前 <b>${c}</b> 天时最低价（含税） <b>${v==null?'未采集':fmt(v+F)}</b>`));
+        cell.addEventListener('mouseleave',hideTip);
+        grid.appendChild(cell);
+      });
+    });
+    host.innerHTML=''; host.appendChild(grid);
+    const ax=document.createElement('div');
+    ax.style.cssText='margin-top:10px;font-size:11px;color:#9aabc2;display:flex;justify-content:space-between';
+    ax.innerHTML=`<span>便宜 ${fmt(min+F)}</span><span>贵 ${fmt(max+F)}</span>`;
+    host.appendChild(ax);
+  }
+
+  // ───────────── verdict ─────────────
+  function renderVerdict(){
+    const r=current();
+    const H = (r.hist && r.hist.best) ? r.hist : null;
+    const b = H ? H.best : (r.best || r.xbest);
+    const isLong = !!b && (!!H || !!r.best);
+    const body=document.getElementById('verdictBody');
+    const hint=document.getElementById('verdictHint');
+    if(!b){ body.innerHTML='<div class="empty">样本不足，跑几天快照再看</div>'; return; }
+    const mean = H ? H.curve.reduce((s,c)=>s+c.mean*c.samples,0)/H.curve.reduce((s,c)=>s+c.samples,0) : r.overall_mean;
+    const save = mean ? Math.round((mean-b.mean)/mean*100) : 0;
+    hint.textContent = H
+      ? `历史纵向 ${H.n} 点 / ${H.departures} 个出发日 · 含税往返 · 置信度 ${D.meta.confidence}`
+      : `${isLong?'纵向样本':'横截面信号'} ${r.obs_count} 条 / ${r.dep_days} 个出发日 · 置信度 ${D.meta.confidence}`;
+    const a=r.advice;
+    let adviceLine='';
+    if(a && a.gap_pct!=null){
+      if(a.gap_pct<=5) adviceLine=`最近一个周末（${mmdd(a.dep_date)} 出发，距今 ${a.days_left} 天）当前往返 <b>${fmt(a.round)}</b>，已经落在最佳区间，<b>可以直接下单</b>。`;
+      else adviceLine=`最近一个周末（${mmdd(a.dep_date)} 出发，距今 ${a.days_left} 天）当前往返 <b>${fmt(a.round)}</b>，比最佳区间均价高 <b>${a.gap_pct}%</b>，不急就再等等。`;
+    }
+    const W = r.mw || ((H && H.window) ? H.window : null);
+    const bigMean = W ? W.mean : b.mean;
+    const saveW = mean ? Math.round((mean-bigMean)/mean*100) : 0;
+    const sv = (D.model||{}).savings;
+    body.innerHTML = `
+      <div class="big">${W?`提前 ${W.lo}–${W.hi} 天`:`提前 ${b.bucket} 天`}<small>最便宜</small></div>
+      <ul>
+        <li>该窗口均价 <b>${fmt(bigMean)}</b>，比全周期均价 ${fmt(mean)} 低 <b>${saveW}%</b></li>
+        <li>10 分位低价 <b>${fmt(b.p10)}</b>，窗口内最低 <b>${fmt(b.min)}</b></li>
+        ${isLong
+          ? `<li>命中率 <b>${b.hit_rate==null?'—':b.hit_rate+'%'}</b>（${H?H.hit_days:r.hit_days} 个观察完整的出发日里拿下最低价的比例）</li>`
+          : `<li style="color:#b4571f">当前只有 ${D.meta.snapshot_days} 个购买日快照，这条是按"今天不同出发日"做的横截面近似，含日期效应。</li>`}
+        ${H?`<li style="color:#0f8a7c">口径：Google Flights 同一行程 60 天价格记录，<b>含税往返</b>，与飞猪"不含税单程"不可直接比大小。</li>`:''}
+        ${sv?`<li style="color:#0f8a7c">回测：比临期(T-${sv.late_lead})省 <b>${sv.vs_late_pct}%</b>，比提前 T-${sv.early_lead} 省 <b>${sv.vs_early_pct}%</b>。</li>`:''}
+      </ul>
+      <div class="mini">
+        <span class="m">建议</span><span style="text-align:right">${adviceLine||'—'}</span>
+      </div>`;
+  }
+
+  // ───────────── compare ─────────────
+  function renderCompare(){
+    const host=document.getElementById('compare');
+    const rows=D.routes.filter(r=>(r.dir||'fwd')===state.dir && r.id!=='ALL').map(r=>{
+      const b=r.best || r.xbest;
+      const fut=r.weekends.filter(w=>!w.past&&w.out)[0];
+      return {r, b, now: fut?(fut.out.price+feeFor(r)):null};
+    }).sort((a,b)=>(a.b?a.b.mean:1e9)-(b.b?b.b.mean:1e9));
+    host.innerHTML = rows.map(({r,b,now})=>{
+      const on = r.key===state.key;
+      return `<div style="display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:9px 0;border-bottom:1px solid #f0f4fa">
+        <div style="font-size:12.5px;font-weight:${on?700:500};color:${on?'#12294a':'#5b6b83'}">${r.label}</div>
+        <div style="font-size:13px;font-weight:700;color:#ff7a45;text-align:right">${b?b.bucket+'天':'—'}</div>
+        <div style="font-size:11px;color:#9aabc2">最佳窗口均价 ${b?fmt(b.mean):'—'}</div>
+        <div style="font-size:11px;color:#9aabc2;text-align:right">当前去程 ${now?fmt(now):'—'}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // ───────────── table ─────────────
+  function renderTable(){
+    const r=current();
+    const F=feeFor(r)*2;
+    const ws=r.weekends.filter(w=>w.out);
+    document.getElementById('tblTag').textContent = `${r.label} · ${ws.length} 个周末`;
+    if(!ws.length){ document.getElementById('table').innerHTML='<tr><td class="muted">暂无数据</td></tr>'; return; }
+    const head = `<thead><tr>
+      <th>出发（周五）</th><th>返程（周日）</th><th>距今</th>
+      <th>去程最低</th><th>航班</th><th>返程最低</th><th>航班</th><th>往返合计</th><th>含税往返</th><th>状态</th>
+    </tr></thead>`;
+    const rows = ws.map(w=>{
+      const soon = w.days_until>=0 && w.days_until<=7;
+      return `<tr>
+        <td>${w.dep_date} <span class="muted">${wd(w.dep_date)}</span></td>
+        <td>${w.back_date} <span class="muted">${wd(w.back_date)}</span></td>
+        <td>${w.days_until>=0?w.days_until+' 天':'已过'}</td>
+        <td><b>${fmt(w.out.price)}</b></td>
+        <td class="muted">${w.out.flight_no?((w.out.airline||'')+' '+(w.out.flight_no||'')+'<br>'+(w.out.dep_time||'')):'四线均价'}</td>
+        <td>${w.back?('<b>'+fmt(w.back.price)+'</b>'):'<span class="muted">—</span>'}</td>
+        <td class="muted">${w.back?((w.back.airline||'')+' '+(w.back.flight_no||'')+'<br>'+(w.back.dep_time||'')):'未采到'}</td>
+        <td>${w.round?'<b>'+fmt(w.round)+'</b>':'<span class="muted">—</span>'}</td>
+        <td>${w.round?'<b style="color:#ff7a45">'+fmt(w.round+F)+'</b>':'<span class="muted">—</span>'}</td>
+        <td>${w.past?'<span class="pill">已过</span>':(soon?'<span class="pill warn">临近</span>':'<span class="pill ok">可锁价</span>')}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('table').innerHTML = head+'<tbody>'+rows+'</tbody>';
+  }
+
+  function renderAll(){
+    renderKpis(); chartMonthly(); chartLead(); chartHit(); chartWeekly();
+    renderHeat(); renderVerdict(); renderCompare();
+    renderConfidence(); renderModel(); renderBuy(); renderFlights(); renderTable();
+  }
+
+  renderMeta(); renderDirSwitch(); renderTabs(); renderAll();
+
+  // 响应式重绘
+  let rt=null;
+  window.addEventListener('resize',()=>{ clearTimeout(rt); rt=setTimeout(()=>{
+    chartMonthly(); chartLead(); chartHit(); chartWeekly();
+  },160); });
+})();
+</script>
+</body>
+</html>
