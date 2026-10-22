@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
@@ -185,6 +185,16 @@
   .calc .adv{font-size:12px;line-height:1.7;color:var(--ink2);margin-top:6px}
   .rbtn{display:inline-block;font-size:11px;padding:2px 8px;border-radius:6px;background:#eef4ff;color:#2f6fed;margin-right:4px}
 
+  /* ── combo / hour filter ── */
+  .hourbar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:6px 0}
+  .hourbar .hlb{font-size:11.5px;color:#8fa1ba;width:60px;flex:0 0 60px}
+  .hchip{border:1px solid #e3e9f2;background:#fff;color:#5b6b83;font:inherit;font-size:11.5px;
+    padding:4px 10px;border-radius:999px;cursor:pointer;transition:.15s}
+  .hchip:hover{background:#f2f6fc}
+  .hchip.on{background:#12294a;border-color:#12294a;color:#fff}
+  .hchip.none{opacity:.35;text-decoration:line-through}
+  #comboTable td.sub{font-size:11px;color:#9aabc2}
+
   footer{margin-top:22px;color:#8697ad;font-size:12px;line-height:1.9}
   .empty{padding:34px 0;text-align:center;color:#9aabc2;font-size:13px}
 
@@ -290,6 +300,17 @@
       <h2>价格预测模型 · 回测 <span class="tag" id="modelTag">—</span></h2>
       <div class="hint" id="modelHint"></div>
       <div class="mgrid" id="modelBody"></div>
+    </article>
+
+    <article class="card span12">
+      <h2>最优航班组合 <span class="tag" id="comboTag">—</span></h2>
+      <div class="hint">
+        先在下面按<b>起飞小时</b>筛（不是日期），筛出来的航班里再自动配对：去程挑最便宜 × 返程挑最便宜 = 一个组合，按含税往返合计排序。
+        右侧「建议」用的是模型窗口 T-<span id="comboLo">—</span>~T-<span id="comboHi">—</span>。
+      </div>
+      <div class="hourbar" id="outHours"><span class="hlb">去程起飞</span></div>
+      <div class="hourbar" id="backHours"><span class="hlb">返程起飞</span></div>
+      <div style="overflow:auto;margin-top:10px"><table id="comboTable"></table></div>
     </article>
 
     <article class="card span12">
@@ -627,6 +648,105 @@
       <th>实际待付（飞猪含税）</th><th>同源现价（Google）</th><th>同区间历史 P20–P80</th><th>位置</th><th>建议</th>
     </tr></thead>`;
     tbl.innerHTML = head + '<tbody>' + nowRow + rows + '</tbody>';
+  }
+
+  // ───────────── 最优航班组合（按起飞小时筛选） ─────────────
+  const COMBO = { out: null, back: null, key: null };   // null = 全部小时；key 变了就重置
+
+  function hoursOf(r, leg){
+    const set = new Set();
+    for(const dep of Object.keys(r.flights||{})){
+      for(const f of ((r.flights[dep]||{})[leg]||[])) set.add(f[0].slice(0,2));
+    }
+    return [...set].sort();
+  }
+
+  function renderHourChips(r){
+    [['out','outHours'],['back','backHours']].forEach(([leg,id])=>{
+      const host = document.getElementById(id);
+      if(!host) return;
+      if(COMBO.key !== r.key){ COMBO.out = null; COMBO.back = null; COMBO.key = r.key; }
+      const hrs = hoursOf(r, leg);
+      if(!COMBO[leg]) COMBO[leg] = new Set(hrs);
+      else { const valid = new Set(hrs); COMBO[leg] = new Set([...COMBO[leg]].filter(h=>valid.has(h))); }
+      host.innerHTML = '<span class="hlb">'+(leg==='out'?'去程起飞':'返程起飞')+'</span>' +
+        hrs.map(h=>`<button class="hchip ${COMBO[leg].has(h)?'on':''}" data-leg="${leg}" data-h="${h}">${h}:00</button>`).join('') +
+        `<button class="hchip" data-leg="${leg}" data-h="all" style="margin-left:4px">全选</button>`;
+      host.querySelectorAll('.hchip').forEach(btn=>{
+        btn.onclick = ()=>{
+          const h = btn.dataset.h;
+          if(h === 'all'){ COMBO[leg] = new Set(hrs); }
+          else if(COMBO[leg].has(h)) COMBO[leg].delete(h); else COMBO[leg].add(h);
+          renderCombo();
+        };
+      });
+    });
+  }
+
+  function combosFor(r, F){
+    const out = (r.weekends||[]).filter(w=>!w.past && w.out);
+    const rows = [];
+    for(const w of out){
+      const O = ((r.flights[w.dep_date]||{}).out||[]).filter(f=>COMBO.out.has(f[0].slice(0,2)));
+      const B = ((r.flights[w.back_date]||{}).back||[]).filter(f=>COMBO.back.has(f[0].slice(0,2)));
+      if(!O.length || !B.length) continue;
+      const o = O[0], b = B[0];                       // 已按裸票价升序
+      // 次优：去程还是最便宜那班，返程换第二便宜；或反过来，取两者更省
+      const alt = [];
+      if(B[1]) alt.push(o[4]+B[1][4]);
+      if(O[1]) alt.push(O[1][4]+b[4]);
+      rows.push({w, o, b, total:o[4]+b[4]+F*2, alt: alt.length?Math.min(...alt)+F*2:null});
+    }
+    return rows.sort((a,b)=>a.total-b.total);
+  }
+
+  function renderCombo(){
+    const r = current();
+    const host = document.getElementById('comboTable');
+    const tag = document.getElementById('comboTag');
+    const F = feeFor(r);
+    document.getElementById('comboLo').textContent = r.mw?r.mw.lo:'—';
+    document.getElementById('comboHi').textContent = r.mw?r.mw.hi:'—';
+    renderHourChips(r);
+    if(!r.flights || !Object.keys(r.flights).length){
+      host.innerHTML = '<tr><td class="muted">汇总页没有航班级数据 —— 切到具体路线（浦东—白云 / 浦东—宝安 / 虹桥—宝安 / 虹桥—白云）。</td></tr>';
+      tag.textContent = '需选具体路线';
+      return;
+    }
+    if(!COMBO.out.size || !COMBO.back.size){
+      host.innerHTML = '<tr><td class="muted">至少各选一个小时</td></tr>'; tag.textContent='筛选为空'; return;
+    }
+    const rows = combosFor(r, F);
+    if(!rows.length){
+      host.innerHTML = '<tr><td class="muted">当前小时筛选下没有可用组合</td></tr>'; tag.textContent='无组合'; return;
+    }
+    const best = rows[0];
+    const mw = r.mw || {lo:12,hi:16};
+    const advice = (d)=>{
+      if(d > mw.hi) return `<span class="pill">等到 T-${mw.hi}（还差 ${d-mw.hi} 天）</span>`;
+      if(d < mw.lo) return `<span class="pill warn">已过窗口，尽快买</span>`;
+      return `<span class="pill ok">正处窗口，可以买</span>`;
+    };
+    tag.textContent = `${rows.length} 个可组合周末 · 最低 ${fmt(best.total)}`;
+    const head = `<thead><tr>
+      <th>出发周</th><th>去程航班</th><th>裸票</th><th>返程航班</th><th>裸票</th>
+      <th>含税往返</th><th>次优</th><th>剩余</th><th>购票建议</th>
+    </tr></thead>`;
+    const body = rows.map((x,i)=>{
+      const hi = i===0;
+      return `<tr${hi?' style="background:#fff7ef"':''}>
+        <td>${mmdd(x.w.dep_date)} ${wd(x.w.dep_date)} → ${mmdd(x.w.back_date)} ${wd(x.w.back_date)}</td>
+        <td>${x.o[0]}–${x.o[1]} <span class="muted">${x.o[3]||''} ${x.o[2]||''}</span></td>
+        <td>${fmt(x.o[4])}</td>
+        <td>${x.b[0]}–${x.b[1]} <span class="muted">${x.b[3]||''} ${x.b[2]||''}</span></td>
+        <td>${fmt(x.b[4])}</td>
+        <td><b>${fmt(x.total)}</b></td>
+        <td class="muted">${x.alt?fmt(x.alt):'—'}</td>
+        <td>${x.w.days_until} 天</td>
+        <td>${advice(x.w.days_until)}</td>
+      </tr>`;
+    }).join('');
+    host.innerHTML = head + '<tbody>' + body + '</tbody>';
   }
 
   // ───────────── 全航班明细 ─────────────
@@ -1108,7 +1228,7 @@
   function renderAll(){
     renderKpis(); chartMonthly(); chartLead(); chartHit(); chartWeekly();
     renderHeat(); renderVerdict(); renderCompare();
-    renderConfidence(); renderModel(); renderBuy(); renderFlights(); renderTable();
+    renderConfidence(); renderModel(); renderBuy(); renderCombo(); renderFlights(); renderTable();
   }
 
   renderMeta(); renderDirSwitch(); renderTabs(); renderAll();
