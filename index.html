@@ -185,15 +185,22 @@
   .calc .adv{font-size:12px;line-height:1.7;color:var(--ink2);margin-top:6px}
   .rbtn{display:inline-block;font-size:11px;padding:2px 8px;border-radius:6px;background:#eef4ff;color:#2f6fed;margin-right:4px}
 
-  /* ── combo / hour filter ── */
-  .hourbar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:6px 0}
-  .hourbar .hlb{font-size:11.5px;color:#8fa1ba;width:60px;flex:0 0 60px}
-  .hchip{border:1px solid #e3e9f2;background:#fff;color:#5b6b83;font:inherit;font-size:11.5px;
-    padding:4px 10px;border-radius:999px;cursor:pointer;transition:.15s}
+  /* ── top filter ── */
+  .topfilter{margin-top:12px;padding:14px 18px 10px}
+  .tf-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+  .tf-head h2{margin:0;font-size:15px;font-weight:700}
+  .tf-presets{display:flex;gap:6px;flex-wrap:wrap}
+  .tf-now{margin-left:auto;font-size:12px;color:var(--ink2)}
+  .tf-now b{color:var(--warm)}
+  .tf-note{font-size:11px;color:#9aabc2;line-height:1.7;margin-top:6px}
+  .hourbar{display:flex;gap:4px;align-items:center;flex-wrap:wrap;margin:4px 0}
+  .hourbar .hlb{font-size:11.5px;color:#8fa1ba;width:56px;flex:0 0 56px}
+  .hchip{border:1px solid #e3e9f2;background:#fff;color:#5b6b83;font:inherit;font-size:11px;
+    padding:5px 8px;border-radius:8px;cursor:pointer;transition:.15s;min-width:38px;font-variant-numeric:tabular-nums}
   .hchip:hover{background:#f2f6fc}
-  .hchip.on{background:#12294a;border-color:#12294a;color:#fff}
-  .hchip.none{opacity:.35;text-decoration:line-through}
-  #comboTable td.sub{font-size:11px;color:#9aabc2}
+  .hchip.on{background:#12294a;border-color:#12294a;color:#fff;font-weight:600}
+  .hchip.preset{border-radius:999px;background:#f1f5fb;border-color:#f1f5fb}
+  .hchip.preset:hover{background:#e6edf8}
 
   footer{margin-top:22px;color:#8697ad;font-size:12px;line-height:1.9}
   .empty{padding:34px 0;text-align:center;color:#9aabc2;font-size:13px}
@@ -214,7 +221,7 @@
   <div class="wrap">
     <h1>沪 ⇄ 广深：周五去、周日回 —— 机票价格趋势 &amp; 最佳购票窗口</h1>
     <p class="sub">
-      4 条往返线 · 去程周五 13:00 之后起飞 · 返程周日 13:00 之后起飞 · 支持双向对调（上海出发 / 广深出发）<br>
+      4 条往返线 · 去程周五 00:00–23:59 · 返程周日 00:00–23:59（全时段，可按时段筛） · 支持双向对调（上海出发 / 广深出发）<br>
       数据来源：飞猪官方 PC 机票搜索结果页（最低价，不含税费），按日累积快照
     </p>
     <div class="badges" id="badges"></div>
@@ -226,6 +233,20 @@
     <button data-dir="fwd" class="on">周五 上海 → 广深</button>
     <button data-dir="rev">周五 广深 → 上海</button>
   </div>
+  <section class="topfilter card">
+    <div class="tf-head">
+      <h2>时段筛选 <span class="tag">整页跟着变</span></h2>
+      <div class="tf-presets" id="tfPresets"></div>
+      <div class="tf-now" id="tfNow">—</div>
+    </div>
+    <div class="hourbar" id="outHours"></div>
+    <div class="hourbar" id="backHours"></div>
+    <div class="tf-note">
+      24 小时全时段可筛：下面所有卡片（KPI / 月度 / 逐周 / 热力 / 最优组合 / 周末明细）都只统计你选中的起飞小时；
+      「提前天数」「模型回测」「这一趟该不该现在买」来自 Google 历史价格，与时段正交，不受影响。
+    </div>
+  </section>
+
   <nav class="tabs" id="tabs"></nav>
 
   <section class="kpis" id="kpis"></section>
@@ -305,11 +326,9 @@
     <article class="card span12">
       <h2>最优航班组合 <span class="tag" id="comboTag">—</span></h2>
       <div class="hint">
-        先在下面按<b>起飞小时</b>筛（不是日期），筛出来的航班里再自动配对：去程挑最便宜 × 返程挑最便宜 = 一个组合，按含税往返合计排序。
+        用页面顶部的<b>时段筛选</b>限定起飞小时后，这里自动配对：去程挑最便宜 × 返程挑最便宜 = 一个组合，按含税往返合计排序。
         右侧「建议」用的是模型窗口 T-<span id="comboLo">—</span>~T-<span id="comboHi">—</span>。
       </div>
-      <div class="hourbar" id="outHours"><span class="hlb">去程起飞</span></div>
-      <div class="hourbar" id="backHours"><span class="hlb">返程起飞</span></div>
       <div style="overflow:auto;margin-top:10px"><table id="comboTable"></table></div>
     </article>
 
@@ -389,7 +408,7 @@
        ⑤ 命中率只统计「≥3 个区间都有数据」的出发日。<br>
        两套价格：<b>飞猪</b>（当前在售、单程、不含税费，用于月度/逐周/全航班明细）；
        <b>Google Flights</b>（同一往返行程的近 60 天逐日报价、含税，用于"提前多久买最便宜"的纵向曲线）。两者口径不同，不要直接比大小。<br>
-       时间窗：去程 ${D.meta.windows.out.label}，返程 ${D.meta.windows.back.label}；附加费：机建 ¥${(m.fees||{}).airport}＋燃油 ¥${(m.fees||{}).fuel_over_800}（>800km，2026-10-10 起）。`;
+       时间窗：去程 ${D.meta.windows.out.label}，返程 ${D.meta.windows.back.label}（24 小时全采，页面可按起飞小时再筛）；附加费：机建 ¥${(m.fees||{}).airport}＋燃油 ¥${(m.fees||{}).fuel_over_800}（>800km，2026-10-10 起）。`;
   }
 
   // ───────────── tabs ─────────────
@@ -650,45 +669,117 @@
     tbl.innerHTML = head + '<tbody>' + nowRow + rows + '</tbody>';
   }
 
-  // ───────────── 最优航班组合（按起飞小时筛选） ─────────────
-  const COMBO = { out: null, back: null, key: null };   // null = 全部小时；key 变了就重置
+  // ───────────── 时段筛选（置顶，整页生效） ─────────────
+  const FILT = { out: null, back: null, key: null };   // null = 全部 24 小时
+  const ORIG = new Map();                              // 缓存 Python 预计算的原始 weekends/monthly/heat
+  const HOURS = Array.from({length:24},(_,i)=>String(i).padStart(2,'0'));
 
   function hoursOf(r, leg){
-    const set = new Set();
+    const s = new Set();
     for(const dep of Object.keys(r.flights||{})){
-      for(const f of ((r.flights[dep]||{})[leg]||[])) set.add(f[0].slice(0,2));
+      for(const f of ((r.flights[dep]||{})[leg]||[])) s.add(f[0].slice(0,2));
     }
-    return [...set].sort();
+    return [...s].sort();
   }
+  const inHours = (hhmm, set) => !set || set.has(hhmm.slice(0,2));
 
-  function renderHourChips(r){
-    [['out','outHours'],['back','backHours']].forEach(([leg,id])=>{
+  function renderTopFilter(){
+    const r = current();
+    if(FILT.key !== r.key){ FILT.out = null; FILT.back = null; FILT.key = r.key; }
+    const hasFlights = r.flights && Object.keys(r.flights).length;
+    [['out','outHours','去程起飞'],['back','backHours','返程起飞']].forEach(([leg,id,label])=>{
       const host = document.getElementById(id);
       if(!host) return;
-      if(COMBO.key !== r.key){ COMBO.out = null; COMBO.back = null; COMBO.key = r.key; }
-      const hrs = hoursOf(r, leg);
-      if(!COMBO[leg]) COMBO[leg] = new Set(hrs);
-      else { const valid = new Set(hrs); COMBO[leg] = new Set([...COMBO[leg]].filter(h=>valid.has(h))); }
-      host.innerHTML = '<span class="hlb">'+(leg==='out'?'去程起飞':'返程起飞')+'</span>' +
-        hrs.map(h=>`<button class="hchip ${COMBO[leg].has(h)?'on':''}" data-leg="${leg}" data-h="${h}">${h}:00</button>`).join('') +
-        `<button class="hchip" data-leg="${leg}" data-h="all" style="margin-left:4px">全选</button>`;
+      const avail = new Set(hoursOf(r, leg));
+      const sel = FILT[leg];
+      host.innerHTML = `<span class="hlb">${label}</span>` + HOURS.map(h=>{
+        const has = avail.has(h);
+        const on = has && (sel ? sel.has(h) : true);
+        return `<button class="hchip ${on?'on':''}" data-leg="${leg}" data-h="${h}"`
+          + (has?'':' disabled style="opacity:.22;cursor:not-allowed"') + `>${h}</button>`;
+      }).join('');
       host.querySelectorAll('.hchip').forEach(btn=>{
-        btn.onclick = ()=>{
-          const h = btn.dataset.h;
-          if(h === 'all'){ COMBO[leg] = new Set(hrs); }
-          else if(COMBO[leg].has(h)) COMBO[leg].delete(h); else COMBO[leg].add(h);
-          renderCombo();
-        };
+        if(btn.disabled) return;
+        btn.onclick = ()=>toggleHour(leg, btn.dataset.h);
       });
     });
+    const pr = document.getElementById('tfPresets');
+    pr.innerHTML = [['全部','all'],['上午 00–12','am'],['下午 12–18','pm'],['晚间 18–24','night'],['13 点后','after13']]
+      .map(([t,k])=>`<button class="hchip preset" data-p="${k}">${t}</button>`).join('');
+    pr.querySelectorAll('.hchip').forEach(b=>b.onclick=()=>applyPreset(b.dataset.p));
+    const cnt = leg => FILT[leg] ? FILT[leg].size : hoursOf(r, leg).length;
+    document.getElementById('tfNow').innerHTML = hasFlights
+      ? `去程 <b>${cnt('out')}</b> 小时 / 返程 <b>${cnt('back')}</b> 小时`
+      : '当前是汇总页，没有航班级数据 —— 切到具体路线才能按时段筛';
+  }
+
+  function toggleHour(leg, h){
+    const r = current();
+    if(!FILT[leg]) FILT[leg] = new Set(hoursOf(r, leg));
+    if(FILT[leg].has(h)) FILT[leg].delete(h); else FILT[leg].add(h);
+    renderAll();
+  }
+
+  function applyPreset(k){
+    const r = current();
+    const pick = (leg, f) => new Set(hoursOf(r, leg).filter(f));
+    if(k==='all'){ FILT.out = null; FILT.back = null; }
+    else if(k==='am'){ FILT.out = pick('out',h=>+h<12);  FILT.back = pick('back',h=>+h<12); }
+    else if(k==='pm'){ FILT.out = pick('out',h=>+h>=12&&+h<18); FILT.back = pick('back',h=>+h>=12&&+h<18); }
+    else if(k==='night'){ FILT.out = pick('out',h=>+h>=18); FILT.back = pick('back',h=>+h>=18); }
+    else if(k==='after13'){ FILT.out = pick('out',h=>+h>=13); FILT.back = pick('back',h=>+h>=13); }
+    renderAll();
+  }
+
+  // 用筛选后的航班重算 weekends / monthly / heat，写回 r，渲染函数不用改
+  function applyFilter(){
+    const r = current();
+    if(!ORIG.has(r.key)) ORIG.set(r.key, {weekends:r.weekends, monthly:r.monthly, heat:r.heat});
+    const base = ORIG.get(r.key);
+    const hasFlights = r.flights && Object.keys(r.flights).length;
+    if(!hasFlights || (!FILT.out && !FILT.back)){
+      r.weekends = base.weekends; r.monthly = base.monthly; r.heat = base.heat; return;
+    }
+    const ws = base.weekends.map(w=>{
+      const O = ((r.flights[w.dep_date]||{}).out||[]).filter(f=>inHours(f[0],FILT.out));
+      const B = ((r.flights[w.back_date]||{}).back||[]).filter(f=>inHours(f[0],FILT.back));
+      const o = O[0]||null, b = B[0]||null;
+      if(!o) return null;
+      return Object.assign({}, w, {
+        out: Object.assign({}, w.out, {price:o[4], dep_time:o[0], flight_no:o[2], airline:o[3]}),
+        back: b ? Object.assign({}, w.back, {price:b[4], dep_time:b[0], flight_no:b[2], airline:b[3]}) : null,
+        round: b ? o[4]+b[4] : null,
+      });
+    }).filter(Boolean);
+    r.weekends = ws;
+
+    const bym = {};
+    ws.forEach(w=>{ (bym[w.month] = bym[w.month] || []).push(w); });
+    const avg = a => a.length ? Math.round(a.reduce((s,v)=>s+v,0)/a.length) : null;
+    r.monthly = Object.keys(bym).sort().map(m=>{
+      const arr = bym[m];
+      const outs = arr.filter(x=>x.out).map(x=>x.out.price);
+      const backs = arr.filter(x=>x.back).map(x=>x.back.price);
+      const rounds = arr.filter(x=>x.round).map(x=>x.round);
+      return {month:m, out_avg:avg(outs), back_avg:avg(backs), round_avg:avg(rounds),
+              round_min: rounds.length?Math.min.apply(null,rounds):null, weekends:arr.length};
+    });
+
+    const BK = ['0-3','4-7','8-14','15-21','22-30','31-45','46+'];
+    const band = d => d<=3?'0-3':d<=7?'4-7':d<=14?'8-14':d<=21?'15-21':d<=30?'22-30':d<=45?'31-45':'46+';
+    const rows = ws.filter(w=>!w.past).map(w=>w.dep_date);
+    r.heat = {rows, cols:BK, values: rows.map(dep=>{
+      const w = ws.filter(x=>x.dep_date===dep)[0];
+      return BK.map(b => (w && w.round!=null && band(w.days_until)===b) ? w.round : null);
+    })};
   }
 
   function combosFor(r, F){
     const out = (r.weekends||[]).filter(w=>!w.past && w.out);
     const rows = [];
     for(const w of out){
-      const O = ((r.flights[w.dep_date]||{}).out||[]).filter(f=>COMBO.out.has(f[0].slice(0,2)));
-      const B = ((r.flights[w.back_date]||{}).back||[]).filter(f=>COMBO.back.has(f[0].slice(0,2)));
+      const O = ((r.flights[w.dep_date]||{}).out||[]).filter(f=>inHours(f[0],FILT.out));
+      const B = ((r.flights[w.back_date]||{}).back||[]).filter(f=>inHours(f[0],FILT.back));
       if(!O.length || !B.length) continue;
       const o = O[0], b = B[0];                       // 已按裸票价升序
       // 次优：去程还是最便宜那班，返程换第二便宜；或反过来，取两者更省
@@ -707,13 +798,12 @@
     const F = feeFor(r);
     document.getElementById('comboLo').textContent = r.mw?r.mw.lo:'—';
     document.getElementById('comboHi').textContent = r.mw?r.mw.hi:'—';
-    renderHourChips(r);
     if(!r.flights || !Object.keys(r.flights).length){
       host.innerHTML = '<tr><td class="muted">汇总页没有航班级数据 —— 切到具体路线（浦东—白云 / 浦东—宝安 / 虹桥—宝安 / 虹桥—白云）。</td></tr>';
       tag.textContent = '需选具体路线';
       return;
     }
-    if(!COMBO.out.size || !COMBO.back.size){
+    if((FILT.out && !FILT.out.size) || (FILT.back && !FILT.back.size)){
       host.innerHTML = '<tr><td class="muted">至少各选一个小时</td></tr>'; tag.textContent='筛选为空'; return;
     }
     const rows = combosFor(r, F);
@@ -1226,6 +1316,8 @@
   }
 
   function renderAll(){
+    renderTopFilter();
+    applyFilter();
     renderKpis(); chartMonthly(); chartLead(); chartHit(); chartWeekly();
     renderHeat(); renderVerdict(); renderCompare();
     renderConfidence(); renderModel(); renderBuy(); renderCombo(); renderFlights(); renderTable();
