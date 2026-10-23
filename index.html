@@ -1,1336 +1,247 @@
-﻿<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>沪广深 周五去·周日回 —— 机票价格趋势与最佳购票窗口</title>
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f5f6f3"><meta name="description" content="上海与广州、深圳周末往返机票观察。真实报价、含税比较、可追溯样本。"><title>周末航线 · Weekend Fare</title>
 <style>
-  :root{
-    --bg:#eef2f8; --card:#ffffff; --ink:#0f2340; --ink2:#5b6b83; --line:#e3e9f2;
-    --navy:#12294a; --blue:#2f6fed; --teal:#16a394; --amber:#f59e0b; --warm:#ff7a45;
-    --shadow:0 1px 2px rgba(16,38,73,.05), 0 8px 24px rgba(16,38,73,.06);
-    --r:16px;
+:root{--ink:#18332d;--muted:#6c7972;--line:#dfe5dd;--bg:#f5f6f3;--white:#fff;--green:#237b5b;--soft:#e5efe6;--lime:#d9f097;--orange:#be7236;--amber:#f6eddc;--red:#ae5346;--mono:ui-monospace,SFMono-Regular,Consolas,monospace}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;font-size:14px;line-height:1.65}button,input,select{font:inherit}button,a,input{ -webkit-tap-highlight-color:transparent}button{cursor:pointer;color:inherit}button:disabled{cursor:not-allowed}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #be7236;outline-offset:3px}a{color:var(--green);text-underline-offset:4px}button{border:1px solid var(--line);background:white;border-radius:8px;padding:8px 13px}button:hover:not(:disabled){border-color:var(--green);background:#edf3ed}button.active{background:var(--ink);color:white;border-color:var(--ink)}.wrap{max-width:1320px;margin:auto;padding:0 40px}.top{height:86px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);gap:20px}.brand{display:flex;align-items:center;gap:13px;letter-spacing:.06em;font-weight:650;font-size:17px}.mark{display:grid;place-items:center;background:var(--ink);border-radius:10px;color:var(--lime);width:38px;height:38px;font-size:23px}.brand small{font:10px var(--mono);letter-spacing:.2em;display:block;color:var(--muted);margin-top:1px}.top nav{display:flex;gap:25px;font-size:12px}.top nav a{color:var(--muted);text-decoration:none}.live{font:11px var(--mono);color:var(--muted);display:flex;align-items:center;gap:8px}.dot{width:6px;height:6px;background:var(--green);border-radius:50%;display:inline-block}.intro{display:flex;justify-content:space-between;align-items:flex-end;padding:41px 0 31px;gap:24px}.eyebrow{font:10px var(--mono);letter-spacing:.17em;color:var(--green);text-transform:uppercase;margin:0 0 12px}h1{font-size:clamp(27px,3vw,39px);font-weight:550;letter-spacing:-.055em;line-height:1.25;margin:0 0 13px}h1 span{color:var(--green)}.muted,.note{color:var(--muted)}.intro p{margin:0;font-size:13px}.intro-side{text-align:right;font-size:12px;line-height:1.9;flex-shrink:0}.intro-side strong{font-family:var(--mono);font-size:19px;font-weight:500}.panel{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:25px}.controls{padding:20px 24px}.control-top{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}.segmented{display:inline-flex;padding:4px;background:var(--bg);border:1px solid var(--line);border-radius:10px;gap:3px}.segmented button{border:0;background:transparent;font-size:12px;padding:7px 14px;white-space:nowrap}.segmented button.active{background:var(--ink);color:white;box-shadow:0 1px 3px #0d352320}.subtext{font-size:11px;color:var(--muted)}label.check{display:inline-flex;align-items:center;gap:7px;font-size:12px;cursor:pointer}input[type=checkbox]{accent-color:var(--green);width:15px;height:15px}.hours{border-top:1px solid var(--line);margin-top:17px;padding-top:12px}.hour-row{display:grid;grid-template-columns:85px 1fr;gap:10px;align-items:center;margin:12px 0}.hour-label{font-size:12px}.hour-label small{display:block;color:var(--muted);font:9px var(--mono);margin-top:2px}.hour-group{min-width:0}.presets{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-bottom:7px}.presets button{padding:1px 8px;border:0;border-radius:4px;background:#f1f4ef;font-size:10px;color:var(--muted)}.chips{display:grid;grid-template-columns:repeat(24,minmax(0,1fr));gap:4px}.chips button{padding:5px 0;font:11px var(--mono);border-radius:5px;color:#789084;background:#eff4ed;border:1px solid transparent}.chips button.active{background:#e0eedc;color:#204d3a;border-color:#c2d8bc}.chips button:disabled{background:#f4f4f1;color:#c3c7c2;text-decoration:line-through;border-color:transparent}.filter-foot{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-top:13px}.filter-foot p{margin:0;font-size:10px;color:var(--muted)}.route-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:20px 0 18px}.route-tabs button{font-size:12px;padding:8px 16px;background:transparent}.route-tabs button.active{background:var(--ink)}.route-tabs .route-code{font:10px var(--mono);opacity:.7;margin-left:6px}.alert{padding:12px 16px;background:var(--amber);color:#805928;border:1px solid #e9dabc;border-radius:8px;font-size:12px;margin:15px 0}.alert:empty{display:none}.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:0 0 24px}.kpi{background:white;border:1px solid var(--line);border-radius:10px;padding:19px 17px}.kpi:last-child{background:var(--ink);color:white;border-color:var(--ink)}.kpi label{font-size:11px;display:block;color:var(--muted)}.kpi:last-child label,.kpi:last-child small{color:#b4c9bb}.kpi strong{display:block;font:26px var(--mono);letter-spacing:-.05em;margin:11px 0 9px;white-space:nowrap}.kpi small{font-size:10px;display:block;color:var(--muted);line-height:1.65}.section-top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:18px}h2{font-size:19px;font-weight:550;letter-spacing:-.03em;margin:0 0 4px}h3{font-size:14px;font-weight:600;margin:0 0 10px}.section-top p{margin:0;font-size:11px;color:var(--muted)}.section-no{font:10px var(--mono);color:var(--muted);margin-right:8px;vertical-align:middle}.badge{font-size:10px;padding:4px 9px;background:var(--soft);color:var(--green);border-radius:5px;white-space:nowrap}.badge.warning{background:var(--amber);color:#805928}.chart{width:100%;height:auto;display:block;overflow:visible}.chart text{font-family:var(--mono);fill:var(--muted);font-size:10px}.chart .axis{stroke:var(--line);stroke-dasharray:3 5;stroke-width:1}.chart .line{fill:none;stroke:var(--green);stroke-width:2.3}.legend{display:flex;gap:17px;flex-wrap:wrap;font-size:10px;color:var(--muted);align-items:center;margin:8px 0 0}.legend i{display:inline-block;width:8px;height:8px;border-radius:2px;background:#c9dabd;margin-right:5px}.legend i.back{background:#78a47b}.legend i.sum{height:2px;width:13px;background:var(--green);vertical-align:middle}.week-picks{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:6px;margin-top:20px}.week-picks button{padding:10px 2px;border-radius:8px;font:11px var(--mono);background:#fbfcf9;position:relative}.week-picks button strong{font:15px var(--mono);display:block;margin:5px 0 2px}.week-picks button small{font:9px var(--mono);color:var(--muted)}.week-picks button.active{background:var(--ink);color:white}.week-picks button.active small{color:#cadacb}.best-flag{position:absolute;top:-8px;left:50%;transform:translateX(-50%);font:8px var(--mono);background:var(--lime);color:var(--ink);padding:1px 5px;border-radius:3px}.grid-two{display:grid;grid-template-columns:1.55fr 1fr;gap:22px;margin-top:22px}.ticket-panel{margin-top:24px}.tickets{display:grid;grid-template-columns:1fr 1fr;gap:16px}.ticket{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:18px}.ticket-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:11px}.ticket-route{display:flex;justify-content:space-between;align-items:center;margin:18px 0 10px}.ticket-time strong{font:27px var(--mono);font-weight:400;line-height:1}.ticket-time small{display:block;color:var(--muted);font-size:10px;margin-top:8px}.ticket-time:last-child{text-align:right}.flight-line{height:1px;background:#c6d4c5;flex:1;margin:0 20px;position:relative}.flight-line:before{content:'✈';position:absolute;left:50%;top:-14px;font-size:16px;color:var(--green);background:var(--bg);padding:0 7px;transform:translateX(-50%)}.ticket-bottom{display:flex;justify-content:space-between;gap:10px;border-top:1px dashed #cdd8c9;padding-top:12px;margin-top:17px;font-size:10px;color:var(--muted)}.ticket-bottom b{font:18px var(--mono);color:var(--ink)}.ticket-bottom a{display:inline-block;margin-top:3px}.trip-total{margin-top:16px;padding:15px 0 0;display:flex;justify-content:space-between;align-items:center;gap:15px}.trip-total strong{font:27px var(--mono)}.trip-total small{font-size:11px;color:var(--muted)}.decision{background:#edf2e9;border:1px solid #d9e2d2;border-radius:10px;margin-top:16px;padding:14px 16px;font-size:12px}.decision strong{display:block;margin-bottom:4px}.empty{min-height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;color:var(--muted);font-size:12px}.empty strong{font-size:16px;color:var(--ink);font-weight:500;margin-bottom:8px}.empty .glyph{font:28px var(--mono);color:#becbb9;margin-bottom:8px}.table-wrap{overflow:auto;scrollbar-width:thin}table{width:100%;border-collapse:collapse;text-align:left;font-size:11px;white-space:nowrap}th{font-weight:400;color:var(--muted);font-size:10px;padding:10px 12px;border-bottom:1px solid var(--line)}td{padding:12px;border-bottom:1px solid #edf0eb}tr:last-child td{border:0}tbody tr:hover{background:#f8faf5}td.num{font-family:var(--mono)}td small{display:block;color:var(--muted);font-size:9px}.route-name{font-size:11px}td.selected{color:var(--green);font-weight:600}.heat td{text-align:center;padding:4px}.heat .cell{border-radius:4px;display:block;padding:7px 9px;font:11px var(--mono);color:var(--ink)}.heat .cell small{font-size:8px;margin-top:3px}.heat .nodata{background:#f3f4f1;color:#b3bbb0}.section-space{margin-top:24px}.history-callout{display:flex;gap:28px;align-items:center;background:#f6f7f2;border-radius:10px;padding:18px 21px;margin:18px 0}.history-callout strong{font:28px var(--mono);white-space:nowrap;font-weight:400}.history-callout p{font-size:11px;margin:0;color:var(--muted)}.history-tabs{display:flex;gap:5px}.history-tabs button{font-size:10px;padding:4px 9px}.hits{display:grid;grid-template-columns:repeat(7,1fr);gap:9px;margin-top:14px}.hit{font-size:10px;color:var(--muted)}.hit b{font:17px var(--mono);display:block;color:var(--ink);margin:5px 0}.track{height:4px;background:#eef2e9;border-radius:5px;overflow:hidden}.track span{display:block;height:100%;background:var(--green)}.hit small{display:block;font:9px var(--mono);margin-top:5px}.model{padding:20px;background:var(--bg);border-radius:10px;margin:18px 0}.model code{font:11px var(--mono);display:block;overflow-wrap:anywhere;white-space:normal;margin-bottom:10px}.model p{font-size:11px;color:var(--muted);margin:5px 0}.model input[type=range]{accent-color:var(--green);width:100%}.model output{font-size:12px;display:block;margin-top:8px}details{border-top:1px solid var(--line);margin-top:14px}summary{cursor:pointer;padding:15px 0;font-size:12px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:15px}summary:after{content:'+';font-family:var(--mono);font-size:18px;color:var(--muted)}details[open]>summary:after{content:'−'}.fineprint{font-size:10px;color:var(--muted);margin:12px 0 0;line-height:1.9}.method-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;font-size:12px;color:var(--muted)}.method-grid strong{color:var(--ink);font-size:12px;display:block;margin-bottom:5px}.method-grid p{margin:0}.source-list{font-size:11px;line-height:2.1}.footer{display:flex;justify-content:space-between;gap:20px;padding:28px 0 38px;margin-top:32px;border-top:1px solid var(--line);font-size:10px;color:var(--muted)}.mono{font-family:var(--mono)}select{padding:6px 10px;background:white;border:1px solid var(--line);color:var(--ink);border-radius:7px;font-size:12px}#fatal{display:none}.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:white;padding:12px 20px;border-radius:8px;font-size:12px;z-index:10;box-shadow:0 4px 20px #0002}.small-stats{display:flex;gap:25px;flex-wrap:wrap;padding:15px 0;font-size:10px;color:var(--muted)}.small-stats strong{color:var(--ink);font:18px var(--mono);display:block}.one-line{white-space:nowrap}.route-bars{padding-top:6px}.route-bar-row{margin-bottom:18px}.route-bar-row .row{display:flex;justify-content:space-between;font-size:12px}.route-bar-row .row b{font:15px var(--mono)}.route-bar-row .bar{height:7px;background:#f0f3eb;border-radius:4px;margin:8px 0 5px}.route-bar-row .bar span{display:block;height:100%;background:#9bb691;border-radius:4px}.route-bar-row small{font-size:9px;color:var(--muted)}
+@media(min-width:1600px){.wrap{max-width:1400px}}@media(max-width:1024px){.wrap{padding:0 24px}.kpis{gap:8px}.kpi{padding:15px 11px}.kpi strong{font-size:23px}.chips{gap:3px}.chips button{font-size:10px}.grid-two{grid-template-columns:1fr}.week-picks{grid-template-columns:repeat(5,1fr);gap:12px 7px}.top nav{display:none}.intro-side{max-width:240px}.tickets{gap:12px}.hit b{font-size:15px}}@media(max-width:640px){body{font-size:13px}.wrap{padding:0 16px}.top{height:70px}.brand{font-size:14px}.brand small{font-size:8px}.mark{width:32px;height:32px;font-size:20px}.live{font-size:9px;max-width:115px;line-height:1.5}.intro{padding:29px 0 24px;display:block}.intro-side{display:none}.intro p{font-size:11px}h1{font-size:29px;letter-spacing:-.06em}.controls{padding:15px}.segmented{width:100%}.segmented button{flex:1;padding:7px 8px;font-size:11px}.control-top{gap:10px}.hour-row{grid-template-columns:1fr;gap:8px}.hour-label small{display:inline;margin-left:7px}.chips{grid-template-columns:repeat(12,1fr);gap:4px}.chips button{font-size:10px;padding:6px 0}.filter-foot{align-items:flex-start;flex-direction:column;gap:7px}.route-tabs{gap:6px;margin:14px 0}.route-tabs button{font-size:11px;padding:6px 10px}.route-tabs .route-code{font-size:9px}.kpis{grid-template-columns:repeat(2,1fr);gap:9px}.kpi:last-child{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;align-items:center}.kpi:last-child strong{grid-column:2;grid-row:1/3;text-align:right;margin:0;font-size:30px}.kpi:last-child small{grid-column:1}.kpi strong{font-size:25px}.panel{padding:18px}.section-top{gap:10px}h2{font-size:17px}.section-top p{font-size:10px}.badge{font-size:9px;padding:3px 6px}.week-picks{grid-template-columns:repeat(5,1fr)}.week-picks button{font-size:9px}.week-picks button strong{font-size:12px}.week-picks button small{font-size:8px}.tickets{grid-template-columns:1fr}.trip-total{align-items:flex-end}.trip-total strong{font-size:24px}.history-callout{display:block}.history-callout strong{display:block;font-size:24px;margin-bottom:8px}.history-tabs button{font-size:9px;padding:4px 6px}.hits{gap:5px}.hit{font-size:8px}.hit b{font-size:12px}.hit small{font-size:8px}.method-grid{grid-template-columns:1fr}.footer{flex-direction:column;gap:8px}.chart text{font-size:11px}.model{padding:15px}.small-stats{gap:16px}.small-stats strong{font-size:16px}}
+.watch-form{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}.watch-form label{display:flex;flex-direction:column;gap:6px;font-size:11px;color:var(--muted)}.watch-form input{padding:9px 12px;border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--ink);min-width:180px}.watch-form button{background:var(--ink);color:white;padding:10px 18px}.watch-form button:hover{color:var(--ink)}@media(max-width:640px){.watch-form{display:grid;grid-template-columns:1fr 1fr;gap:10px}.watch-form input{width:100%;min-width:0}.watch-form button{grid-column:1/-1}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style></head><body><div class="wrap">
+<header class="top"><div class="brand"><span class="mark" aria-hidden="true">↗</span><div>周末航线<small>WEEKEND FARE OBSERVATORY</small></div></div><nav aria-label="页面导航"><a href="#weekends">十周比价</a><a href="#itinerary">航班组合</a><a href="#history">购票时机</a><a href="#method">数据口径</a></nav><div class="live"><i class="dot"></i><span id="updated">正在读取本地数据</span></div></header>
+<main><section class="intro"><div><div class="eyebrow">SHANGHAI ⇄ GUANGZHOU / SHENZHEN</div><h1>下一站，<span>选一个好价周末。</span></h1><p>周五出发，周日返回。用真实报价，比较下一段两天的旅程。</p></div><div class="intro-side"><strong id="range">未来 10 个周末</strong><br><span class="muted">1 位成人 · 经济舱 · 直飞 · 人民币</span></div></section>
+<div id="fatal" class="alert" role="alert">未加载 data.js。请把它与 index.html 放在同一文件夹后重新打开。</div>
+<section class="panel controls" aria-label="全局行程筛选"><div class="control-top"><div class="segmented" id="directions" aria-label="出发方向"><button data-dir="fwd" class="active" aria-pressed="true">周五 上海 → 广深</button><button data-dir="rev" aria-pressed="false">周五 广深 → 上海</button></div><label class="check"><input id="mix" type="checkbox" checked>允许机场混搭 <span class="subtext">广深跨城 +¥100</span></label></div><div class="hours"><div id="hours-out"></div><div id="hours-back"></div></div><div class="filter-foot"><p>按起飞整点筛选。灰色小时＝本批次未观察到可选直飞报价，不等于机场无航班。</p><button id="reset" style="padding:3px 9px;font-size:10px">重置为全部时段</button></div></section>
+<div class="route-tabs" id="routes" aria-label="路线"></div><div id="warnings" role="status" class="alert"></div><section class="kpis" id="kpis" aria-label="价格概览"></section>
+<section class="panel" id="weekends"><div class="section-top"><div><h2><span class="section-no">01</span>未来十周，哪周更划算</h2><p id="weekly-caption">当前筛选下，两张独立单程票的最低组合。点击日期查看航班。</p></div><span class="badge" id="weekly-n"></span></div><div id="weekly-chart"></div><div class="legend"><span><i></i>去程含税</span><span><i class="back"></i>返程含税</span><span><i class="sum"></i>组合比较价（含广深跨城费）</span></div><div id="week-picks" class="week-picks"></div><p class="fineprint" id="weekly-foot"></p></section>
+<section class="panel ticket-panel" id="itinerary"><div class="section-top"><div><h2><span class="section-no">02</span>这一周，怎么飞</h2><p id="ticket-caption"></p></div><select id="week-select" aria-label="选择周末"></select></div><div id="tickets"></div><div id="decision" class="decision"></div><details><summary>查看这一周的候选组合与次优航班</summary><div id="combination-table" class="table-wrap"></div></details></section>
+<section class="panel section-space" id="monitor"><div class="section-top"><div><h2>选好日期，让好价来找你</h2><p id="watch-status">本机监测 · Windows 桌面通知</p></div><span class="badge">你的监测清单仅存本机</span></div><div class="watch-form"><label>周五出发日期<input id="watch-date" type="date" aria-label="监测的周五出发日期"></label><label>目标比较价（可留空）<input id="watch-target" type="number" min="1" max="50000" step="1" placeholder="例如 1200" aria-label="目标比较价人民币"></label><button id="watch-enable">启用监测</button></div><p id="watch-summary" class="fineprint"></p><p class="fineprint">周日自动返程；按当前路线、方向和小时筛选保存。目标价＝含税往返＋广深跨城预算。未填目标时，至少观察3天后出现显著新低，或历史同类价位处于P20以下才提醒。不承诺未来最低价；过期报价不触发。</p><p id="watch-message" role="status" style="font-size:12px"></p><div style="display:flex;gap:8px"><button id="watch-refresh" hidden style="font-size:11px">检查最新已采报价</button><button id="watch-test" hidden style="font-size:11px">测试桌面通知</button></div><div id="watch-list" class="table-wrap"></div><details><summary>提醒记录与触发依据</summary><div id="watch-alerts" class="table-wrap"></div></details></section>
+<div class="grid-two"><section class="panel"><div class="section-top"><div><h2>按月看价格</h2><p>按周五归属月份；每周最低组合跨周平均，含税。</p></div><span class="badge" id="monthly-n"></span></div><div id="monthly-chart"></div><p class="fineprint" id="monthly-foot"></p></section><section class="panel"><div class="section-top"><div><h2>四条固定线对比</h2><p>相同时段、相同方向；不使用混搭组合。</p></div></div><div id="route-compare" class="route-bars"></div></section></div>
+<section class="panel section-space" id="history"><div class="section-top"><div><h2><span class="section-no">03</span>什么时候买，有证据才建议</h2><p>历史研究固定为全天、原四条往返线；不随时段或混搭开关变化。</p></div><div class="history-tabs" id="history-tabs"><button data-source="fliggy" class="active" aria-pressed="true">飞猪纵向</button><button data-source="google" aria-pressed="false">Google 历史</button></div></div><div id="history-stats" class="small-stats"></div><div id="window" class="history-callout"></div><div id="history-chart"></div><div class="legend"><span><i></i>真实报价点</span><span><i class="sum"></i>按出发日取桶内最低后求均值</span><span>□ 严格覆盖子集</span><span>虚线仅为模型参考</span></div><p class="fineprint" id="history-note"></p><div id="hits" class="hits"></div><details><summary>预测模型、严格覆盖对照与全样本表</summary><div id="model" class="model"></div><div id="strict-table" class="table-wrap"></div><p class="fineprint">严格覆盖只表示同一行程有 T≤8 和 T≥50 的观察，不保证中间完整。桶内最低是事后观察下界，不是可执行策略的收益。全样本 n 大，但跨日期子集比均值不严谨。</p></details></section>
+<section class="panel section-space"><div class="section-top"><div><h2>价格观察矩阵</h2><p>行＝周五出发日，列＝购买时距离出发的天数；随当前时段重算。空白不插值。</p></div><span class="badge" id="heat-n"></span></div><div id="heat" class="table-wrap"></div><p class="fineprint">飞猪：每日选择覆盖最多的一批（并列取最接近09:30者），两程采集相差不超过40分钟。格内为观察到的最低含税往返价，不含跨城费；n 是独立报价日数。</p></section>
+<section class="panel section-space" id="details"><div class="section-top"><div><h2><span class="section-no">04</span>报价明细，可逐条核查</h2><p>列表报价不锁价。共享航班按营销航班号列出；n 为报价条目，不等于独立执飞航班数。</p></div><button id="export" style="font-size:11px">导出当前筛选 CSV ↗</button></div><details open><summary>十周周末明细</summary><div id="weekend-table" class="table-wrap"></div></details><details id="flight-detail"><summary>展开全部航班报价</summary><div id="all-flights"></div></details></section>
+<section class="panel section-space" id="method"><div class="section-top"><div><h2>每一个数字，都有来处</h2><p>方法、缺失与采集状态，和价格一起公开。</p></div><span class="badge">无模拟报价</span></div><div class="method-grid"><div><strong>01 · 我们实际比较什么</strong><p>飞猪公开列表中的直飞裸票价，加报价日适用的成人机建、燃油。两程单独购票，不代表航空公司的往返联票优惠。行李额未查明时显示“待核验”，不假设免费托运。</p></div><div><strong>02 · 混搭与地面费用</strong><p>可在浦东/虹桥、广州/深圳之间混搭。两程涉及不同广深机场时，全程另计一次 ¥100（你的预算）。其他接驳费未计入；不称为全程出行总成本。</p></div><div><strong>03 · 不混合两种历史</strong><p>Google 单独展示已核实周五去、周日回的往返含税历史。days_before 是距抓取日的天数，先还原购买日再计算 lead。平台和票价产品不同，不用 Google 分位数判断飞猪便宜与否。</p></div><div><strong>04 · 为什么不直接告诉你 T-14 买</strong><p>没有原始证据的 T-12～T-16、n=8、节省11.9% / 4.2%、MAPE 22.6% / MAE ¥483 均不作为本网站结论。择时窗口由新数据计算；独立周数、覆盖和真实模型误差始终可见。</p></div><div><strong>05 · 窗口、命中与置信度</strong><p>描述性窗口比较同一严格子集的3–10天连续区间，至少80%日覆盖；选均价距最佳≤2%的最窄区间。2%只表示价格接近，不表示统计等效。命中率仅对≥3桶有观察的行程计算；并列都记命中，各桶分母显示。</p></div><div><strong>06 · 缺失与新鲜度</strong><p>未抓到价格、页面阻断和无匹配报价分开记录，不补零，不推断无航班。近期四周报价超过2小时标记更新延迟，其他周超过26小时标过期。离线页面读取保存的数据，不自动联网刷新。</p></div></div><details><summary>税费来源、采集状态与完整统计规则</summary><div class="source-list"><p>当前成人单程：裸票 + 机建 ¥50 + 燃油 ¥90。燃油按出票日期规则，历史未知费率留空。<a href="https://global.ceair.com/global/static/Announcement/AnnouncementMessage/notices/202610/t20261009_30517.html" target="_blank" rel="noopener">东航 2026-10-09 官方公告 ↗</a></p><p>原始 JSONL 与列表证据只留本机；公开仓库只含 index.html、data.js、.nojekyll 和 robots.txt。数据日期使用 Asia/Shanghai（UTC+08:00）。</p><p>统计置信度：至少8个独立出发周，且≥200日级点、跨度≥30天标高；≥60点、≥14天标中；≥30点标偏低，否则低。这是样本充分性标记，不是预测成功概率。模型至少8个出发周与14个购买日才训练；T=0不取对数。</p><p>每日纵向样本选覆盖最多的一批，并列取距09:30最近者；同批次配对，两个单程采集相差≤40分钟。固定日级抽样减少每小时采样次数不同造成的最低值偏差。主图的十周走势是“现在看未来出发日期的报价”，不是未来购票价格预测。</p></div><div id="collection-status" class="table-wrap"></div></details></section>
+</main><footer class="footer"><span>周末航线 · WEEKEND FARE<br>上海 ⇄ 广州 / 深圳</span><span>真实报价 · 明确口径 · 保留不确定性<br><span id="footer-data"></span></span></footer></div>
+<script src="data.js"></script><script>(function(root,factory){if(typeof module==='object'&&module.exports)module.exports=factory();else root.FlightEngine=factory()})(typeof globalThis!=='undefined'?globalThis:this,function(){
+'use strict';
+const buckets=[[0,3],[4,7],[8,14],[15,21],[22,30],[31,45],[46,Infinity]];
+const labels=['0–3','4–7','8–14','15–21','22–30','31–45','46+'];
+const mean=a=>a.length?a.reduce((s,x)=>s+x,0)/a.length:null;
+const day=s=>Date.parse(s.slice(0,10)+'T00:00:00+08:00')/86400000;
+const lead=(a,b)=>Math.round(day(a)-day(b));
+const bucket=n=>buckets.findIndex(([a,b])=>n>=a&&n<=b);
+const quantile=(a,p)=>{if(!a.length)return null;const s=[...a].sort((a,b)=>a-b),i=(s.length-1)*p,l=Math.floor(i);return s[l]+(s[Math.ceil(i)]-s[l])*(i-l)};
+const group=(a,key)=>{const m=new Map();for(const r of a){const k=key(r);if(!m.has(k))m.set(k,[]);m.get(k).push(r)}return m};
+function fee(at,fees){const rule=[...fees.fuelSchedule].reverse().find(r=>at.slice(0,10)>=r.effectiveFrom);return rule?fees.adultAirportConstruction+rule.over800km:null}
+function taxed(f,fees){const t=fee(f.snapshot_at,fees);return t===null?null:f.price+t}
+const byPrice=(a,b)=>a.price-b.price||a.dep_time.localeCompare(b.dep_time)||a.flight_no.localeCompare(b.flight_no);
+const south=f=>['CAN','SZX'].includes(f.dep_code)?f.dep_code:f.arr_code;
+const physical=f=>[f.dep_code,f.arr_code,f.dep_time,f.arr_time].join('|');
+function combinations(flights,options,meta){
+ const {direction,route='all',hoursOut=null,hoursBack=null,mix=true}=options;
+ const relevant=flights.filter(f=>f.direction===direction&&(route==='all'||f.route_id===route));
+ const filtered=relevant.filter(f=>{const h=f.trip==='out'?hoursOut:hoursBack;return !h||h.includes(Number(f.dep_time.slice(0,2)))});
+ const result=[];
+ for(const [date,rows]of group(filtered,f=>f.weekend)){
+  const outs=group(rows.filter(f=>f.trip==='out'),f=>f.route_id),backs=group(rows.filter(f=>f.trip==='back'),f=>f.route_id);
+  const candidates=[];
+  for(const [or,oa]of outs)for(const [br,ba]of backs){
+   if((!mix||route!=='all')&&or!==br)continue;
+   oa.sort(byPrice);ba.sort(byPrice);
+   const o=oa[0],b=ba[0];
+   if(Math.abs(Date.parse(o.snapshot_at)-Date.parse(b.snapshot_at))>meta.maxPairSkewMinutes*60000)continue;
+   const ot=taxed(o,meta.fees),bt=taxed(b,meta.fees);if(ot===null||bt===null)continue;
+   const ground=south(o)!==south(b)?meta.fees.crossCityGround:0;
+   const make=(x,y)=>({date,out:x,back:y,bare:x.price+y.price,tax:taxed(x,meta.fees)+taxed(y,meta.fees),ground,score:taxed(x,meta.fees)+taxed(y,meta.fees)+ground,n:oa.length+ba.length,mixed:or!==br});
+   const c=make(o,b),o2=oa.find(x=>physical(x)!==physical(o)),b2=ba.find(x=>physical(x)!==physical(b));
+   const alternatives=[o2?make(o2,b):null,b2?make(o,b2):null].filter(Boolean).sort((a,b)=>a.score-b.score);
+   c.alternative=alternatives[0]||null;candidates.push(c);
   }
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0}
-  body{
-    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,-apple-system,sans-serif;
-    background:var(--bg); color:var(--ink); -webkit-font-smoothing:antialiased;
-    padding:0 0 56px;
+  candidates.sort((a,b)=>a.score-b.score||a.out.dep_time.localeCompare(b.out.dep_time));
+  result.push({date,candidates,best:candidates[0]||null,n:rows.length});
+ }
+ return result.sort((a,b)=>a.date.localeCompare(b.date));
+}
+function dailyPairs(observations,options,meta){
+ const out=[];
+ // 同一批次配对再按本地报价日取最低，不能拼接两个不同时间的单程最低。
+ for(const [key,rows]of group(observations,f=>f.batch_id)){
+  for(const w of combinations(rows,options,meta))for(const c of w.candidates){
+   const buy=c.out.snapshot_at.slice(0,10);out.push({id:c.out.route_id+'~'+c.back.route_id+'|'+options.direction+'|'+w.date,group:c.out.route_id+'|'+options.direction,route_id:c.out.route_id,back_route:c.back.route_id,direction:options.direction,date:w.date,purchase_date:buy,lead:lead(w.date,buy),price:c.tax,score:c.score,source:'fliggy-pc',out:c.out,back:c.back});
   }
-  .wrap{max-width:1280px;margin:0 auto;padding:0 20px}
-
-  /* ── header ── */
-  header.top{
-    background:linear-gradient(120deg,#0d1f38 0%,#173765 52%,#1f4f86 100%);
-    color:#fff;padding:34px 0 78px;position:relative;overflow:hidden;
+ }
+ return [...group(out,p=>p.id+'|'+p.purchase_date).values()].map(a=>a.sort((a,b)=>a.price-b.price)[0]).filter(p=>p.lead>=0);
+}
+function stats(points,minN=8){
+ const trips=group(points,p=>p.id),strict=[...trips.entries()].filter(([,a])=>a.some(p=>p.lead<=8)&&a.some(p=>p.lead>=50));
+ function table(entries){return buckets.map(([lo,hi],i)=>{const per=entries.map(([,a])=>{const p=a.filter(p=>p.lead>=lo&&p.lead<=hi);return p.length?Math.min(...p.map(p=>p.price)):null}).filter(v=>v!==null);return {label:labels[i],lo,hi:hi===Infinity?null:hi,mean:mean(per),n:per.length}})}
+ const full=table([...trips.entries()]),strictTable=table(strict),complete=[...trips.values()].filter(a=>new Set(a.map(p=>bucket(p.lead))).size>=3);
+ const wins=Array(7).fill(0),eligible=Array(7).fill(0);
+ for(const a of complete){const mins=buckets.map(([lo,hi])=>{const p=a.filter(p=>p.lead>=lo&&p.lead<=hi);return p.length?Math.min(...p.map(p=>p.price)):Infinity});const best=Math.min(...mins);mins.forEach((m,i)=>{if(Number.isFinite(m)){eligible[i]++;if(m===best)wins[i]++}})}
+ const hit=wins.map((w,i)=>({label:labels[i],wins:w,n:eligible[i],percent:eligible[i]?100*w/eligible[i]:null}));
+ const dates=[...new Set(points.map(p=>p.purchase_date))].sort(),span=dates.length?lead(dates.at(-1),dates[0]):0;
+ const independent=new Set(points.map(p=>p.date)).size;
+ // 描述性平台窗口：对相同完整行程集，比较所有3–10天连续区间的每日均值；最低观察覆盖80%。
+ let window=null;
+ const strictWeeks=new Set(strict.map(([,p])=>p[0].date)).size;
+ if(strictWeeks>=minN){
+  const candidates=[];
+  for(let width=3;width<=10;width++)for(let lo=2;lo+width-1<=45;lo++){
+   const hi=lo+width-1,values=[];let valid=true;
+   for(const [,a]of strict){const p=a.filter(p=>p.lead>=lo&&p.lead<=hi);if(new Set(p.map(x=>x.lead)).size<Math.ceil(width*.8)){valid=false;break}values.push(mean(p.map(p=>p.price)))}
+   if(valid)candidates.push({lo,hi,width,mean:mean(values),n:values.length,weekends:strictWeeks});
   }
-  header.top:after{
-    content:"";position:absolute;right:-90px;top:-120px;width:420px;height:420px;border-radius:50%;
-    background:radial-gradient(circle,rgba(47,111,237,.42),transparent 62%);
+  const best=Math.min(...candidates.map(c=>c.mean));
+  window=candidates.filter(c=>c.mean<=best*1.02).sort((a,b)=>a.width-b.width||a.mean-b.mean)[0]||null;
+  if(window){
+   const paired=[];
+   for(const [,a]of strict){const at2=a.find(p=>p.lead===2),at30=a.find(p=>p.lead===30),inW=a.filter(p=>p.lead>=window.lo&&p.lead<=window.hi);if(at2&&at30&&inW.length)paired.push({window:mean(inW.map(p=>p.price)),late:at2.price,early:at30.price})}
+   window.pairedN=paired.length;window.vsLate=mean(paired.map(p=>1-p.window/p.late));window.vs30=mean(paired.map(p=>1-p.window/p.early));
   }
-  .top h1{margin:0 0 10px;font-size:26px;letter-spacing:.3px;font-weight:700}
-  .top p.sub{margin:0;color:#a9c2e4;font-size:14px;line-height:1.7}
-  .badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
-  .badge{
-    display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:5px 11px;border-radius:999px;
-    background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);color:#dce8f8;
-  }
-  .badge.demo{background:rgba(255,122,69,.18);border-color:rgba(255,122,69,.45);color:#ffcdb4}
-  .dot{width:6px;height:6px;border-radius:50%;background:#4ade80;box-shadow:0 0 0 3px rgba(74,222,128,.18)}
-  .badge.demo .dot{background:var(--warm);box-shadow:0 0 0 3px rgba(255,122,69,.2)}
-
-  /* ── direction switch ── */
-  .dirsw{
-    display:flex;gap:6px;width:fit-content;background:var(--card);border-radius:999px;padding:6px;
-    box-shadow:var(--shadow);margin-top:-48px;position:relative;z-index:3;
-  }
-  .dirsw button{
-    border:0;background:transparent;cursor:pointer;font:inherit;font-size:13px;color:var(--ink2);
-    padding:8px 18px;border-radius:999px;transition:.18s;white-space:nowrap;
-  }
-  .dirsw button:hover{background:#f2f6fc}
-  .dirsw button.on{background:linear-gradient(135deg,#12294a,#26456f);color:#fff;font-weight:600}
-
-  /* ── tabs ── */
-  .tabs{
-    display:flex;gap:8px;flex-wrap:wrap;background:var(--card);border-radius:14px;padding:8px;
-    box-shadow:var(--shadow);margin-top:10px;position:relative;z-index:2;
-  }
-  .tab{
-    flex:1 1 0;min-width:190px;border:0;background:transparent;cursor:pointer;text-align:left;
-    padding:11px 14px;border-radius:10px;font-family:inherit;color:var(--ink2);transition:.18s;
-  }
-  .tab:hover{background:#f2f6fc}
-  .tab .code{font-size:11px;letter-spacing:.6px;color:#8fa1ba}
-  .tab .name{font-size:14px;font-weight:650;color:var(--ink);margin-top:3px}
-  .tab.on{background:linear-gradient(135deg,#12294a,#26456f);color:#fff}
-  .tab.on .name{color:#fff}
-  .tab.on .code{color:#9dbbea}
-
-  /* ── cards ── */
-  .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;margin-top:16px}
-  .card{
-    background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:18px 20px 14px;
-    border:1px solid rgba(227,233,242,.9);
-  }
-  .card h2{margin:0;font-size:15px;font-weight:700;letter-spacing:.2px;display:flex;align-items:center;gap:8px}
-  .card h2 .tag{font-size:11px;font-weight:500;color:var(--ink2);background:#f1f5fb;border-radius:6px;padding:2px 7px}
-  .card .hint{margin:4px 0 12px;font-size:12px;color:#7d8ca3;line-height:1.6}
-  .span12{grid-column:span 12}.span8{grid-column:span 8}.span6{grid-column:span 6}.span4{grid-column:span 4}
-
-  /* ── kpi ── */
-  .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:16px}
-  .kpi{background:var(--card);border-radius:14px;padding:15px 16px;box-shadow:var(--shadow);border:1px solid rgba(227,233,242,.9)}
-  .kpi .k{font-size:11.5px;color:#7d8ca3;letter-spacing:.2px}
-  .kpi .v{font-size:22px;font-weight:750;margin-top:7px;letter-spacing:-.3px;font-variant-numeric:tabular-nums}
-  .kpi .s{font-size:11.5px;color:var(--ink2);margin-top:5px}
-  .kpi.hl .v{color:var(--warm)}
-  .kpi.teal .v{color:var(--teal)}
-
-  /* ── charts ── */
-  .chart{width:100%;position:relative}
-  svg{display:block;width:100%;overflow:visible}
-  .axis text{fill:#8fa1ba;font-size:11px}
-  .axis line{stroke:#e8eef7}
-  .gridline{stroke:#eef3fa;stroke-width:1}
-  .lg{display:flex;gap:16px;flex-wrap:wrap;margin:2px 0 6px;font-size:12px;color:var(--ink2)}
-  .lg i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px;vertical-align:1px}
-  .tip{
-    position:fixed;pointer-events:none;background:#0f2340;color:#fff;font-size:12px;line-height:1.55;
-    padding:8px 11px;border-radius:9px;opacity:0;transition:opacity .12s;z-index:99;box-shadow:0 8px 20px rgba(9,22,42,.28);
-    max-width:250px;
-  }
-  .tip b{font-weight:650}
-
-  /* ── heatmap ── */
-  .heat{display:grid;gap:4px;font-size:11px}
-  .hcell{height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-variant-numeric:tabular-nums;font-weight:600}
-  .hcell.empty{background:#f1f5fb;color:#c2cfe0}
-  .hlabel{display:flex;align-items:center;color:#7d8ca3;font-size:11px;white-space:nowrap}
-  .hcol{text-align:center;color:#7d8ca3;font-size:11px;padding-bottom:2px}
-
-  /* ── table ── */
-  table{width:100%;border-collapse:collapse;font-size:13px}
-  th,td{padding:9px 8px;text-align:right;border-bottom:1px solid #eef3fa;font-variant-numeric:tabular-nums}
-  th{font-size:11.5px;color:#7d8ca3;font-weight:600;text-align:right;white-space:nowrap}
-  th:first-child,td:first-child{text-align:left}
-  tbody tr:hover{background:#f8fbff}
-  .pill{display:inline-block;padding:1px 7px;border-radius:6px;font-size:11px;background:#eef4ff;color:#2f6fed}
-  .pill.warn{background:#fff2e8;color:#d9660f}
-  .pill.ok{background:#e7f8f4;color:#0f8a7c}
-  .muted{color:#9aabc2}
-
-  /* ── verdict ── */
-  .verdict{background:linear-gradient(135deg,#fff8f2,#fff);border:1px solid #ffe2d2}
-  .verdict .big{font-size:30px;font-weight:800;color:var(--warm);letter-spacing:-.6px;line-height:1.2}
-  .verdict .big small{font-size:15px;font-weight:600;color:#b4571f;margin-left:4px}
-  .verdict ul{margin:12px 0 0;padding-left:18px;color:var(--ink2);font-size:12.5px;line-height:1.85}
-  .verdict li b{color:var(--ink)}
-  .mini{display:grid;grid-template-columns:1fr auto;gap:6px 10px;font-size:12.5px;margin-top:14px;padding-top:12px;border-top:1px dashed #e8dcd2}
-  .mini .m{color:var(--ink2)}
-
-  /* ── confidence ── */
-  .conf-grid{display:grid;grid-template-columns:132px 1fr 250px;gap:20px;align-items:start}
-  .lvl{font-size:38px;font-weight:800;line-height:1;letter-spacing:-1px}
-  .lvl.low{color:#ff7a45}.lvl.mid{color:#2f6fed}.lvl.high{color:#16a394}
-  .cap{font-size:11.5px;color:#9aabc2;margin-top:6px;line-height:1.6}
-  .rt{width:100%;border-collapse:collapse;font-size:12px}
-  .rt td{padding:4px 6px;border-bottom:1px dashed #eef3fa;color:var(--ink2)}
-  .rt td:first-child{font-weight:600;color:var(--ink)}
-  .rt tr.on td{background:#fff7ef;color:#b4571f}
-  .prog{font-size:11.5px;color:var(--ink2);margin-bottom:2px}
-  .bar{height:7px;border-radius:4px;background:#eef3fa;margin:4px 0 12px;overflow:hidden}
-  .bar i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#2f6fed,#16a394)}
-
-  /* ── week accordion ── */
-  details.wk{border:1px solid var(--line);border-radius:12px;margin-bottom:9px;background:#fff;overflow:hidden}
-  details.wk summary{cursor:pointer;padding:11px 14px;display:flex;gap:14px;align-items:center;list-style:none;background:#f8fbff}
-  details.wk summary::-webkit-details-marker{display:none}
-  details.wk[open] summary{background:#eef4ff}
-  .wk-date{font-weight:700;font-size:13.5px;white-space:nowrap}
-  .wk-meta{font-size:12px;color:var(--ink2);margin-left:auto;text-align:right}
-  .wk-meta b{color:var(--warm)}
-  .wk-body{padding:4px 14px 12px}
-  .leg{margin-top:10px}
-  .leg h5{margin:0 0 6px;font-size:12.5px;display:flex;gap:8px;align-items:center;color:var(--ink)}
-  .leg h5 span{font-weight:400;color:#9aabc2;font-size:11.5px}
-  .ft{width:100%;border-collapse:collapse;font-size:12px}
-  .ft th{padding:5px 7px;font-size:11px;color:#8fa1ba;font-weight:600;text-align:right;border-bottom:1px solid #eef3fa;white-space:nowrap}
-  .ft th:first-child,.ft td:first-child,.ft th:nth-child(2),.ft td:nth-child(2){text-align:left}
-  .ft td{padding:5px 7px;border-bottom:1px solid #f5f8fd;text-align:right;color:var(--ink2);font-variant-numeric:tabular-nums}
-  .ft tr.cheap td{background:#fff7ef;color:#7a3b12}
-  .ft tr.cheap td:nth-child(6){font-weight:800;color:var(--warm)}
-  .ft .no{font-variant-numeric:normal}
-
-  /* ── model card ── */
-  .mgrid{display:grid;grid-template-columns:1.05fr 1.35fr .95fr;gap:20px;align-items:start}
-  .mgrid h6{margin:0 0 8px;font-size:11.5px;color:#8fa1ba;font-weight:600;letter-spacing:.3px}
-  .formula{font-family:ui-monospace,Consolas,monospace;font-size:11.5px;line-height:1.9;background:#f7faff;
-    border:1px solid #e8eef7;border-radius:10px;padding:10px 12px;color:#26456f;white-space:pre-wrap}
-  .mstat{display:flex;gap:16px;margin-top:10px;flex-wrap:wrap}
-  .mstat div{font-size:11.5px;color:#7d8ca3}
-  .mstat b{display:block;font-size:18px;color:var(--ink);font-variant-numeric:tabular-nums;margin-top:2px}
-  .prow{display:grid;grid-template-columns:44px 1fr 62px 34px;gap:8px;align-items:center;font-size:11.5px;margin-bottom:4px}
-  .prow .lb{color:#5b6b83;font-variant-numeric:tabular-nums}
-  .prow .bar{height:9px;border-radius:3px;background:#eef3fa;overflow:hidden;margin:0}
-  .prow .bar i{display:block;height:100%;background:#9fbfe8;border-radius:3px}
-  .prow.best .bar i{background:var(--warm)}
-  .prow.best .lb{color:var(--warm);font-weight:700}
-  .prow .pv{text-align:right;color:var(--ink);font-variant-numeric:tabular-nums}
-  .prow .pn{text-align:right;color:#b9c6d8;font-size:10px}
-  .calc{margin-top:4px}
-  .calc input[type=range]{width:100%;accent-color:#2f6fed}
-  .calc .out{font-size:26px;font-weight:800;color:var(--ink);letter-spacing:-.5px;margin-top:6px}
-  .calc .adv{font-size:12px;line-height:1.7;color:var(--ink2);margin-top:6px}
-  .rbtn{display:inline-block;font-size:11px;padding:2px 8px;border-radius:6px;background:#eef4ff;color:#2f6fed;margin-right:4px}
-
-  /* ── top filter ── */
-  .topfilter{margin-top:12px;padding:14px 18px 10px}
-  .tf-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px}
-  .tf-head h2{margin:0;font-size:15px;font-weight:700}
-  .tf-presets{display:flex;gap:6px;flex-wrap:wrap}
-  .tf-now{margin-left:auto;font-size:12px;color:var(--ink2)}
-  .tf-now b{color:var(--warm)}
-  .tf-note{font-size:11px;color:#9aabc2;line-height:1.7;margin-top:6px}
-  .hourbar{display:flex;gap:4px;align-items:center;flex-wrap:wrap;margin:4px 0}
-  .hourbar .hlb{font-size:11.5px;color:#8fa1ba;width:56px;flex:0 0 56px}
-  .hchip{border:1px solid #e3e9f2;background:#fff;color:#5b6b83;font:inherit;font-size:11px;
-    padding:5px 8px;border-radius:8px;cursor:pointer;transition:.15s;min-width:38px;font-variant-numeric:tabular-nums}
-  .hchip:hover{background:#f2f6fc}
-  .hchip.on{background:#12294a;border-color:#12294a;color:#fff;font-weight:600}
-  .hchip.preset{border-radius:999px;background:#f1f5fb;border-color:#f1f5fb}
-  .hchip.preset:hover{background:#e6edf8}
-
-  footer{margin-top:22px;color:#8697ad;font-size:12px;line-height:1.9}
-  .empty{padding:34px 0;text-align:center;color:#9aabc2;font-size:13px}
-
-  @media (max-width:1080px){
-    .kpis{grid-template-columns:repeat(3,1fr)}
-    .span8,.span6,.span4{grid-column:span 12}
-  }
-  @media (max-width:680px){
-    .kpis{grid-template-columns:repeat(2,1fr)}
-    .top h1{font-size:21px}
-    .tab{min-width:0;flex:1 1 45%}
-  }
-</style>
-</head>
-<body>
-<header class="top">
-  <div class="wrap">
-    <h1>沪 ⇄ 广深：周五去、周日回 —— 机票价格趋势 &amp; 最佳购票窗口</h1>
-    <p class="sub">
-      4 条往返线 · 去程周五 00:00–23:59 · 返程周日 00:00–23:59（全时段，可按时段筛） · 支持双向对调（上海出发 / 广深出发）<br>
-      数据来源：飞猪官方 PC 机票搜索结果页（最低价，不含税费），按日累积快照
-    </p>
-    <div class="badges" id="badges"></div>
-  </div>
-</header>
-
-<div class="wrap">
-  <div class="dirsw" id="dirsw">
-    <button data-dir="fwd" class="on">周五 上海 → 广深</button>
-    <button data-dir="rev">周五 广深 → 上海</button>
-  </div>
-  <section class="topfilter card">
-    <div class="tf-head">
-      <h2>时段筛选 <span class="tag">整页跟着变</span></h2>
-      <div class="tf-presets" id="tfPresets"></div>
-      <div class="tf-now" id="tfNow">—</div>
-    </div>
-    <div class="hourbar" id="outHours"></div>
-    <div class="hourbar" id="backHours"></div>
-    <div class="tf-note">
-      24 小时全时段可筛：下面所有卡片（KPI / 月度 / 逐周 / 热力 / 最优组合 / 周末明细）都只统计你选中的起飞小时；
-      「提前天数」「模型回测」「这一趟该不该现在买」来自 Google 历史价格，与时段正交，不受影响。
-    </div>
-  </section>
-
-  <nav class="tabs" id="tabs"></nav>
-
-  <section class="kpis" id="kpis"></section>
-
-  <section class="grid" style="margin-top:16px">
-    <article class="card span12">
-      <h2>置信度怎么算 <span class="tag" id="confTag">—</span></h2>
-      <div class="hint">
-        它衡量的不是「数据多不多」，而是<b>「最便宜窗口」这个结论能不能信</b>：只有同一个出发日被多个购买日观察过（纵向样本），
-        提前天数曲线才不会被「哪一周」的日期效应带偏。
-      </div>
-      <div class="conf-grid" id="confBody"></div>
-    </article>
-  </section>
-
-  <div class="grid">
-    <article class="card span8">
-      <h2>月度价格趋势 <span class="tag" id="mTag">均价 / 往返合计</span></h2>
-      <div class="hint">按出发月份聚合（全部含税）：柱＝当月在售最低价均价＋机建燃油，折线＝同一周末「去＋返」含税合计</div>
-      <div class="lg" id="mLegend"></div>
-      <div class="chart" id="chartMonthly"></div>
-    </article>
-
-    <article class="card span4 verdict" id="verdictCard">
-      <h2>最佳购票窗口</h2>
-      <div class="hint" id="verdictHint">按「提前购票天数」分组统计后的结果</div>
-      <div id="verdictBody"></div>
-    </article>
-
-    <article class="card span12">
-      <h2>这一趟该不该现在买 <span class="tag" id="buyTag">—</span></h2>
-      <div class="hint">
-        当前往返含税＝飞猪去程最低＋返程最低＋机建燃油；历史区间＝同一条线、同一「提前天数」区间的价格分位（不含税费口径已换算）。
-        <b>≤P20 便宜</b>、P20–P50 偏低、P50–P80 偏高、<b>＞P80 偏贵</b>。
-      </div>
-      <div style="overflow:auto"><table id="buyTable"></table></div>
-    </article>
-
-    <article class="card span8">
-      <h2>提前多少天买最便宜 <span class="tag" id="leadTag">抢先看</span></h2>
-      <div class="hint">横轴＝距离起飞还有几天；每个点＝某次快照里的最低价；阶梯线＝该区间的均价，橙色区间为最便宜窗口</div>
-      <div class="lg" id="lLegend"></div>
-      <div class="chart" id="chartLead"></div>
-    </article>
-
-    <article class="card span4">
-      <h2>命中率 <span class="tag">该区间是否为全周期最低</span></h2>
-      <div class="hint">在观察完整（≥3 个区间都有数据）的出发日里，该区间拿下最低价的比例</div>
-      <div class="chart" id="chartHit"></div>
-    </article>
-
-    <article class="card span12">
-      <h2>逐周往返价格 <span class="tag">每个周五出发</span></h2>
-      <div class="hint">柱＝去程最低价、返程最低价（均含税）；折线＝往返含税合计。今天之后最近的出发日标了 ●</div>
-      <div class="lg" id="wLegend"></div>
-      <div class="chart" id="chartWeekly"></div>
-    </article>
-
-    <article class="card span8">
-      <h2>价格热力：出发周 × 提前天数 <span class="tag">颜色越绿越便宜</span></h2>
-      <div class="hint">行＝未来出发的周五，列＝当时距起飞的天数区间，格值＝该组合观察到的最低价（含税，¥）。空白＝还没采到</div>
-      <div id="heat"></div>
-    </article>
-
-    <article class="card span4">
-      <h2>四条线对比 <span class="tag">最佳窗口均价</span></h2>
-      <div class="hint">含税口径横向对比：左侧是模型给的窗口均价，右侧是当前去程含税最低价</div>
-      <div id="compare"></div>
-    </article>
-
-    <article class="card span12">
-      <h2>价格预测模型 · 回测 <span class="tag" id="modelTag">—</span></h2>
-      <div class="hint" id="modelHint"></div>
-      <div class="mgrid" id="modelBody"></div>
-    </article>
-
-    <article class="card span12">
-      <h2>最优航班组合 <span class="tag" id="comboTag">—</span></h2>
-      <div class="hint">
-        用页面顶部的<b>时段筛选</b>限定起飞小时后，这里自动配对：去程挑最便宜 × 返程挑最便宜 = 一个组合，按含税往返合计排序。
-        右侧「建议」用的是模型窗口 T-<span id="comboLo">—</span>~T-<span id="comboHi">—</span>。
-      </div>
-      <div style="overflow:auto;margin-top:10px"><table id="comboTable"></table></div>
-    </article>
-
-    <article class="card span12">
-      <h2>全航班明细 · 一周周看 <span class="tag" id="weekTag">时间窗内全部航班</span></h2>
-      <div class="hint">
-        票价＝飞猪最低价（不含税费）；<b>含税</b>＝票价＋机建 ¥<span id="fAir">50</span>＋燃油 ¥<span id="fFuel">90</span>／航段（四线均 &gt;800 公里）。
-        按票价升序，标橙的是当班最便宜。点开某一周看两程全部航班。
-      </div>
-      <div id="weekList"></div>
-    </article>
-
-    <article class="card span12">
-      <h2>周末明细 <span class="tag" id="tblTag"></span></h2>
-      <div class="hint">每一个「周五去 / 周日回」的实际最低价与承运航班</div>
-      <div style="overflow:auto">
-        <table id="table"></table>
-      </div>
-    </article>
-  </div>
-
-  <footer id="footer"></footer>
-</div>
-
-<div class="tip" id="tip"></div>
-
-<script src="data.js"></script>
-<script>
-(function(){
-  const D = window.FLIGHT_DATA;
-  if(!D || !D.routes || !D.routes.length){
-    document.body.innerHTML = '<div class="wrap" style="padding:60px 0;text-align:center">'+
-      '<h2>没有找到 data.js</h2><p style="color:#7d8ca3">先运行 <code>python build_data.py</code> 生成数据文件，再刷新本页。</p></div>';
-    return;
-  }
-
-  const WD = ['周日','周一','周二','周三','周四','周五','周六'];
-  const C = {blue:'#2f6fed', teal:'#16a394', amber:'#f59e0b', warm:'#ff7a45', navy:'#12294a', grey:'#b9c6d8'};
-  const fmt = n => (n==null?'—':'¥'+Math.round(n).toLocaleString('zh-CN'));
-  const fmtN = n => (n==null?'—':Math.round(n).toLocaleString('zh-CN'));
-  const mmdd = s => { if(!s) return '—'; const d=new Date(s+'T00:00:00'); return `${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
-  const wd = s => { if(!s) return ''; return WD[new Date(s+'T00:00:00').getDay()]; };
-  const monthLabel = m => { const [y,mm]=m.split('-'); return `${y.slice(2)}年${+mm}月`; };
-  const tip = document.getElementById('tip');
-  function showTip(e,html){ tip.innerHTML=html; tip.style.opacity=1; moveTip(e); }
-  function moveTip(e){
-    const pad=14; let x=e.clientX+pad, y=e.clientY+pad;
-    const r=tip.getBoundingClientRect();
-    if(x+r.width>innerWidth-8) x=e.clientX-r.width-pad;
-    if(y+r.height>innerHeight-8) y=e.clientY-r.height-pad;
-    tip.style.left=x+'px'; tip.style.top=y+'px';
-  }
-  function hideTip(){ tip.style.opacity=0; }
-
-  const NS='http://www.w3.org/2000/svg';
-  const el=(t,a={})=>{ const n=document.createElementNS(NS,t); for(const k in a) n.setAttribute(k,a[k]); return n; };
-  const text=(x,y,s,a={})=>{ const n=el('text',Object.assign({x,y},a)); n.textContent=s; return n; };
-
-  let state = { dir: 'fwd', key: D.routes[0].key || D.routes[0].id };
-
-  // ───────────── header / footer ─────────────
-  function renderMeta(){
-    const m = D.meta;
-    const b = document.getElementById('badges');
-    const demo = m.is_demo;
-    const h = m.history || { points: 0 };
-    b.innerHTML =
-      `<span class="badge ${demo?'demo':''}"><span class="dot"></span>${demo?'演示数据（非真实抓取）':'飞猪官方实时抓取'}</span>
-       <span class="badge">当前在售 ${m.snapshot_days} 个购买日 · ${m.observations} 条价格</span>
-       ${h.points ? `<span class="badge"><span class="dot" style="background:#16a394"></span>历史纵向 ${h.points} 点（Google Flights 60 天）</span>` : ''}
-       <span class="badge">置信度 ${m.confidence}</span>
-       <span class="badge">抓价 ${(m.last_fetch_at||'').replace('T',' ')}</span>
-       <span class="badge">生成 ${(m.generated_at||'').replace('T',' ').slice(5,16)}</span>`;
-    document.getElementById('footer').innerHTML =
-      `统计口径：① 每个「路线·去/返·出发日·快照日」取时间窗内最低价；② 提前天数＝出发日−购买日；
-       ③ 区间均价先按出发日聚合再平均；④ 最便宜窗口＝区间均价最低者；
-       ⑤ 命中率只统计「≥3 个区间都有数据」的出发日。<br>
-       两套价格：<b>飞猪</b>（当前在售、单程、不含税费，用于月度/逐周/全航班明细）；
-       <b>Google Flights</b>（同一往返行程的近 60 天逐日报价、含税，用于"提前多久买最便宜"的纵向曲线）。两者口径不同，不要直接比大小。<br>
-       时间窗：去程 ${D.meta.windows.out.label}，返程 ${D.meta.windows.back.label}（24 小时全采，页面可按起飞小时再筛）；附加费：机建 ¥${(m.fees||{}).airport}＋燃油 ¥${(m.fees||{}).fuel_over_800}（>800km，2026-10-10 起）。`;
-  }
-
-  // ───────────── tabs ─────────────
-  function renderDirSwitch(){
-    const host = document.getElementById('dirsw');
-    if(!host) return;
-    host.querySelectorAll('button').forEach(b=>{
-      b.classList.toggle('on', b.dataset.dir === state.dir);
-      b.onclick = ()=>{
-        if(state.dir === b.dataset.dir) return;
-        const baseId = (current().id || 'ALL');
-        state.dir = b.dataset.dir;
-        const target = D.routes.find(r=>(r.dir||'fwd')===state.dir && r.id===baseId)
-          || D.routes.find(r=>(r.dir||'fwd')===state.dir);
-        state.key = target.key;
-        renderDirSwitch(); renderTabs(); renderAll();
-      };
-    });
-  }
-
-  function renderTabs(){
-    const t = document.getElementById('tabs');
-    const list = D.routes.filter(r=>(r.dir||'fwd')===state.dir);
-    t.innerHTML = list.map(r=>{
-      const rev = (r.dir||'fwd')==='rev';
-      const code = rev ? `${r.arr_code} ⇄ ${r.dep_code}` : `${r.dep_code} ⇄ ${r.arr_code}`;
-      const name = rev ? `${r.arr_city} — ${r.dep_city}` : r.label;
-      return `<button class="tab ${r.key===state.key?'on':''}" data-key="${r.key}">
-         <div class="code">${code}</div>
-         <div class="name">${name}</div>
-       </button>`;
-    }).join('');
-    t.querySelectorAll('.tab').forEach(btn=>{
-      btn.onclick=()=>{ state.key=btn.dataset.key; renderTabs(); renderAll(); };
-    });
-  }
-
-  const current = () => D.routes.find(r=>r.key===state.key) || D.routes.find(r=>(r.dir||'fwd')===state.dir) || D.routes[0];
-
-  // ───────────── 费用：机建 + 燃油 ─────────────
-  const FEES = D.meta.fees || {airport:50, fuel_over_800:90, fuel_under_800:50, route_km:{}};
-  function feeFor(r){
-    const km = (FEES.route_km||{})[r.id] || 1200;
-    return (FEES.airport||0) + (km > 800 ? FEES.fuel_over_800 : FEES.fuel_under_800);
-  }
-
-  // ───────────── 置信度 ─────────────
-  function renderConfidence(){
-    const m = D.meta, ci = m.confidence_inputs || {}, rules = m.confidence_rules || [];
-    const lv = m.confidence || '低';
-    const isHist = m.confidence_basis === 'history';
-    const cls = lv === '高' ? 'high' : lv === '中' ? 'mid' : 'low';
-    document.getElementById('confTag').textContent = '当前：' + lv;
-    const hp = ci.hist_points || 0, hs = ci.hist_span || 0, hd = ci.hist_departures || 0;
-    const cap = isHist
-      ? `纵向样本 ${hp} 点，覆盖 ${hd} 个出发日、提前 ${hs} 天的跨度。<br>来源：Google Flights 同一行程 60 天价格记录。`
-      : `只有 ${ci.snapshot_days||0} 个购买日、${ci.long_obs||0} 条纵向样本。<br>当前曲线是横截面近似。`;
-    const rowsRules = rules.map(x=>{
-      const on = x.level === lv;
-      return `<tr class="${on?'on':''}"><td>${x.level}</td><td style="text-align:left">${x.desc}</td></tr>`;
-    }).join('');
-    const pP = Math.min(100, Math.round(hp/200*100));
-    const pS = Math.min(100, Math.round(hs/30*100));
-    const pD = Math.min(100, Math.round((ci.snapshot_days||0)/8*100));
-    const pL = Math.min(100, Math.round((ci.long_obs||0)/200*100));
-    const bars = isHist
-      ? `<div class="prog">历史纵向样本 ${hp} / 200 点</div><div class="bar"><i style="width:${pP}%"></i></div>
-         <div class="prog">覆盖提前天数跨度 ${hs} / 30 天</div><div class="bar"><i style="width:${pS}%"></i></div>
-         <div style="font-size:11.5px;color:#0f8a7c;line-height:1.7">已达标：门槛是 200 点 + 30 天跨度，现在 ${hp} 点 + ${hs} 天。</div>`
-      : `<div class="prog">历史纵向样本 ${hp} / 200 点</div><div class="bar"><i style="width:${pP}%"></i></div>
-         <div class="prog">飞猪购买日快照 ${ci.snapshot_days||0} / 8 天</div><div class="bar"><i style="width:${pD}%"></i></div>
-         <div style="font-size:11.5px;color:#b4571f;line-height:1.7">升到「中」：再采 ${Math.max(0,3-(ci.snapshot_days||0))} 个购买日 + ${Math.max(0,60-(ci.long_obs||0))} 条纵向样本。</div>`;
-    document.getElementById('confBody').innerHTML = `
-      <div>
-        <div class="lvl ${cls}">${lv}</div>
-        <div class="cap">${cap}</div>
-      </div>
-      <div>
-        <table class="rt">
-          <tr><td>历史纵向点</td><td style="text-align:right">${hp}</td><td style="text-align:left">同一出发日、不同购买日的报价</td></tr>
-          <tr><td>覆盖出发日</td><td style="text-align:right">${hd}</td><td style="text-align:left">4 条线 × 若干周五</td></tr>
-          <tr><td>提前天数跨度</td><td style="text-align:right">${hs} 天</td><td style="text-align:left">T-${(D.routes[0].hist||{}).lead_max||'—'} 到 T-${(D.routes[0].hist||{}).lead_min||'—'}</td></tr>
-          <tr><td>飞猪价格点</td><td style="text-align:right">${(ci.observations||m.observations||0).toLocaleString('zh-CN')}</td><td style="text-align:left">当前在售，不含税费</td></tr>
-        </table>
-        <table class="rt" style="margin-top:10px"><tbody>${rowsRules}</tbody></table>
-      </div>
-      <div>${bars}</div>`;
-  }
-
-  // ───────────── 预测模型 · 回测 ─────────────
-  function priceAt(r, lead){
-    const cur = r.mcurve || (((D.model||{}).curves||{})[`${r.id}#${r.dir||'fwd'}`]) || [];
-    if(!cur.length) return null;
-    let best = cur[0];
-    for(const p of cur){ if(Math.abs(p[0]-lead) < Math.abs(best[0]-lead)) best = p; }
-    return best[1];
-  }
-
-  function bindCalc(r, mw){
-    const range = document.getElementById('leadRange');
-    const out = document.getElementById('calcOut');
-    const adv = document.getElementById('calcAdv');
-    if(!range) return;
-    const upd = ()=>{
-      const lead = Number(range.value);
-      const pred = priceAt(r, lead);
-      out.textContent = pred ? `¥${Math.round(pred).toLocaleString('zh-CN')}` : '—';
-      let a = '';
-      if(!pred){ a = '这条线还没有预测曲线，先看下面的决策表。'; }
-      else if(lead > mw.hi) a = `还没到窗口 —— 建议等到 <b>T-${mw.hi}</b> 左右再看（窗口均价 ¥${mw.mean}）。`;
-      else if(lead < mw.lo) a = `已经过了窗口 —— 现在离出发只有 ${lead} 天，尽快下手，晚了要付临期溢价。`;
-      else {
-        const gap = pred / mw.mean - 1;
-        if(gap <= 0.02) a = `正处在最佳窗口（T-${mw.lo}~T-${mw.hi}），预测价不高于窗口均价 ¥${mw.mean}，<b>可以买</b>。`;
-        else if(gap <= 0.06) a = `在窗口内但预测价高 <b>${Math.round(gap*100)}%</b>，能等就再等 2–3 天。`;
-        else a = `在窗口内但预测价高 <b>${Math.round(gap*100)}%</b>，建议先观察，接近 ¥${mw.mean} 再下手。`;
-      }
-      adv.innerHTML = a;
-    };
-    range.oninput = upd; upd();
-  }
-
-  function renderModel(){
-    const r = current();
-    const M = D.model;
-    const tag = document.getElementById('modelTag');
-    const hint = document.getElementById('modelHint');
-    const host = document.getElementById('modelBody');
-    if(!M){ tag.textContent='未训练'; hint.textContent='先跑 python model.py'; host.innerHTML=''; return; }
-    const pol = M.policy_strict || {};
-    const polAll = M.policy_all || {};
-    const leads = Object.keys(pol).map(Number).sort((a,b)=>a-b);
-    if(!leads.length){ host.innerHTML='<div class="empty">模型数据不足</div>'; return; }
-    const maxMean = Math.max(...leads.map(l=>pol[l].mean));
-    const minMean = Math.min(...leads.map(l=>pol[l].mean));
-    const bestLead = leads.reduce((a,l)=>pol[l].mean < pol[a].mean ? l : a, leads[0]);
-    const mw = r.mw || M.window_strict || {lo:14,hi:18,mean:0,width:5};
-    const tight = M.n_strict || 0;
-    tag.textContent = `严格样本 ${tight} 组 · 全样本 ${M.n_groups||0} 组 · 窗口 ≤${M.window_max} 天`;
-    hint.innerHTML = `中间那张表是<b>严格回测</b>：只统计「同一条行程既能观察到 T-${M.strict_near} 以内、又能观察到 T-${M.strict_far} 以外」的样本，`
-      + `所以每一行都是<b>同一批行程</b>在比较，n=${tight}。样本少是因为 Google 的历史窗口只有 60 天、会随出发日滑动，能同时覆盖近端和远端行程的本来就不多。`
-      + ` 窗口按「宽度 ≤${M.window_max} 天、均值与最优差 ≤${Math.round(((M.indistinct||1.02)-1)*100)}%」取最窄：<b>T-${mw.lo} ~ T-${mw.hi}</b>（${mw.width||5} 天）。`;
-    host.innerHTML = `
-      <div>
-        <h6>模型（仅参考线）</h6>
-        <div class="formula">${M.formula||''}</div>
-        <div class="mstat">
-          <div>MAPE<b>${M.accuracy?M.accuracy.mape+'%':'—'}</b></div>
-          <div>MAE<b>${M.accuracy?'¥'+M.accuracy.mae:'—'}</b></div>
-          <div>样本<b>${(M.n_points||0).toLocaleString('zh-CN')}</b></div>
-        </div>
-        <div style="font-size:11px;color:#b4571f;margin-top:8px;line-height:1.7">
-          ⚠ 误差 ±¥${M.accuracy?M.accuracy.mae:'—'} 大于择时能省的 ¥${M.savings?Math.abs(Math.round(mw.mean*M.savings.vs_late_pct/100)):'—'} 左右，
-          所以它只用来画平滑参考线、给试算器，结论以决策表为准。
-        </div>
-      </div>
-      <div>
-        <h6>严格回测：同一批行程（n=${tight}），提前 N 天买的平均成交价</h6>
-        ${leads.map(l=>{
-          const v = pol[l];
-          const w = Math.max(3, Math.round((v.mean-minMean)/(maxMean-minMean||1)*100));
-          return `<div class="prow ${l===bestLead?'best':''}">
-            <span class="lb">T-${l}</span>
-            <span class="bar"><i style="width:${w}%"></i></span>
-            <span class="pv">¥${v.mean.toLocaleString('zh-CN')}</span>
-            <span class="pn">n=${v.n}</span>
-          </div>`;
-        }).join('')}
-        <div style="font-size:11px;color:#b4571f;margin-top:8px">
-          严格样本最低：<b>T-${bestLead}</b>（¥${pol[bestLead].mean}）　窗��� T-${mw.lo}~T-${mw.hi} 均价 ¥${mw.mean}
-        </div>
-        <div style="font-size:10.5px;color:#9aabc2;margin-top:10px;line-height:1.7">
-          <b>脚注·全样本</b>（n 大，但跨不同日期子集比均值不严谨）：${Object.keys(polAll).map(Number).sort((a,b)=>a-b).map(l=>`T-${l} ¥${polAll[l].mean}`).join('　')}
-        </div>
-      </div>
-      <div>
-        <h6>试算：还剩几天</h6>
-        <div class="calc">
-          <input type="range" id="leadRange" min="2" max="70" value="${Math.round((mw.lo+mw.hi)/2)}">
-          <div class="out" id="calcOut">—</div>
-          <div class="adv" id="calcAdv"></div>
-        </div>
-        ${M.savings?`<div style="font-size:11.5px;color:#0f8a7c;margin-top:12px;line-height:1.7">
-          配对回测（同一 ${M.savings.n} 组行程）：窗口内买 比临期(T-${M.savings.win_center?2:2})省 <b>${M.savings.vs_late_pct}%</b>，
-          比 T-30 省 <b>${M.savings.vs_t30_pct}%</b>。
-        </div>`:''}
-      </div>`;
-    bindCalc(r, mw);
-  }
-
-  // ───────────── 这一趟该不该现在买 ─────────────
-  function bandOf(lead){
-    if(lead <= 7) return '1-7';
-    if(lead <= 14) return '8-14';
-    if(lead <= 21) return '15-21';
-    if(lead <= 30) return '22-30';
-    if(lead <= 45) return '31-45';
-    if(lead <= 60) return '46-60';
-    return '61-130';
-  }
-
-  function renderBuy(){
-    const r = current();
-    const F = feeFor(r);
-    const q = r.mquant || {};
-    const ws = r.weekends.filter(w=>!w.past && w.out);
-    document.getElementById('buyTag').textContent = ws.length ? `${ws.length} 个未来周末` : '无未来周末';
-    const tbl = document.getElementById('buyTable');
-    if(!ws.length){ tbl.innerHTML = '<tr><td class="muted">暂无未来出发日</td></tr>'; return; }
-
-    // 只有「同源」才能比：Google 的历史分位 vs Google 序列里最近一次报价。
-    // 飞猪价单独一列，只展示实际待付，不参与分位判断。
-    const gp = (r.hist && r.hist.points) || [];
-    const minLead = gp.length ? Math.min(...gp.map(p=>p[0])) : null;
-    const gCur = gp.length ? gp.filter(p=>p[0]===minLead).map(p=>p[1]) : [];
-    const gPrice = gCur.length ? Math.round(gCur.reduce((a,b)=>a+b,0)/gCur.length) : null;
-    const gHist = minLead!=null ? q[bandOf(minLead)] : null;
-
-    let pos = '—', cls = 'pill', advice = '同源样本不足';
-    if(gPrice && gHist){
-      if(gPrice <= gHist.p20){ pos = 'P20 以下'; cls = 'pill ok'; advice = '便宜，可以买'; }
-      else if(gPrice <= gHist.p50){ pos = 'P20–P50'; cls = 'pill ok'; advice = '偏低，可以下手'; }
-      else if(gPrice <= gHist.p80){ pos = 'P50–P80'; cls = 'pill warn'; advice = '偏高，再等等'; }
-      else { pos = 'P80 以上'; cls = 'pill warn'; advice = '偏贵，不建议'; }
-    }
-    const soon = ws[0];
-    const soonCur = soon.round ? soon.round + F*2 : null;
-    const nowRow = `<tr style="background:#f8fbff">
-      <td><b>现在</b> <span class="muted">T-${minLead!=null?minLead:'—'}</span></td>
-      <td class="muted">最近周末 ${mmdd(soon.dep_date)}</td>
-      <td>${minLead!=null?minLead+' 天':'—'}</td>
-      <td>${soonCur?'<b>'+fmt(soonCur)+'</b>':'<span class="muted">—</span>'}</td>
-      <td><b>${gPrice?fmt(gPrice):'—'}</b></td>
-      <td class="muted">${gHist?('¥'+gHist.p20+' – ¥'+gHist.p80+'（中位 ¥'+gHist.p50+'，n='+gHist.n+'）'):'—'}</td>
-      <td>${pos}</td>
-      <td><span class="${cls}">${advice}</span></td>
-    </tr>`;
-
-    const rows = ws.map(w=>{
-      const d = w.days_until, hist = q[bandOf(d)];
-      const cur = w.round ? w.round + F*2 : null;
-      return `<tr>
-        <td>${mmdd(w.dep_date)} <span class="muted">${wd(w.dep_date)}</span></td>
-        <td>${mmdd(w.back_date)} <span class="muted">${wd(w.back_date)}</span></td>
-        <td>${d} 天 <span class="muted">T-${d}</span></td>
-        <td>${cur?'<b>'+fmt(cur)+'</b>':'<span class="muted">—</span>'}</td>
-        <td class="muted">—</td>
-        <td class="muted">${hist?('¥'+hist.p20+' – ¥'+hist.p80+'（中位 ¥'+hist.p50+'，n='+hist.n+'）'):'样本不足'}</td>
-        <td class="muted">${hist?'参考':'—'}</td>
-        <td class="muted">${hist?('到 T-'+Math.min(14,d)+' 左右再判'):'—'}</td>
-      </tr>`;
-    }).join('');
-
-    const head = `<thead><tr>
-      <th>出发（周五）</th><th>返程（周日）</th><th>还剩</th>
-      <th>实际待付（飞猪含税）</th><th>同源现价（Google）</th><th>同区间历史 P20–P80</th><th>位置</th><th>建议</th>
-    </tr></thead>`;
-    tbl.innerHTML = head + '<tbody>' + nowRow + rows + '</tbody>';
-  }
-
-  // ───────────── 时段筛选（置顶，整页生效） ─────────────
-  const FILT = { out: null, back: null, key: null };   // null = 全部 24 小时
-  const ORIG = new Map();                              // 缓存 Python 预计算的原始 weekends/monthly/heat
-  const HOURS = Array.from({length:24},(_,i)=>String(i).padStart(2,'0'));
-
-  function hoursOf(r, leg){
-    const s = new Set();
-    for(const dep of Object.keys(r.flights||{})){
-      for(const f of ((r.flights[dep]||{})[leg]||[])) s.add(f[0].slice(0,2));
-    }
-    return [...s].sort();
-  }
-  const inHours = (hhmm, set) => !set || set.has(hhmm.slice(0,2));
-
-  function renderTopFilter(){
-    const r = current();
-    if(FILT.key !== r.key){ FILT.out = null; FILT.back = null; FILT.key = r.key; }
-    const hasFlights = r.flights && Object.keys(r.flights).length;
-    [['out','outHours','去程起飞'],['back','backHours','返程起飞']].forEach(([leg,id,label])=>{
-      const host = document.getElementById(id);
-      if(!host) return;
-      const avail = new Set(hoursOf(r, leg));
-      const sel = FILT[leg];
-      host.innerHTML = `<span class="hlb">${label}</span>` + HOURS.map(h=>{
-        const has = avail.has(h);
-        const on = has && (sel ? sel.has(h) : true);
-        return `<button class="hchip ${on?'on':''}" data-leg="${leg}" data-h="${h}"`
-          + (has?'':' disabled style="opacity:.22;cursor:not-allowed"') + `>${h}</button>`;
-      }).join('');
-      host.querySelectorAll('.hchip').forEach(btn=>{
-        if(btn.disabled) return;
-        btn.onclick = ()=>toggleHour(leg, btn.dataset.h);
-      });
-    });
-    const pr = document.getElementById('tfPresets');
-    pr.innerHTML = [['全部','all'],['上午 00–12','am'],['下午 12–18','pm'],['晚间 18–24','night'],['13 点后','after13']]
-      .map(([t,k])=>`<button class="hchip preset" data-p="${k}">${t}</button>`).join('');
-    pr.querySelectorAll('.hchip').forEach(b=>b.onclick=()=>applyPreset(b.dataset.p));
-    const cnt = leg => FILT[leg] ? FILT[leg].size : hoursOf(r, leg).length;
-    document.getElementById('tfNow').innerHTML = hasFlights
-      ? `去程 <b>${cnt('out')}</b> 小时 / 返程 <b>${cnt('back')}</b> 小时`
-      : '当前是汇总页，没有航班级数据 —— 切到具体路线才能按时段筛';
-  }
-
-  function toggleHour(leg, h){
-    const r = current();
-    if(!FILT[leg]) FILT[leg] = new Set(hoursOf(r, leg));
-    if(FILT[leg].has(h)) FILT[leg].delete(h); else FILT[leg].add(h);
-    renderAll();
-  }
-
-  function applyPreset(k){
-    const r = current();
-    const pick = (leg, f) => new Set(hoursOf(r, leg).filter(f));
-    if(k==='all'){ FILT.out = null; FILT.back = null; }
-    else if(k==='am'){ FILT.out = pick('out',h=>+h<12);  FILT.back = pick('back',h=>+h<12); }
-    else if(k==='pm'){ FILT.out = pick('out',h=>+h>=12&&+h<18); FILT.back = pick('back',h=>+h>=12&&+h<18); }
-    else if(k==='night'){ FILT.out = pick('out',h=>+h>=18); FILT.back = pick('back',h=>+h>=18); }
-    else if(k==='after13'){ FILT.out = pick('out',h=>+h>=13); FILT.back = pick('back',h=>+h>=13); }
-    renderAll();
-  }
-
-  // 用筛选后的航班重算 weekends / monthly / heat，写回 r，渲染函数不用改
-  function applyFilter(){
-    const r = current();
-    if(!ORIG.has(r.key)) ORIG.set(r.key, {weekends:r.weekends, monthly:r.monthly, heat:r.heat});
-    const base = ORIG.get(r.key);
-    const hasFlights = r.flights && Object.keys(r.flights).length;
-    if(!hasFlights || (!FILT.out && !FILT.back)){
-      r.weekends = base.weekends; r.monthly = base.monthly; r.heat = base.heat; return;
-    }
-    const ws = base.weekends.map(w=>{
-      const O = ((r.flights[w.dep_date]||{}).out||[]).filter(f=>inHours(f[0],FILT.out));
-      const B = ((r.flights[w.back_date]||{}).back||[]).filter(f=>inHours(f[0],FILT.back));
-      const o = O[0]||null, b = B[0]||null;
-      if(!o) return null;
-      return Object.assign({}, w, {
-        out: Object.assign({}, w.out, {price:o[4], dep_time:o[0], flight_no:o[2], airline:o[3]}),
-        back: b ? Object.assign({}, w.back, {price:b[4], dep_time:b[0], flight_no:b[2], airline:b[3]}) : null,
-        round: b ? o[4]+b[4] : null,
-      });
-    }).filter(Boolean);
-    r.weekends = ws;
-
-    const bym = {};
-    ws.forEach(w=>{ (bym[w.month] = bym[w.month] || []).push(w); });
-    const avg = a => a.length ? Math.round(a.reduce((s,v)=>s+v,0)/a.length) : null;
-    r.monthly = Object.keys(bym).sort().map(m=>{
-      const arr = bym[m];
-      const outs = arr.filter(x=>x.out).map(x=>x.out.price);
-      const backs = arr.filter(x=>x.back).map(x=>x.back.price);
-      const rounds = arr.filter(x=>x.round).map(x=>x.round);
-      return {month:m, out_avg:avg(outs), back_avg:avg(backs), round_avg:avg(rounds),
-              round_min: rounds.length?Math.min.apply(null,rounds):null, weekends:arr.length};
-    });
-
-    const BK = ['0-3','4-7','8-14','15-21','22-30','31-45','46+'];
-    const band = d => d<=3?'0-3':d<=7?'4-7':d<=14?'8-14':d<=21?'15-21':d<=30?'22-30':d<=45?'31-45':'46+';
-    const rows = ws.filter(w=>!w.past).map(w=>w.dep_date);
-    r.heat = {rows, cols:BK, values: rows.map(dep=>{
-      const w = ws.filter(x=>x.dep_date===dep)[0];
-      return BK.map(b => (w && w.round!=null && band(w.days_until)===b) ? w.round : null);
-    })};
-  }
-
-  function combosFor(r, F){
-    const out = (r.weekends||[]).filter(w=>!w.past && w.out);
-    const rows = [];
-    for(const w of out){
-      const O = ((r.flights[w.dep_date]||{}).out||[]).filter(f=>inHours(f[0],FILT.out));
-      const B = ((r.flights[w.back_date]||{}).back||[]).filter(f=>inHours(f[0],FILT.back));
-      if(!O.length || !B.length) continue;
-      const o = O[0], b = B[0];                       // 已按裸票价升序
-      // 次优：去程还是最便宜那班，返程换第二便宜；或反过来，取两者更省
-      const alt = [];
-      if(B[1]) alt.push(o[4]+B[1][4]);
-      if(O[1]) alt.push(O[1][4]+b[4]);
-      rows.push({w, o, b, total:o[4]+b[4]+F*2, alt: alt.length?Math.min(...alt)+F*2:null});
-    }
-    return rows.sort((a,b)=>a.total-b.total);
-  }
-
-  function renderCombo(){
-    const r = current();
-    const host = document.getElementById('comboTable');
-    const tag = document.getElementById('comboTag');
-    const F = feeFor(r);
-    document.getElementById('comboLo').textContent = r.mw?r.mw.lo:'—';
-    document.getElementById('comboHi').textContent = r.mw?r.mw.hi:'—';
-    if(!r.flights || !Object.keys(r.flights).length){
-      host.innerHTML = '<tr><td class="muted">汇总页没有航班级数据 —— 切到具体路线（浦东—白云 / 浦东—宝安 / 虹桥—宝安 / 虹桥—白云）。</td></tr>';
-      tag.textContent = '需选具体路线';
-      return;
-    }
-    if((FILT.out && !FILT.out.size) || (FILT.back && !FILT.back.size)){
-      host.innerHTML = '<tr><td class="muted">至少各选一个小时</td></tr>'; tag.textContent='筛选为空'; return;
-    }
-    const rows = combosFor(r, F);
-    if(!rows.length){
-      host.innerHTML = '<tr><td class="muted">当前小时筛选下没有可用组合</td></tr>'; tag.textContent='无组合'; return;
-    }
-    const best = rows[0];
-    const mw = r.mw || {lo:12,hi:16};
-    const advice = (d)=>{
-      if(d > mw.hi) return `<span class="pill">等到 T-${mw.hi}（还差 ${d-mw.hi} 天）</span>`;
-      if(d < mw.lo) return `<span class="pill warn">已过窗口，尽快买</span>`;
-      return `<span class="pill ok">正处窗口，可以买</span>`;
-    };
-    tag.textContent = `${rows.length} 个可组合周末 · 最低 ${fmt(best.total)}`;
-    const head = `<thead><tr>
-      <th>出发周</th><th>去程航班</th><th>裸票</th><th>返程航班</th><th>裸票</th>
-      <th>含税往返</th><th>次优</th><th>剩余</th><th>购票建议</th>
-    </tr></thead>`;
-    const body = rows.map((x,i)=>{
-      const hi = i===0;
-      return `<tr${hi?' style="background:#fff7ef"':''}>
-        <td>${mmdd(x.w.dep_date)} ${wd(x.w.dep_date)} → ${mmdd(x.w.back_date)} ${wd(x.w.back_date)}</td>
-        <td>${x.o[0]}–${x.o[1]} <span class="muted">${x.o[3]||''} ${x.o[2]||''}</span></td>
-        <td>${fmt(x.o[4])}</td>
-        <td>${x.b[0]}–${x.b[1]} <span class="muted">${x.b[3]||''} ${x.b[2]||''}</span></td>
-        <td>${fmt(x.b[4])}</td>
-        <td><b>${fmt(x.total)}</b></td>
-        <td class="muted">${x.alt?fmt(x.alt):'—'}</td>
-        <td>${x.w.days_until} 天</td>
-        <td>${advice(x.w.days_until)}</td>
-      </tr>`;
-    }).join('');
-    host.innerHTML = head + '<tbody>' + body + '</tbody>';
-  }
-
-  // ───────────── 全航班明细 ─────────────
-  function legTable(name, date, rows, F){
-    if(!rows || !rows.length) return `<div class="leg"><h5>${name} · ${mmdd(date)} ${wd(date)} <span>时间窗内没有采到航班</span></h5></div>`;
-    const minP = rows[0][4];
-    return `<div class="leg">
-      <h5>${name} · ${mmdd(date)} ${wd(date)} · ${rows.length} 班 <span>13:00 后起飞 · 按票价升序</span></h5>
-      <table class="ft">
-        <thead><tr><th>起飞</th><th>到达</th><th>航班</th><th>航司</th><th>机型</th><th>票价</th><th>含税</th><th>比最低</th></tr></thead>
-        <tbody>${rows.map((f,i)=>`<tr class="${i===0?'cheap':''}">
-          <td>${f[0]||'—'}</td><td>${f[1]||'—'}</td><td class="no">${f[2]||'—'}</td>
-          <td>${f[3]||'—'}</td><td>${f[5]||'—'}</td>
-          <td>${fmt(f[4])}</td><td>${fmt(f[4]+F)}</td>
-          <td>${i===0?'最低':'+'+fmtN(f[4]-minP)}</td>
-        </tr>`).join('')}</tbody>
-      </table></div>`;
-  }
-
-  function renderFlights(){
-    const host = document.getElementById('weekList');
-    const r = current();
-    const F = feeFor(r);
-    document.getElementById('fAir').textContent = FEES.airport;
-    document.getElementById('fFuel').textContent = F - (FEES.airport||0);
-    if(!r.flights || !Object.keys(r.flights).length){
-      host.innerHTML = '<div class="empty">汇总页不列全航班 —— 切到具体路线（浦东—白云 / 浦东—宝安 / 虹桥—宝安 / 虹桥—白云）就能一班班看。</div>';
-      return;
-    }
-    const ws = r.weekends.filter(w=>w.out);
-    const cntO = ws.reduce((s,w)=>s+(((r.flights[w.dep_date]||{}).out||[]).length),0);
-    const cntB = ws.reduce((s,w)=>s+(((r.flights[w.back_date]||{}).back||[]).length),0);
-    document.getElementById('weekTag').textContent = `${ws.length} 周 · 去程 ${cntO} 班 / 返程 ${cntB} 班`;
-    host.innerHTML = ws.map((w,i)=>{
-      const O = (r.flights[w.dep_date]||{}).out || [];
-      const B = (r.flights[w.back_date]||{}).back || [];
-      const both = O.length && B.length;
-      const totBoth = both ? O[0][4] + B[0][4] + F*2 : null;
-      return `<details class="wk" ${i===0?'open':''}>
-        <summary>
-          <span class="wk-date">${mmdd(w.dep_date)} ${wd(w.dep_date)} → ${mmdd(w.back_date)} ${wd(w.back_date)}</span>
-          <span class="wk-meta">去 ${O.length} 班 · 返 ${B.length} 班 · 含税往返 <b>${totBoth?fmt(totBoth):'—'}</b></span>
-        </summary>
-        <div class="wk-body">
-          ${legTable('去程', w.dep_date, O, F)}
-          ${legTable('返程', w.back_date, B, F)}
-        </div>
-      </details>`;
-    }).join('');
-  }
-
-  // ───────────── KPIs ─────────────
-  function renderKpis(){
-    const r = current();
-    const fut = r.weekends.filter(w=>!w.past && w.out);
-    const soon = fut[0];
-    const roundMin = r.weekends.filter(w=>w.round).sort((a,b)=>a.round-b.round)[0];
-    const best = (r.hist && r.hist.best) || r.best || r.xbest;
-    const F = feeFor(r);                       // 单程附加：机建 + 燃油
-    const kv = [
-      {k:'最近一个周五 去程最低（含税）', v: soon?fmt(soon.out.price+F):'—', s: soon?`${mmdd(soon.dep_date)} ${wd(soon.dep_date)} · 距今 ${soon.days_until} 天 · 裸票 ${fmt(soon.out.price)}`:'暂无数据'},
-      {k:'对应当周 返程最低（含税）', v: soon&&soon.back?fmt(soon.back.price+F):'—', s: soon&&soon.back?`${mmdd(soon.back_date)} ${wd(soon.back_date)} · 裸票 ${fmt(soon.back.price)}`:'返程未采到'},
-      {k:'该周末 往返合计（含税）', v: soon&&soon.round?fmt(soon.round+F*2):'—', s: soon&&soon.round?`含机建 ¥${FEES.airport}×2 + 燃油 ¥${F-FEES.airport}×2`:'—'},
-      {k:'最佳提前天数',
-       v: best ? (r.mw ? ('T-'+r.mw.lo+' ~ T-'+r.mw.hi) : ((r.hist&&r.hist.window) ? ('T-'+r.hist.window.lo+' ~ T-'+r.hist.window.hi) : (best.bucket+' 天'))) : '—',
-       s: best ? `均价 ${fmt((r.mw || (r.hist&&r.hist.window) || best).mean)} · ${r.mw?('严格回测 n='+(r.mw.n||0)):(r.hist?'历史纵向':'横截面信号')}` : '样本不足', cls:'hl'},
-      {k:'最低往返合计（含税）', v: roundMin?fmt(roundMin.round+F*2):'—', s: roundMin?`出现在 ${mmdd(roundMin.dep_date)} ${wd(roundMin.dep_date)} · 裸票 ${fmt(roundMin.round)}`:'—', cls:'teal'},
-    ];
-    document.getElementById('kpis').innerHTML = kv.map(x=>
-      `<div class="kpi ${x.cls||''}"><div class="k">${x.k}</div><div class="v">${x.v}</div><div class="s">${x.s}</div></div>`).join('');
-  }
-
-  // ───────────── monthly chart ─────────────
-  function chartMonthly(){
-    const host = document.getElementById('chartMonthly');
-    const r = current();
-    const F = feeFor(r);
-    const data = r.monthly.filter(m=>m.out_avg||m.back_avg).map(m=>({
-      ...m,
-      out_avg: m.out_avg!=null?m.out_avg+F:null,
-      back_avg: m.back_avg!=null?m.back_avg+F:null,
-      round_avg: m.round_avg!=null?m.round_avg+F*2:null,
-      round_min: m.round_min!=null?m.round_min+F*2:null,
-    }));
-    document.getElementById('mLegend').innerHTML =
-      `<span><i style="background:${C.blue}"></i>去程均价（含税）</span>
-       <span><i style="background:${C.teal}"></i>返程均价（含税）</span>
-       <span><i style="background:${C.warm}"></i>往返合计均价（含税）</span>`;
-    if(!data.length){ host.innerHTML='<div class="empty">暂无月度数据</div>'; return; }
-
-    const W = host.clientWidth || 700, H = 300, P = {l:52,r:58,t:14,b:34};
-    const iw = W-P.l-P.r, ih = H-P.t-P.b;
-    host.innerHTML=''; const svg = el('svg',{viewBox:`0 0 ${W} ${H}`,height:H}); host.appendChild(svg);
-
-    const vals=[].concat(...data.map(d=>[d.out_avg,d.back_avg,d.round_avg])).filter(v=>v!=null);
-    const max = Math.max(...vals)*1.12, min = Math.max(0, Math.min(...vals)*0.72);
-    const y = v => P.t + ih - (v-min)/(max-min)*ih;
-    const bandW = iw/data.length;
-
-    // y grid
-    const ticks=4;
-    for(let i=0;i<=ticks;i++){
-      const v = min + (max-min)*i/ticks, yy=y(v);
-      svg.appendChild(el('line',{x1:P.l,y1:yy,x2:P.l+iw,y2:yy,class:'gridline'}));
-      svg.appendChild(text(P.l-8,yy+4,fmtN(v),{class:'axis', 'text-anchor':'end',fill:'#8fa1ba','font-size':11}));
-    }
-    // bars
-    data.forEach((d,i)=>{
-      const cx = P.l + bandW*(i+.5);
-      const bw = Math.min(26, bandW*0.26);
-      [['out_avg',C.blue,-bw*0.62],['back_avg',C.teal,bw*0.62]].forEach(([k,col,off])=>{
-        if(d[k]==null) return;
-        const h = Math.max(2, y(min)-y(d[k]));
-        const rect = el('rect',{x:cx+off-bw/2, y:y(d[k]), width:bw, height:h, rx:5, fill:col, opacity:.92});
-        rect.addEventListener('mousemove',e=>showTip(e,`<b>${monthLabel(d.month)}</b><br>${k==='out_avg'?'去程':'返程'}均价（含税） <b>${fmt(d[k])}</b><br>当月 ${d.weekends} 个周末`));
-        rect.addEventListener('mouseleave',hideTip);
-        svg.appendChild(rect);
-      });
-      svg.appendChild(text(cx,H-10,monthLabel(d.month),{fill:'#8fa1ba','font-size':11,'text-anchor':'middle'}));
-    });
-    // round-trip line
-    const pts = data.filter(d=>d.round_avg!=null);
-    if(pts.length){
-      const path = pts.map((d,i)=>{
-        const idx = data.indexOf(d);
-        return `${i?'L':'M'}${P.l+bandW*(idx+.5)},${y(d.round_avg)}`;
-      }).join(' ');
-      svg.appendChild(el('path',{d:path,fill:'none',stroke:C.warm,'stroke-width':2.5,'stroke-linejoin':'round','stroke-linecap':'round'}));
-      pts.forEach(d=>{
-        const idx=data.indexOf(d);
-        const c = el('circle',{cx:P.l+bandW*(idx+.5), cy:y(d.round_avg), r:4, fill:'#fff', stroke:C.warm,'stroke-width':2.5});
-        c.addEventListener('mousemove',e=>showTip(e,`<b>${monthLabel(d.month)}</b><br>往返合计均价 <b>${fmt(d.round_avg)}</b><br>最低合计 ${fmt(d.round_min)}`));
-        c.addEventListener('mouseleave',hideTip);
-        svg.appendChild(c);
-      });
-      // right axis label
-      const mid = y(pts[0].round_avg);
-      svg.appendChild(text(P.l+iw+8, mid+4, '合计', {fill:C.warm,'font-size':11}));
-    }
-  }
-
-  // ───────────── lead-time chart ─────────────
-  function chartLead(){
-    const host = document.getElementById('chartLead');
-    const r = current();
-    const H = (r.hist && r.hist.curve && r.hist.curve.length) ? r.hist : null;
-    const isHist = !!H;
-    const isLong = (r.curve||[]).length > 0;
-    const curve = isHist ? H.curve : (isLong ? r.curve : (r.xcurve||[]));
-    const bestBucket = ((isHist ? H.best : (isLong ? r.best : r.xbest))||{}).bucket;
-    const tag = document.getElementById('leadTag');
-    if(tag) tag.textContent = isHist ? '纵向：Google Flights 60 天价格记录' : (isLong ? '纵向：飞猪多日快照' : '横截面：最近一次快照');
-    document.getElementById('lLegend').innerHTML =
-      `<span><i style="background:${C.navy};opacity:.25"></i>单次报价</span>
-       <span><i style="background:${C.blue}"></i>区间均价</span>
-       <span><i style="background:${C.warm};opacity:.28"></i>最便宜窗口</span>
-       <span style="color:${isHist?'#16a394':'#b4571f'}">${isHist?'含税往返价 · 同一行程的历史报价':'⚠ 无纵向样本，仅横截面近似'}</span>`;
-    if(!curve.length){ host.innerHTML='<div class="empty">还没有足够的提前天数样本</div>'; return; }
-    const pts = isHist ? (H.points||[]).map(p=>[p[0], p[1], 'rt']) : (r.scatter||[]);
-    const obsMax = pts.length ? Math.max(...pts.map(p=>p[0])) : 0;
-    const maxLead = Math.max(7, Math.min(75, Math.max(obsMax, ...curve.map(c=>c.lo)) + 3));
-    const prices = pts.map(p=>p[1]).concat(curve.map(c=>c.mean));
-    const maxY = Math.max(...prices)*1.1, minY = Math.min(...prices)*0.9;
-
-    const CW = host.clientWidth || 700, CH = 320, P={l:52,r:16,t:14,b:38};
-    const iw=CW-P.l-P.r, ih=CH-P.t-P.b;
-    const x = v => P.l + (v/Math.max(maxLead,1))*iw;
-    const y = v => P.t + ih - (v-minY)/(maxY-minY)*ih;
-    host.innerHTML=''; const svg=el('svg',{viewBox:`0 0 ${CW} ${CH}`,height:CH}); host.appendChild(svg);
-
-    // best window band：优先用模型给的 ≤15 天窗口
-    const winBand = (r.mw) ? {lo:r.mw.lo, hi:r.mw.hi}
-      : ((isHist && H.window) ? H.window
-      : (()=>{ const c = curve.find(k=>k.bucket===bestBucket); return c?{lo:c.lo,hi:c.hi}:null; })());
-    if(winBand){
-      const lo = Math.max(0, winBand.lo), hi = Math.min(maxLead, winBand.hi);
-      svg.appendChild(el('rect',{x:x(lo), y:P.t, width:Math.max(6,x(hi+1)-x(lo)), height:ih, fill:C.warm, opacity:.13, rx:6}));
-      svg.appendChild(text((x(lo)+x(hi))/2, P.t+13, `T-${winBand.lo}~T-${winBand.hi} 最便宜窗口`,
-        {fill:'#b4571f','font-size':11,'font-weight':700,'text-anchor':'middle'}));
-    }
-    // y grid
-    for(let i=0;i<=4;i++){
-      const v=minY+(maxY-minY)*i/4, yy=y(v);
-      svg.appendChild(el('line',{x1:P.l,y1:yy,x2:P.l+iw,y2:yy,class:'gridline'}));
-      svg.appendChild(text(P.l-8,yy+4,fmtN(v),{fill:'#8fa1ba','font-size':11,'text-anchor':'end'}));
-    }
-    // x ticks
-    const step = maxLead>45?15:(maxLead>20?7:3);
-    for(let v=0; v<=maxLead; v+=step){
-      svg.appendChild(text(x(v),CH-14,`T-${v}`,{fill:'#8fa1ba','font-size':11,'text-anchor':'middle'}));
-    }
-    svg.appendChild(text(P.l+iw, CH-14, '天', {fill:'#8fa1ba','font-size':11,'text-anchor':'end'}));
-
-    // scatter
-    const g = el('g');
-    pts.forEach(p=>{
-      const c=el('circle',{cx:x(p[0]), cy:y(p[1]), r:2.6, fill:p[2]==='out'?C.blue:p[2]==='back'?C.teal:'#7c8db0', opacity:.22});
-      c.addEventListener('mousemove',e=>showTip(e,`提前 <b>${p[0]}</b> 天<br>报价 <b>${fmt(p[1])}</b><br>${p[2]==='out'?'去程在售':p[2]==='back'?'返程在售':'历史含税往返'}`));
-      c.addEventListener('mouseleave',hideTip);
-      g.appendChild(c);
-    });
-    svg.appendChild(g);
-
-    // 模型预测曲线（虚线）
-    const mc = (r.mcurve||[]).filter(p=>p[0]<=maxLead);
-    if(mc.length){
-      const d = mc.map((p,i)=>`${i?'L':'M'}${x(p[0])},${y(p[1])}`).join(' ');
-      svg.appendChild(el('path',{d,fill:'none',stroke:'#12294a','stroke-width':1.8,'stroke-dasharray':'6 4',opacity:.75}));
-      const lp = mc[mc.length-1];
-      svg.appendChild(text(x(lp[0])-4, y(lp[1])-8, '模型预测', {fill:'#12294a','font-size':10.5,'text-anchor':'end'}));
-    }
-    // 回测决策点（每个提前天数一个方块）
-    const pol = r.mpolicy || {};
-    Object.keys(pol).map(Number).sort((a,b)=>a-b).forEach(l=>{
-      if(l>maxLead) return;
-      const p = pol[l];
-      const sq = el('rect',{x:x(l)-3, y:y(p.mean)-3, width:6, height:6, fill:'#ff7a45', opacity:.9, rx:1});
-      sq.addEventListener('mousemove',e=>showTip(e,`<b>提前 ${l} 天买</b><br>平均成交 <b>${fmt(p.mean)}</b><br>样本 ${p.n} 个出发日`));
-      sq.addEventListener('mouseleave',hideTip);
-      svg.appendChild(sq);
-    });
-
-    // step line + area through buckets
-    const sorted = curve.slice().sort((a,b)=>a.lo-b.lo);
-    const base = P.t+ih;
-    const stepPts = [];
-    sorted.forEach(c=>{
-      const hi = Math.min(c.hi, maxLead);
-      stepPts.push([x(c.lo), y(c.mean)], [x(hi), y(c.mean)]);
-    });
-    const line = stepPts.map((p,i)=>`${i?'L':'M'}${p[0]},${p[1]}`).join(' ');
-    const area = `M${stepPts[0][0]},${base} L${stepPts.map(p=>p.join(',')).join(' L')} L${stepPts[stepPts.length-1][0]},${base} Z`;
-    svg.appendChild(el('path',{d:area,fill:C.blue,opacity:.10}));
-    svg.appendChild(el('path',{d:line,fill:'none',stroke:C.blue,'stroke-width':2.2,'stroke-linejoin':'round'}));
-    sorted.forEach(c=>{
-      const hi = Math.min(c.hi, maxLead);
-      const cx=x(c.lo+(hi-c.lo)/2);
-      const hit = bestBucket && c.bucket===bestBucket;
-      const dot=el('circle',{cx,cy:y(c.mean),r:hit?5:3.6,fill:hit?C.warm:'#fff',stroke:hit?C.warm:C.blue,'stroke-width':2.2});
-      dot.addEventListener('mousemove',e=>showTip(e,
-        `<b>提前 ${c.bucket} 天</b><br>均价 <b>${fmt(c.mean)}</b><br>10 分位 ${fmt(c.p10)}<br>样本 ${c.samples} 个出发日${c.hit_rate!=null?`<br>命中率 ${c.hit_rate}%`:''}`));
-      dot.addEventListener('mouseleave',hideTip);
-      svg.appendChild(dot);
-      if(hit) svg.appendChild(text(cx, y(c.mean)-12, '最便宜', {fill:C.warm,'font-size':11,'font-weight':700,'text-anchor':'middle'}));
-    });
-  }
-
-  // ───────────── hit rate chart ─────────────
-  function chartHit(){
-    const host=document.getElementById('chartHit');
-    const r=current();
-    const H0 = (r.hist && r.hist.curve && r.hist.curve.length) ? r.hist : null;
-    const cs=((H0?H0.curve:r.curve)||[]).filter(c=>c.hit_rate!=null);
-    if(!cs.length){ host.innerHTML='<div class="empty">观察期还不够，暂无法计算命中率</div>'; return; }
-    const W=host.clientWidth||320, H=250, P={l:8,r:8,t:12,b:52};
-    const iw=W-P.l-P.r, ih=H-P.t-P.b;
-    host.innerHTML=''; const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,height:H}); host.appendChild(svg);
-    const bw = iw/cs.length;
-    const bestB = ((H0?H0.best:r.best)||{}).bucket;
-    cs.forEach((c,i)=>{
-      const h = Math.max(2, (c.hit_rate/100)*ih);
-      const isBest = c.bucket===bestB;
-      const rect=el('rect',{x:P.l+bw*i+bw*0.18, y:P.t+ih-h, width:bw*0.64, height:h, rx:5, fill:isBest?C.warm:'#9fbfe8'});
-      rect.addEventListener('mousemove',e=>showTip(e,`提前 <b>${c.bucket}</b> 天<br>命中率 <b>${c.hit_rate}%</b><br>均价 ${fmt(c.mean)}`));
-      rect.addEventListener('mouseleave',hideTip);
-      svg.appendChild(rect);
-      if(c.hit_rate>=5) svg.appendChild(text(P.l+bw*i+bw/2, P.t+ih-h-6, c.hit_rate+'%', {fill:isBest?C.warm:'#7d8ca3','font-size':11,'text-anchor':'middle','font-weight':600}));
-      svg.appendChild(text(P.l+bw*i+bw/2, H-32, c.bucket, {fill:'#8fa1ba','font-size':10,'text-anchor':'middle'}));
-    });
-    svg.appendChild(text(P.l, H-10, '提前天数区间', {fill:'#9aabc2','font-size':10}));
-    svg.appendChild(text(P.l+iw, H-10, `样本 ${(H0?H0.hit_days:r.hit_days)} 个出发日`, {fill:'#9aabc2','font-size':10,'text-anchor':'end'}));
-  }
-
-  // ───────────── weekly chart ─────────────
-  function chartWeekly(){
-    const host=document.getElementById('chartWeekly');
-    const r=current();
-    const F=feeFor(r);
-    // 全部换成含税：单程 +F，往返 +2F
-    const ws=r.weekends.filter(w=>w.out).map(w=>({
-      ...w,
-      out: w.out?{...w.out, price:w.out.price+F}:null,
-      back: w.back?{...w.back, price:w.back.price+F}:null,
-      round: w.round!=null?w.round+F*2:null,
-    }));
-    document.getElementById('wLegend').innerHTML =
-      `<span><i style="background:${C.blue}"></i>去程最低（含税）</span>
-       <span><i style="background:${C.teal}"></i>返程最低（含税）</span>
-       <span><i style="background:${C.warm}"></i>往返合计（含税）</span>
-       <span><i style="background:${C.navy}"></i>今天之后最近的出发日</span>`;
-    if(!ws.length){ host.innerHTML='<div class="empty">暂无数据</div>'; return; }
-
-    const W=host.clientWidth||900, H=300, P={l:52,r:14,t:14,b:46};
-    const iw=W-P.l-P.r, ih=H-P.t-P.b;
-    const vals=[]; ws.forEach(w=>{ vals.push(w.out.price); if(w.back) vals.push(w.back.price); if(w.round) vals.push(w.round); });
-    const maxV=Math.max(...vals)*1.1, minV=0;
-    const y=v=>P.t+ih-(v-minV)/(maxV-minV)*ih;
-    const bandW=iw/ws.length;
-    host.innerHTML=''; const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,height:H}); host.appendChild(svg);
-
-    for(let i=0;i<=4;i++){
-      const v=maxV*i/4, yy=y(v);
-      svg.appendChild(el('line',{x1:P.l,y1:yy,x2:P.l+iw,y2:yy,class:'gridline'}));
-      svg.appendChild(text(P.l-8,yy+4,fmtN(v),{fill:'#8fa1ba','font-size':11,'text-anchor':'end'}));
-    }
-    const nextIdx = ws.findIndex(w=>!w.past);
-    ws.forEach((w,i)=>{
-      const cx=P.l+bandW*(i+.5);
-      if(i===nextIdx) svg.appendChild(el('rect',{x:P.l+bandW*i+2, y:P.t, width:bandW-4, height:ih, fill:C.navy, opacity:.05, rx:6}));
-      const bw=Math.min(15, bandW*0.3);
-      [['out',C.blue,-bw*0.62],['back',C.teal,bw*0.62]].forEach(([k,col,off])=>{
-        const o=w[k]; if(!o) return;
-        const h=Math.max(2,y(0)-y(o.price));
-        const rect=el('rect',{x:cx+off-bw/2, y:y(o.price), width:bw, height:h, rx:4, fill:col, opacity:w.past?.45:.95});
-        rect.addEventListener('mousemove',e=>showTip(e,
-          `<b>${mmdd(w.dep_date)} ${wd(w.dep_date)} → ${mmdd(w.back_date)} ${wd(w.back_date)}</b><br>
-           ${k==='out'?'去程':'返程'}最低 <b>${fmt(o.price)}</b><br>
-           ${o.airline||''} ${o.flight_no||''} ${o.dep_time||''}<br>
-           快照 ${o.snap_date||''}（T-${o.lead}）`));
-        rect.addEventListener('mouseleave',hideTip);
-        svg.appendChild(rect);
-      });
-      const lab=`${mmdd(w.dep_date)}`;
-      svg.appendChild(text(cx,H-26,lab,{fill:w.past?'#c2cfe0':'#8fa1ba','font-size':10.5,'text-anchor':'middle'}));
-      if(w.round) svg.appendChild(text(cx,H-12,'¥'+fmtN(w.round),{fill:'#9aabc2','font-size':9.5,'text-anchor':'middle'}));
-    });
-    // round line
-    const pts=ws.filter(w=>w.round);
-    if(pts.length){
-      const d=pts.map((w,i)=>`${i?'L':'M'}${P.l+bandW*(ws.indexOf(w)+.5)},${y(w.round)}`).join(' ');
-      svg.appendChild(el('path',{d,fill:'none',stroke:C.warm,'stroke-width':2.2,'stroke-linejoin':'round'}));
-      pts.forEach(w=>{
-        const c=el('circle',{cx:P.l+bandW*(ws.indexOf(w)+.5), cy:y(w.round), r:3.4, fill:'#fff', stroke:C.warm,'stroke-width':2});
-        svg.appendChild(c);
-      });
-    }
-    if(nextIdx>=0){
-      const cx=P.l+bandW*(nextIdx+.5);
-      svg.appendChild(el('circle',{cx, cy:P.t+6, r:4, fill:C.navy}));
-    }
-  }
-
-  // ───────────── heatmap ─────────────
-  function renderHeat(){
-    const host=document.getElementById('heat');
-    const r=current();
-    const F=feeFor(r);
-    const h=r.heat;
-    if(!h || !h.rows.length){ host.innerHTML='<div class="empty">还没有未来出发日的样本</div>'; return; }
-    const cols=h.cols, rows=h.rows;
-    const flat=[].concat(...h.values).filter(v=>v!=null);
-    if(!flat.length){ host.innerHTML='<div class="empty">样本不足</div>'; return; }
-    const min=Math.min(...flat), max=Math.max(...flat);
-    const color=v=>{
-      if(v==null) return '';
-      const t=(v-min)/(max-min||1);
-      // 绿(便宜) → 黄(中) → 红(贵)
-      const lerp=(a,b,t)=>Math.round(a+(b-a)*t);
-      let c1,c2,tt;
-      if(t<.5){ c1=[22,163,148]; c2=[245,158,11]; tt=t*2; }
-      else { c1=[245,158,11]; c2=[239,68,68]; tt=(t-.5)*2; }
-      return `rgb(${lerp(c1[0],c2[0],tt)},${lerp(c1[1],c2[1],tt)},${lerp(c1[2],c2[2],tt)})`;
-    };
-    const grid = document.createElement('div');
-    grid.className='heat';
-    grid.style.gridTemplateColumns = `70px repeat(${cols.length}, minmax(38px,1fr))`;
-    grid.appendChild(Object.assign(document.createElement('div'),{className:'hcol',textContent:''}));
-    cols.forEach(c=>grid.appendChild(Object.assign(document.createElement('div'),{className:'hcol',textContent:c})));
-    rows.forEach((dep,i)=>{
-      const lab=document.createElement('div');
-      lab.className='hlabel'; lab.textContent=`${mmdd(dep)} ${wd(dep)}`;
-      grid.appendChild(lab);
-      cols.forEach((c,j)=>{
-        const v=h.values[i][j];
-        const cell=document.createElement('div');
-        cell.className='hcell'+(v==null?' empty':'');
-        if(v==null){ cell.textContent='·'; }
-        else { cell.textContent=fmtN(v+F); cell.style.background=color(v); }
-        cell.addEventListener('mousemove',e=>showTip(e,`<b>${mmdd(dep)} 出发</b><br>提前 <b>${c}</b> 天时最低价（含税） <b>${v==null?'未采集':fmt(v+F)}</b>`));
-        cell.addEventListener('mouseleave',hideTip);
-        grid.appendChild(cell);
-      });
-    });
-    host.innerHTML=''; host.appendChild(grid);
-    const ax=document.createElement('div');
-    ax.style.cssText='margin-top:10px;font-size:11px;color:#9aabc2;display:flex;justify-content:space-between';
-    ax.innerHTML=`<span>便宜 ${fmt(min+F)}</span><span>贵 ${fmt(max+F)}</span>`;
-    host.appendChild(ax);
-  }
-
-  // ───────────── verdict ─────────────
-  function renderVerdict(){
-    const r=current();
-    const H = (r.hist && r.hist.best) ? r.hist : null;
-    const b = H ? H.best : (r.best || r.xbest);
-    const isLong = !!b && (!!H || !!r.best);
-    const body=document.getElementById('verdictBody');
-    const hint=document.getElementById('verdictHint');
-    if(!b){ body.innerHTML='<div class="empty">样本不足，跑几天快照再看</div>'; return; }
-    const mean = H ? H.curve.reduce((s,c)=>s+c.mean*c.samples,0)/H.curve.reduce((s,c)=>s+c.samples,0) : r.overall_mean;
-    const save = mean ? Math.round((mean-b.mean)/mean*100) : 0;
-    hint.textContent = H
-      ? `历史纵向 ${H.n} 点 / ${H.departures} 个出发日 · 含税往返 · 置信度 ${D.meta.confidence}`
-      : `${isLong?'纵向样本':'横截面信号'} ${r.obs_count} 条 / ${r.dep_days} 个出发日 · 置信度 ${D.meta.confidence}`;
-    const a=r.advice;
-    let adviceLine='';
-    if(a && a.gap_pct!=null){
-      if(a.gap_pct<=5) adviceLine=`最近一个周末（${mmdd(a.dep_date)} 出发，距今 ${a.days_left} 天）当前往返 <b>${fmt(a.round)}</b>，已经落在最佳区间，<b>可以直接下单</b>。`;
-      else adviceLine=`最近一个周末（${mmdd(a.dep_date)} 出发，距今 ${a.days_left} 天）当前往返 <b>${fmt(a.round)}</b>，比最佳区间均价高 <b>${a.gap_pct}%</b>，不急就再等等。`;
-    }
-    const W = r.mw || ((H && H.window) ? H.window : null);
-    const bigMean = W ? W.mean : b.mean;
-    const saveW = mean ? Math.round((mean-bigMean)/mean*100) : 0;
-    const sv = (D.model||{}).savings;
-    body.innerHTML = `
-      <div class="big">${W?`提前 ${W.lo}–${W.hi} 天`:`提前 ${b.bucket} 天`}<small>最便宜</small></div>
-      <ul>
-        <li>该窗口均价 <b>${fmt(bigMean)}</b>，比全周期均价 ${fmt(mean)} 低 <b>${saveW}%</b></li>
-        <li>10 分位低价 <b>${fmt(b.p10)}</b>，窗口内最低 <b>${fmt(b.min)}</b></li>
-        ${isLong
-          ? `<li>命中率 <b>${b.hit_rate==null?'—':b.hit_rate+'%'}</b>（${H?H.hit_days:r.hit_days} 个观察完整的出发日里拿下最低价的比例）</li>`
-          : `<li style="color:#b4571f">当前只有 ${D.meta.snapshot_days} 个购买日快照，这条是按"今天不同出发日"做的横截面近似，含日期效应。</li>`}
-        ${H?`<li style="color:#0f8a7c">口径：Google Flights 同一行程 60 天价格记录，<b>含税往返</b>，与飞猪"不含税单程"不可直接比大小。</li>`:''}
-        ${sv?`<li style="color:#0f8a7c">回测：比临期(T-${sv.late_lead})省 <b>${sv.vs_late_pct}%</b>，比提前 T-${sv.early_lead} 省 <b>${sv.vs_early_pct}%</b>。</li>`:''}
-      </ul>
-      <div class="mini">
-        <span class="m">建议</span><span style="text-align:right">${adviceLine||'—'}</span>
-      </div>`;
-  }
-
-  // ───────────── compare ─────────────
-  function renderCompare(){
-    const host=document.getElementById('compare');
-    const rows=D.routes.filter(r=>(r.dir||'fwd')===state.dir && r.id!=='ALL').map(r=>{
-      const b=r.best || r.xbest;
-      const fut=r.weekends.filter(w=>!w.past&&w.out)[0];
-      return {r, b, now: fut?(fut.out.price+feeFor(r)):null};
-    }).sort((a,b)=>(a.b?a.b.mean:1e9)-(b.b?b.b.mean:1e9));
-    host.innerHTML = rows.map(({r,b,now})=>{
-      const on = r.key===state.key;
-      return `<div style="display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:9px 0;border-bottom:1px solid #f0f4fa">
-        <div style="font-size:12.5px;font-weight:${on?700:500};color:${on?'#12294a':'#5b6b83'}">${r.label}</div>
-        <div style="font-size:13px;font-weight:700;color:#ff7a45;text-align:right">${b?b.bucket+'天':'—'}</div>
-        <div style="font-size:11px;color:#9aabc2">最佳窗口均价 ${b?fmt(b.mean):'—'}</div>
-        <div style="font-size:11px;color:#9aabc2;text-align:right">当前去程 ${now?fmt(now):'—'}</div>
-      </div>`;
-    }).join('');
-  }
-
-  // ───────────── table ─────────────
-  function renderTable(){
-    const r=current();
-    const F=feeFor(r)*2;
-    const ws=r.weekends.filter(w=>w.out);
-    document.getElementById('tblTag').textContent = `${r.label} · ${ws.length} 个周末`;
-    if(!ws.length){ document.getElementById('table').innerHTML='<tr><td class="muted">暂无数据</td></tr>'; return; }
-    const head = `<thead><tr>
-      <th>出发（周五）</th><th>返程（周日）</th><th>距今</th>
-      <th>去程最低</th><th>航班</th><th>返程最低</th><th>航班</th><th>往返合计</th><th>含税往返</th><th>状态</th>
-    </tr></thead>`;
-    const rows = ws.map(w=>{
-      const soon = w.days_until>=0 && w.days_until<=7;
-      return `<tr>
-        <td>${w.dep_date} <span class="muted">${wd(w.dep_date)}</span></td>
-        <td>${w.back_date} <span class="muted">${wd(w.back_date)}</span></td>
-        <td>${w.days_until>=0?w.days_until+' 天':'已过'}</td>
-        <td><b>${fmt(w.out.price)}</b></td>
-        <td class="muted">${w.out.flight_no?((w.out.airline||'')+' '+(w.out.flight_no||'')+'<br>'+(w.out.dep_time||'')):'四线均价'}</td>
-        <td>${w.back?('<b>'+fmt(w.back.price)+'</b>'):'<span class="muted">—</span>'}</td>
-        <td class="muted">${w.back?((w.back.airline||'')+' '+(w.back.flight_no||'')+'<br>'+(w.back.dep_time||'')):'未采到'}</td>
-        <td>${w.round?'<b>'+fmt(w.round)+'</b>':'<span class="muted">—</span>'}</td>
-        <td>${w.round?'<b style="color:#ff7a45">'+fmt(w.round+F)+'</b>':'<span class="muted">—</span>'}</td>
-        <td>${w.past?'<span class="pill">已过</span>':(soon?'<span class="pill warn">临近</span>':'<span class="pill ok">可锁价</span>')}</td>
-      </tr>`;
-    }).join('');
-    document.getElementById('table').innerHTML = head+'<tbody>'+rows+'</tbody>';
-  }
-
-  function renderAll(){
-    renderTopFilter();
-    applyFilter();
-    renderKpis(); chartMonthly(); chartLead(); chartHit(); chartWeekly();
-    renderHeat(); renderVerdict(); renderCompare();
-    renderConfidence(); renderModel(); renderBuy(); renderCombo(); renderFlights(); renderTable();
-  }
-
-  renderMeta(); renderDirSwitch(); renderTabs(); renderAll();
-
-  // 响应式重绘
-  let rt=null;
-  window.addEventListener('resize',()=>{ clearTimeout(rt); rt=setTimeout(()=>{
-    chartMonthly(); chartLead(); chartHit(); chartWeekly();
-  },160); });
+ }
+ const confidence=independent<minN?'低':points.length>=200&&span>=30?'高':points.length>=60&&span>=14?'中':points.length>=30?'偏低':'低';
+ return {points:points.length,trips:trips.size,independent,span,strictN:strict.length,strictWeeks,strictTable,full,hit,window,confidence};
+}
+function solve(A,b){const n=b.length,M=A.map((r,i)=>[...r,b[i]]);for(let i=0;i<n;i++){let p=i;for(let j=i+1;j<n;j++)if(Math.abs(M[j][i])>Math.abs(M[p][i]))p=j;if(Math.abs(M[p][i])<1e-10)return null;[M[p],M[i]]=[M[i],M[p]];const v=M[i][i];for(let k=i;k<=n;k++)M[i][k]/=v;for(let j=0;j<n;j++)if(j!==i){const s=M[j][i];for(let k=i;k<=n;k++)M[j][k]-=s*M[i][k]}}return M.map(r=>r[n])}
+function fit(points){const p=points.filter(p=>p.lead>0&&p.price>0),groups=[...new Set(p.map(p=>p.group))].sort(),n=groups.length+2;if(p.length<n*3||new Set(p.map(p=>p.lead)).size<5)return null;const X=p.map(p=>{const l=Math.log(p.lead);return [...groups.map(g=>g===p.group?1:0),l,l*l]}),Y=p.map(p=>Math.log(p.price)),A=Array.from({length:n},()=>Array(n).fill(0)),B=Array(n).fill(0);X.forEach((x,i)=>{x.forEach((a,j)=>{B[j]+=a*Y[i];x.forEach((b,k)=>A[j][k]+=a*b)})});const coef=solve(A,B);if(!coef)return null;const smear=mean(X.map((x,i)=>Math.exp(Y[i]-x.reduce((s,v,k)=>s+v*coef[k],0))));return {groups,coef,smear,uShaped:coef[n-1]>0}}
+function predict(m,group,lead){if(!m||lead<=0||!m.groups.includes(group))return null;const i=m.groups.indexOf(group),l=Math.log(lead),n=m.groups.length;return Math.exp(m.coef[i]+m.coef[n]*l+m.coef[n+1]*l*l)*m.smear}
+function train(points,minN=8){const dates=[...new Set(points.map(p=>p.date))].sort();if(dates.length<minN||new Set(points.map(p=>p.purchase_date)).size<14)return {status:'insufficient',n:dates.length,mape:null,mae:null,model:null};const errors=[];for(const d of dates){const m=fit(points.filter(p=>p.date!==d));for(const p of points.filter(p=>p.date===d)){const y=predict(m,p.group,p.lead);if(y!==null)errors.push({abs:Math.abs(y-p.price),pct:Math.abs(y-p.price)/p.price})}}if(!errors.length)return {status:'insufficient',n:dates.length,mape:null,mae:null,model:null};const model=fit(points);return {status:model?'fitted':'insufficient',n:dates.length,testPoints:errors.length,mape:mean(errors.map(x=>x.pct))*100,mae:mean(errors.map(x=>x.abs)),model,validation:'留一出发日分组交叉验证，尚非前瞻性验证'};}
+return {buckets,labels,mean,day,lead,bucket,quantile,group,fee,taxed,combinations,dailyPairs,stats,solve,fit,predict,train};
+});
+</script><script>(()=>{'use strict';
+const D=window.FLIGHT_DATA,E=window.FlightEngine,$=id=>document.getElementById(id);
+if(!D){$('fatal').style.display='block';return}
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>Number.isFinite(n)?'¥'+Math.round(n).toLocaleString('zh-CN'):'—';
+const pct=n=>Number.isFinite(n)?n.toFixed(1)+'%':'—';
+const md=d=>d?.slice(5).replace('-','/');
+const routeNames={'PVG-CAN':'浦东 ⇄ 广州','PVG-SZX':'浦东 ⇄ 深圳','SHA-SZX':'虹桥 ⇄ 深圳','SHA-CAN':'虹桥 ⇄ 广州'};
+const places={PVG:'上海浦东',SHA:'上海虹桥',CAN:'广州白云',SZX:'深圳宝安'};
+const allHours=()=>Array.from({length:24},(_,i)=>i);
+const state={dir:'fwd',route:'all',out:allHours(),back:allHours(),mix:true,date:D.weekends[0]?.out,source:'fliggy'};
+const today=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+const histCache=new Map();let current=[],currentFlights=[];
+function empty(title,detail){return `<div class="empty"><span class="glyph">— / —</span><strong>${esc(title)}</strong><span>${esc(detail)}</span></div>`}
+function opts(extra={}){return {direction:state.dir,route:state.route,hoursOut:state.out,hoursBack:state.back,mix:state.mix,...extra}}
+function optionsAll(extra={}){return {direction:state.dir,route:state.route,mix:false,...extra}}
+function chartFrame(body,alt,width=960,height=245){return `<svg class="chart" role="img" aria-label="${esc(alt)}" viewBox="0 0 ${width} ${height}">${body}</svg>`}
+function comboChart(items,monthly=false){
+ const width=960,height=245,left=52,right=18,top=18,bottom=42,max=Math.max(500,...items.filter(x=>x.score!==null).map(x=>x.score))*1.14;
+ const w=width-left-right,h=height-top-bottom,step=w/Math.max(items.length,1),y=v=>top+h-v/max*h;
+ let body='';for(let i=0;i<=4;i++){const v=max*i/4;body+=`<line class="axis" x1="${left}" x2="${width-right}" y1="${y(v)}" y2="${y(v)}"/><text x="${left-10}" y="${y(v)+4}" text-anchor="end">${Math.round(v)}</text>`}
+ let segment=[];const flush=()=>{if(segment.length)body+=`<polyline class="line" points="${segment.join(' ')}"/>`;segment=[]};
+ items.forEach((c,i)=>{const x=left+step*(i+.5),bw=Math.min(18,step*.21);if(c.score!==null){body+=`<rect x="${x-bw-2}" y="${y(c.out)}" width="${bw}" height="${y(0)-y(c.out)}" fill="#c9dabd" rx="3"><title>去程含税 ${money(c.out)}；裸票 ${money(c.outBare)}；n=${c.n}</title></rect><rect x="${x+2}" y="${y(c.back)}" width="${bw}" height="${y(0)-y(c.back)}" fill="#78a47b" rx="3"><title>返程含税 ${money(c.back)}；裸票 ${money(c.backBare)}；n=${c.n}</title></rect>`;segment.push(`${x},${y(c.score)}`);body+=`<circle cx="${x}" cy="${y(c.score)}" r="3.7" fill="#237b5b" stroke="#fff" stroke-width="1.5"><title>${esc(c.label)}：比较价 ${money(c.score)}；含税往返 ${money(c.tax)}；裸票 ${money(c.outBare+c.backBare)}；n=${c.n}</title></circle><text x="${x}" y="${y(c.score)-12}" text-anchor="middle" style="fill:#237b5b;font-size:10px">${Math.round(c.score)}</text>`}else flush();body+=`<text x="${x}" y="${height-19}" text-anchor="middle">${esc(c.label)}</text>`});flush();
+ if(!items.some(c=>c.score!==null))body+=`<text x="480" y="105" text-anchor="middle">暂无符合条件的真实报价</text>`;
+ return chartFrame(body,monthly?'月度含税均价':'未来十周含税票价，缺失周不连线');
+}
+function drawHours(){for(const trip of ['out','back']){
+ const relevant=D.flights.filter(f=>f.direction===state.dir&&(state.route==='all'||f.route_id===state.route)&&f.trip===trip),available=new Set(relevant.map(f=>Number(f.dep_time.slice(0,2))));
+ $('hours-'+trip).innerHTML=`<div class="hour-row"><div class="hour-label">${trip==='out'?'周五 · 去程':'周日 · 返程'}<small>DEPARTURE HOUR</small></div><div class="hour-group"><div class="presets">${[['all','全部'],['morning','上午'],['afternoon','下午'],['evening','晚间'],['after13','13点后'],['none','清空']].map(([key,name])=>`<button data-preset="${key}" data-trip="${trip}">${name}</button>`).join('')}</div><div class="chips">${allHours().map(h=>`<button data-hour="${h}" data-trip="${trip}" aria-label="${trip==='out'?'去程':'返程'} ${h}点至${h}点59分${available.has(h)?'':'，未观察到报价'}" aria-pressed="${state[trip].includes(h)&&available.has(h)}" ${available.has(h)?'':'disabled'} class="${state[trip].includes(h)&&available.has(h)?'active':''}">${String(h).padStart(2,'0')}</button>`).join('')}</div></div></div>`;
+ }}
+function historyData(){const key=state.dir+state.route+state.source;if(histCache.has(key))return histCache.get(key);let p;if(state.source==='google')p=D.google.filter(p=>p.direction===state.dir&&(state.route==='all'||p.route_id===state.route)).map(p=>({...p,id:[p.route_id,p.direction,p.depart_date,p.return_date].join('|'),date:p.depart_date,group:p.route_id+'|'+p.direction,lead:E.lead(p.depart_date,p.purchase_date)}));else p=E.dailyPairs(D.observations,optionsAll(),D.meta);const value={points:p,stats:E.stats(p,D.meta.minimumIndependentWeekends)};histCache.set(key,value);return value}
+function stale(c){if(!c)return true;const threshold=E.lead(c.date,D.meta.today)<=28?D.meta.hourlyStaleHours:D.meta.quoteStaleHours;return [c.out,c.back].some(f=>(Date.now()-Date.parse(f.snapshot_at))/36e5>threshold)}
+function render(){
+ drawHours();document.querySelectorAll('[data-dir]').forEach(b=>{b.classList.toggle('active',b.dataset.dir===state.dir);b.setAttribute('aria-pressed',b.dataset.dir===state.dir)});
+ $('routes').innerHTML=[['all','十周总览'],...D.routes.map(r=>[r,routeNames[r]])].map(([r,name])=>`<button data-route="${r}" aria-pressed="${state.route===r}" class="${state.route===r?'active':''}">${name}${r==='all'?'':`<span class="route-code">${r}</span>`}</button>`).join('');
+ $('mix').disabled=state.route!=='all';
+ current=E.combinations(D.flights,opts(),D.meta);currentFlights=D.flights.filter(f=>f.direction===state.dir&&(state.route==='all'||f.route_id===state.route)&&state[f.trip].includes(Number(f.dep_time.slice(0,2))));
+ const weekly=D.weekends.map(w=>({date:w.out,backDate:w.back,...(current.find(c=>c.date===w.out)||{candidates:[],best:null,n:0})}));
+ const valid=weekly.filter(w=>w.best),best=[...valid].sort((a,b)=>a.best.score-b.best.score)[0],recent=weekly[0];
+ if(!weekly.some(w=>w.date===state.date))state.date=weekly[0]?.date;
+ let warning=[];if(!state.out.length||!state.back.length)warning.push('至少各选一个小时。');else if(!valid.length)warning.push('当前时段没有可配对的真实报价。请放宽时段，或等待采集更新。');
+ if(valid.some(w=>stale(w.best)))warning.push('部分报价已超过更新周期，仅供核价参考；请点击原始页面确认。');
+ const failed=D.collection.filter(r=>r.source==='fliggy-pc'&&r.status==='failed').length;if(failed)warning.push(`${failed} 个查询最近一次采集失败，旧报价已保留并显示时间。`);
+ $('warnings').textContent=warning.join(' ');
+ const H=historyData(),win=H.stats.window;
+ const kpis=[['最近周五 · 去程',recent?.best?money(E.taxed(recent.best.out,D.meta.fees)):'—',recent?.best?`${md(recent.date)} · 裸票 ${money(recent.best.out.price)}<br>n=${recent.n} 条筛选后报价`:'该周无完整配对 · n=0'],['当周周日 · 返程',recent?.best?money(E.taxed(recent.best.back,D.meta.fees)):'—',recent?.best?`${md(recent.backDate)} · 裸票 ${money(recent.best.back.price)}<br>与去程为同一候选组合`:'该周无完整配对 · n=0'],['当周 · 含税往返',recent?.best?money(recent.best.tax):'—',recent?.best?`裸票 ${money(recent.best.bare)} · 跨城另 ${money(recent.best.ground)}<br>两张单程票 · n=1 组合`:'缺失不以零替代 · n=0'],['最佳提前天数',win?`T-${win.lo}～${win.hi}`:'样本不足',`全天历史 · 严格 n=${H.stats.strictN}<br>${H.stats.strictWeeks} 个独立周 · 与时段无关`],['十周最低 · 比较价',best?money(best.best.score):'—',best?`${md(best.date)} → ${md(best.backDate)}<br>含税 ${money(best.best.tax)} + 跨城 ${money(best.best.ground)} · n=${valid.length} 周`:'无符合条件的周末 · n=0']];
+ $('kpis').innerHTML=kpis.map(([name,value,sub])=>`<article class="kpi"><label>${name}</label><strong style="${value==='样本不足'?'font-family:inherit;font-size:21px':''}">${value}</strong><small>${sub}</small></article>`).join('');
+ const item=w=>({label:md(w.date),score:w.best?.score??null,tax:w.best?.tax??null,out:w.best?E.taxed(w.best.out,D.meta.fees):null,back:w.best?E.taxed(w.best.back,D.meta.fees):null,outBare:w.best?.out.price??null,backBare:w.best?.back.price??null,n:w.n});
+ $('weekly-chart').innerHTML=comboChart(weekly.map(item));$('weekly-n').textContent=`n=${valid.length}/10 周 · ${currentFlights.length} 条报价`;
+ $('week-picks').innerHTML=weekly.map(w=>`<button data-week="${w.date}" class="${state.date===w.date?'active':''}" aria-pressed="${state.date===w.date}" aria-label="${w.date}至${w.backDate}，${w.best?money(w.best.score):'无数据'}">${best?.date===w.date?'<span class="best-flag">LOWEST</span>':''}${md(w.date)}<strong>${w.best?money(w.best.score):'—'}</strong><small>${w.best?'n='+w.n:'缺失'}</small></button>`).join('');
+ $('weekly-foot').textContent=`从下一个周五 ${D.weekends[0]?.out} 起，价格为此刻观察的未来出发日横截面，不是预测。${state.route==='all'&&state.mix?'总览允许机场混搭，广深跨城另计¥100。':'当前只比较同一固定往返线。'} 所有实际起飞时间均为北京时间。`;
+ $('week-select').innerHTML=weekly.map(w=>`<option value="${w.date}" ${state.date===w.date?'selected':''}>${w.date} → ${w.backDate}</option>`).join('');
+ renderTickets(weekly.find(w=>w.date===state.date));
+ const months=[...E.group(valid,w=>w.date.slice(0,7))].map(([label,ws])=>({label:label.slice(5)+'月',score:E.mean(ws.map(w=>w.best.score)),tax:E.mean(ws.map(w=>w.best.tax)),out:E.mean(ws.map(w=>E.taxed(w.best.out,D.meta.fees))),back:E.mean(ws.map(w=>E.taxed(w.best.back,D.meta.fees))),outBare:E.mean(ws.map(w=>w.best.out.price)),backBare:E.mean(ws.map(w=>w.best.back.price)),n:ws.length}));
+ $('monthly-chart').innerHTML=comboChart(months,true);$('monthly-n').textContent=`n=${valid.length} 周`;$('monthly-foot').textContent=months.map(m=>`${m.label} n=${m.n} 周；去/返裸票均价 ${money(m.outBare)} / ${money(m.backBare)}`).join('；')||'样本不足';
+ const comparisons=D.routes.map(r=>{const ws=E.combinations(D.flights,opts({route:r,mix:false}),D.meta).filter(w=>w.best);return {r,n:ws.length,mean:E.mean(ws.map(w=>w.best.tax)),bare:E.mean(ws.map(w=>w.best.bare)),min:ws.length?Math.min(...ws.map(w=>w.best.tax)):null}}),scale=Math.max(1,...comparisons.map(r=>r.mean||0));
+ $('route-compare').innerHTML=comparisons.map(r=>`<div class="route-bar-row"><div class="row"><span>${routeNames[r.r]}</span><b>${money(r.mean)}</b></div><div class="bar"><span style="width:${(r.mean||0)/scale*100}%"></span></div><small>含税均价 · 裸票 ${money(r.bare)} · 最低 ${money(r.min)} · n=${r.n} 周</small></div>`).join('');
+ renderHistory(H);renderHeat();renderDetails(weekly);
+ const latestQuote=D.flights.map(f=>f.snapshot_at).sort().at(-1);$('updated').textContent=latestQuote?latestQuote.slice(5,16).replace('T',' ')+' CST 报价':'暂无真实报价';$('range').textContent=`${md(D.weekends[0]?.out)} — ${md(D.weekends.at(-1)?.back)}`;
+ $('footer-data').textContent=`生成于 ${D.meta.generated_at.replace('T',' ')} · 最新报价 ${D.meta.latestQuotes} 条`;
+ const statuses=E.group(D.collection,r=>r.source+'|'+r.status);$('collection-status').innerHTML=`<table><thead><tr><th>来源 / 状态</th><th>查询数 n</th><th>最近记录</th></tr></thead><tbody>${[...statuses].map(([k,a])=>`<tr><td>${esc(k.replace('|',' / '))}</td><td>${a.length}</td><td>${esc(a.map(r=>r.at).sort().at(-1))}${a[0].reason?'<small>'+esc(a[0].reason)+'</small>':''}</td></tr>`).join('')}</tbody></table>`;
+ window.dispatchEvent(new Event('flight-render'));
+}
+function flightCard(f,label){return `<article class="ticket"><div class="ticket-top"><span>${label} · ${f.depart_date}</span><span class="mono">${esc(f.flight_no)}${f.codeshare?' · 共享':''}</span></div><div class="ticket-route"><div class="ticket-time"><strong>${esc(f.dep_time)}</strong><small>${esc(places[f.dep_code])} ${f.dep_code}</small></div><div class="flight-line"></div><div class="ticket-time"><strong>${esc(f.arr_time)}${f.next_day?'<sup style="font-size:11px">+1</sup>':''}</strong><small>${esc(places[f.arr_code])} ${f.arr_code}</small></div></div><div class="ticket-bottom"><div>${esc(f.airline)} · ${esc(f.aircraft||'机型待核验')}<br>托运行李：${esc(f.baggage||'待核验')}<br><a href="${esc(f.source_url)}" target="_blank" rel="noopener">到飞猪核价 ↗</a></div><div style="text-align:right"><b>${money(E.taxed(f,D.meta.fees))}</b><br>裸票 ${money(f.price)} + 税费 ${money(E.fee(f.snapshot_at,D.meta.fees))}<br><span class="mono">${f.snapshot_at.slice(5,16).replace('T',' ')} 报价</span></div></div></article>`}
+function renderTickets(w){
+ $('ticket-caption').textContent=`${state.date} 周五出发 · ${w?.backDate||''} 周日返程 · ${w?.candidates.length||0} 个机场配对`;
+ if(!w?.best){$('tickets').innerHTML=empty('没有符合条件的去返组合','两程必须都有报价且采集时间相近；试试其他周末或放宽时段。');$('decision').textContent='样本不足，暂不提供买入或等待建议。';$('combination-table').innerHTML='';return}
+ const c=w.best;let parts=[{v:c.out.price,c:'#c9dabd',t:'去程裸票'},{v:c.back.price,c:'#78a47b',t:'返程裸票'},{v:c.tax-c.bare,c:'#bdd0cf',t:'两程税费'},{v:c.ground,c:'#e2d3b3',t:'广深跨城预算'}];let x=0;const bar=parts.map(p=>{const width=p.v/c.score*800;const s=`<rect x="${x}" y="3" width="${width}" height="9" fill="${p.c}"><title>${p.t} ${money(p.v)}</title></rect>`;x+=width;return s}).join('');
+ $('tickets').innerHTML=`<div class="tickets">${flightCard(c.out,'去程')}${flightCard(c.back,'返程')}</div><div class="trip-total"><div><span class="badge">当前筛选最低${c.mixed?' · 机场混搭':''}</span><br><small>含税往返 ${money(c.tax)} + 广深跨城 ${money(c.ground)}<br>不含其他机场接驳费用 · n=${w.n} 条报价</small></div><div style="text-align:right"><strong>${money(c.score)}</strong><br><small>组合比较价 / 1 人</small></div></div>${chartFrame(bar,'本组合裸票、税费与跨城预算构成',800,15)}`;
+ const remaining=E.lead(state.date,today);
+ // 单次判断始终使用全天固定路线、同源、已经出发的独立历史行程；不跟随时段改变。
+ const base=E.combinations(D.flights,optionsAll(),D.meta).find(w=>w.date===state.date)?.best;
+ const fixed=E.dailyPairs(D.observations,optionsAll(),D.meta).filter(p=>p.date<today&&E.bucket(p.lead)===E.bucket(remaining)&&(state.route==='all'?p.route_id===base?.out.route_id:true));
+ const values=[...E.group(fixed,p=>p.id).values()].map(a=>Math.min(...a.map(p=>p.price))),n=values.length;
+ let decision=`<strong>距周五还有 ${remaining} 天 · ${n<D.meta.minimumIndependentWeekends?'历史样本不足':'同源价格位置参考'}</strong>`;
+ if(n>=D.meta.minimumIndependentWeekends&&base&&!stale(base)){const p20=E.quantile(values,.2),p50=E.quantile(values,.5),p80=E.quantile(values,.8);decision+=`${base.out.route_id} 全天最低含税 ${money(base.tax)}；P20 ${money(p20)} / P50 ${money(p50)} / P80 ${money(p80)}。${base.tax<=p20?'处于历史偏低区，可优先核价。':base.tax>=p80?'处于历史偏高区，可比较相邻周末。':'处于历史常见区间，按行程确定性决策。'} n=${n} 个已出发周末。`}
+ else decision+=`暂不判断“现在买”或“再等等”。${base?'全天固定线基准 '+base.out.route_id+' '+money(base.tax)+'；':''}需要至少 ${D.meta.minimumIndependentWeekends} 个已出发、同线同提前桶的历史行程。`;
+ $('decision').innerHTML=decision+'<br><span class="subtext">此判断固定为全天、固定路线，不随时段或混搭变化；不会用 Google 价格比较飞猪。</span>';
+ $('combination-table').innerHTML=`<table><thead><tr><th>去程</th><th>返程</th><th>裸票 / 含税</th><th>跨城</th><th>比较价</th><th>仅换一程的次优</th><th>样本</th></tr></thead><tbody>${w.candidates.map(c=>`<tr><td>${esc(c.out.dep_code+'→'+c.out.arr_code)}<small>${esc(c.out.flight_no)} ${c.out.dep_time}</small></td><td>${esc(c.back.dep_code+'→'+c.back.arr_code)}<small>${esc(c.back.flight_no)} ${c.back.dep_time}</small></td><td class="num">${money(c.bare)} / ${money(c.tax)}</td><td class="num">${money(c.ground)}</td><td class="num">${money(c.score)}</td><td>${c.alternative?`${c.alternative.out.flight_no} + ${c.alternative.back.flight_no}<small>${money(c.alternative.score)} · 多 ${money(c.alternative.score-c.score)}</small>`:'无不同时间航班'}</td><td>n=${c.n} 条</td></tr>`).join('')}</tbody></table>`;
+}
+function renderHistory(H){
+ const {points:p,stats:s}=H,win=s.window;document.querySelectorAll('[data-source]').forEach(b=>{b.classList.toggle('active',b.dataset.source===state.source);b.setAttribute('aria-pressed',b.dataset.source===state.source)});
+ $('history-stats').innerHTML=[['日级观察',s.points],['行程',s.trips],['独立出发周',s.independent],['购买日跨度',s.span+' 天'],['严格覆盖行程',s.strictN],['样本充分性',s.confidence]].map(([l,n])=>`<span>${l}<strong>${n}</strong></span>`).join('');
+ $('window').innerHTML=win?`<strong>T-${win.lo}～T-${win.hi}</strong><p>候选描述性窗口，${win.width} 天。n=${win.n} 行程 / ${win.weekends} 独立周。<br>同批配对 n=${win.pairedN}：对 T-2 ${win.vsLate===null?'缺失':pct(win.vsLate*100)}；对 T-30 ${win.vs30===null?'缺失':pct(win.vs30*100)}。<br>这是样本内观察，尚不能称为未来可实现的节省。</p>`:`<strong style="font-family:inherit;font-size:24px">样本不足</strong><p>还不能给出最佳购买窗口。当前严格覆盖 n=${s.strictN} 行程、${s.strictWeeks} 个独立出发周。<br>至少需要 ${D.meta.minimumIndependentWeekends} 个独立周，并有临期和远期的真实观察；今天的十周报价不能替代这段历史。</p>`;
+ const model=(state.source==='google'?D.googleModels:D.models)[state.dir],width=960,height=245,left=52,top=18,bottom=38,maxX=Math.max(70,...p.map(p=>p.lead)),maxY=Math.max(500,...p.map(p=>p.price))*1.1,x=n=>left+n/maxX*(width-left-20),y=n=>height-bottom-n/maxY*(height-top-bottom);
+ let body='';for(let i=0;i<=4;i++){const v=maxY*i/4;body+=`<line class="axis" x1="52" x2="940" y1="${y(v)}" y2="${y(v)}"/><text x="42" y="${y(v)+4}" text-anchor="end">${Math.round(v)}</text>`}
+ if(win)body+=`<rect x="${x(win.lo)}" width="${x(win.hi)-x(win.lo)}" y="18" height="${height-top-bottom}" fill="#f4e2c8"/>`;
+ for(let i=0;i<=maxX;i+=10)body+=`<text x="${x(i)}" y="235" text-anchor="middle">T-${i}</text>`;
+ // Every point is observed; no fabricated scatter or interpolated missing buckets.
+ p.forEach(p=>body+=`<circle cx="${x(p.lead)}" cy="${y(p.price)}" r="2.8" fill="#85aa84" opacity=".38"><title>${esc(p.route_id)} ${p.date}；购买日${p.purchase_date}；T-${p.lead} ${money(p.price)}</title></circle>`);
+ s.full.forEach((b,i)=>{if(b.mean!==null){const hi=b.hi??maxX;body+=`<line x1="${x(b.lo)}" x2="${x(Math.min(hi,maxX))}" y1="${y(b.mean)}" y2="${y(b.mean)}" stroke="#237b5b" stroke-width="2.5"><title>${b.label} 天均价 ${money(b.mean)}；n=${b.n} 行程</title></line>`}});
+ s.strictTable.forEach(b=>{if(b.mean!==null)body+=`<rect x="${x((b.lo+(b.hi??maxX))/2)-4}" y="${y(b.mean)-4}" width="8" height="8" fill="#bd733a"><title>严格子集 n=${b.n}；${money(b.mean)}</title></rect>`});
+ if(model?.model&&state.route!=='all'){const pts=[];for(let i=1;i<=Math.min(maxX,90);i++){const v=E.predict(model.model,state.route+'|'+state.dir,i);if(v!==null&&v<=maxY*1.1)pts.push(`${x(i)},${y(v)}`)}body+=`<polyline points="${pts.join(' ')}" fill="none" stroke="#768e9f" stroke-width="1.8" stroke-dasharray="5 5"/>`}
+ if(!p.length)body+=`<text x="480" y="114" text-anchor="middle">尚无符合机场、日期与直飞条件的历史数据</text>`;
+ $('history-chart').innerHTML=chartFrame(body,'提前天数与真实往返含税报价，不同来源独立展示');
+ $('history-note').textContent=state.source==='google'?'Google：已核实同机场、周五去周日回、直飞、1成人经济舱、CNY的往返含税价；仅作外部研究。与飞猪售票覆盖不同，不能直接比较。':'飞猪：两张独立单程票含税合计，按日取一批可比较的报价；桶均价先对每个出发日取桶内最低，再跨行程平均。当前只有一次横截面时，不构成纵向择时证据。';
+ $('hits').innerHTML=s.hit.map(h=>`<div class="hit">提前 ${h.label} 天<b>${pct(h.percent)}</b><div class="track"><span style="width:${h.percent||0}%"></span></div><small>${h.wins}/${h.n} 行程</small></div>`).join('');
+ const evidence=model?.status==='fitted'?`MAPE ${model.mape.toFixed(1)}% · MAE ${money(model.mae)} · n=${model.n} 个留出出发日 / ${model.testPoints} 测试点。`:'MAPE：样本不足 · MAE：样本不足。至少8个出发周且14个购买日后才训练。';
+ const savings=win?.vsLate>0?win.mean*win.vsLate/(1-win.vsLate):null;
+ const judgement=model?.mae!==null&&savings!==null?(model.mae>savings?'误差大于收益：模型误差高于样本内择时差额，不能用于买入决策。':'误差与收益的对照尚需独立前瞻验证，不作为买入指令。'):'“误差大于收益”须用本次实测误差和配对差额核验；目前数据不足，不复用旧数值。';
+ $('model').innerHTML=`<code>ln(price) = a[路线×方向] + b₁ ln(lead) + b₂ ln(lead)²<br>price_hat = exp(·) × smearing</code><p>${evidence}</p><p>${judgement}</p><p>自实现高斯消元；所有路线方向共享形状，未强制 U 型；T=0不训练。留一出发日验证仍不同于未来滚动验证。</p><label for="lead-range" class="subtext">还剩几天 · 参考试算（仅固定路线可用）</label><input id="lead-range" type="range" min="1" max="70" value="14" ${model?.model&&state.route!=='all'?'':'disabled'}><output id="model-output">${model?.model&&state.route!=='all'?'拖动查看模型参考；不用于买入决策。':'样本不足或正在查看汇总；无法试算。'}</output>`;
+ const table=(rows)=>`<table><thead><tr><th>提前天数</th><th>含税桶均价</th><th>参与行程 n</th></tr></thead><tbody>${rows.map(r=>`<tr><td>T-${r.label}</td><td class="num">${money(r.mean)}</td><td>n=${r.n}</td></tr>`).join('')}</tbody></table>`;
+ $('strict-table').innerHTML='<h3>严格覆盖子集 · 描述性对照</h3>'+table(s.strictTable)+`<details><summary>全样本脚注（不可把不同日期子集直接当配对）</summary>${table(s.full)}</details>`;
+}
+function renderHeat(){const p=E.dailyPairs(D.observations,opts(),D.meta);$('heat-n').textContent=`n=${new Set(p.map(p=>p.purchase_date)).size} 个报价日`;const min=Math.min(...p.map(p=>p.price)),max=Math.max(...p.map(p=>p.price));$('heat').innerHTML=`<table class="heat"><thead><tr><th>周五 → 周日</th>${E.labels.map(l=>`<th>T-${l}</th>`).join('')}</tr></thead><tbody>${D.weekends.map(w=>`<tr><td style="text-align:left"><span class="mono">${md(w.out)} → ${md(w.back)}</span></td>${E.buckets.map(([lo,hi])=>{const rows=p.filter(p=>p.date===w.out&&p.lead>=lo&&p.lead<=hi),value=rows.length?Math.min(...rows.map(p=>p.price)):null,n=new Set(rows.map(p=>p.purchase_date)).size;return `<td>${value===null?'<span class="cell nodata">—<small>n=0</small></span>':`<span class="cell" style="background:hsl(97 26% ${94-(1-(value-min)/(max-min||1))*17}%)">${money(value)}<small>n=${n}</small></span>`}</td>`}).join('')}</tr>`).join('')}</tbody></table>`}
+function renderDetails(weekly){$('weekend-table').innerHTML=`<table><thead><tr><th>周末</th><th>去程最低</th><th>返程最低</th><th>裸票合计</th><th>含税往返</th><th>跨城预算</th><th>比较价</th><th>样本 n</th></tr></thead><tbody>${weekly.map(w=>`<tr><td>${w.date}<small>→ ${w.backDate}</small></td>${w.best?`<td>${money(w.best.out.price)}<small>${w.best.out.flight_no} ${w.best.out.dep_time}</small></td><td>${money(w.best.back.price)}<small>${w.best.back.flight_no} ${w.best.back.dep_time}</small></td><td>${money(w.best.bare)}</td><td>${money(w.best.tax)}</td><td>${money(w.best.ground)}</td><td>${money(w.best.score)}</td><td>${w.n} 条报价</td>`:'<td colspan="7">当前筛选没有完整配对 · n=0</td>'}</tr>`).join('')}</tbody></table>`;if($('flight-detail').open)renderFlights();else $('all-flights').innerHTML=''}
+function renderFlights(){if(state.route==='all'){$('all-flights').innerHTML=empty('切换到具体路线，查看全部航班','总览保留混搭组合和周末比较；航班明细按原四条路线分别列出。');return}const header='<thead><tr><th>起飞 / 到达</th><th>航班 / 航司</th><th>机场</th><th>机型 / 行李</th><th>票价</th><th>含税</th><th>比本程最低</th><th>报价时间</th></tr></thead>';$('all-flights').innerHTML=D.weekends.map(w=>`<details><summary>${w.out} → ${w.back} · n=${currentFlights.filter(f=>f.weekend===w.out).length} 条</summary>${['out','back'].map(trip=>{const rows=currentFlights.filter(f=>f.weekend===w.out&&f.trip===trip).sort((a,b)=>a.dep_time.localeCompare(b.dep_time)),min=Math.min(...rows.map(f=>f.price));return `<h3>${trip==='out'?'周五去程':'周日返程'} · n=${rows.length}</h3><div class="table-wrap"><table>${header}<tbody>${rows.map(f=>`<tr><td class="num">${f.dep_time} → ${f.arr_time}${f.next_day?' +1天':''}</td><td>${esc(f.flight_no)}${f.codeshare?' 共享':''}<small>${esc(f.airline)}</small></td><td>${esc(f.dep_airport)}<small>→ ${esc(f.arr_airport)}</small></td><td>${esc(f.aircraft)}<small>托运行李 ${esc(f.baggage||'待核验')}</small></td><td>${money(f.price)}</td><td>${money(E.taxed(f,D.meta.fees))}</td><td>${money(f.price-min)}</td><td><a href="${esc(f.source_url)}" target="_blank" rel="noopener">${f.snapshot_at.slice(5,16).replace('T',' ')} ↗</a></td></tr>`).join('')||'<tr><td colspan="8">无匹配报价</td></tr>'}</tbody></table></div>`}).join('')}</details>`).join('')}
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.dir){state.dir=b.dataset.dir;state.out=allHours();state.back=allHours();render()}else if(b.dataset.route){state.route=b.dataset.route;state.out=allHours();state.back=allHours();render()}else if(b.dataset.hour){const t=b.dataset.trip,h=Number(b.dataset.hour);state[t]=state[t].includes(h)?state[t].filter(x=>x!==h):[...state[t],h];render()}else if(b.dataset.preset){const p=b.dataset.preset;state[b.dataset.trip]=allHours().filter(h=>p==='all'||p==='morning'&&h>=6&&h<12||p==='afternoon'&&h>=12&&h<18||p==='evening'&&h>=18||p==='after13'&&h>=13);render()}else if(b.dataset.week){state.date=b.dataset.week;render()}else if(b.dataset.source){state.source=b.dataset.source;render()}else if(b.id==='reset'){state.out=allHours();state.back=allHours();render()}else if(b.id==='export')exportCSV()});
+$('mix').addEventListener('change',e=>{state.mix=e.target.checked;render()});$('week-select').addEventListener('change',e=>{state.date=e.target.value;render()});$('flight-detail').addEventListener('toggle',()=>{if($('flight-detail').open)renderFlights()});
+document.addEventListener('input',e=>{if(e.target.id==='lead-range'){const m=(state.source==='google'?D.googleModels:D.models)[state.dir],n=Number(e.target.value),v=E.predict(m?.model,state.route+'|'+state.dir,n),win=historyData().stats.window;const delta=v&&win?v/win.mean-1:null;$('model-output').textContent=`T-${n}：模型参考 ${money(v)}。${delta===null?'没有可比窗口，无法分档。':delta<=.02?'接近描述性窗口均价。':delta<=.1?'略高于描述性窗口均价。':'明显高于描述性窗口均价。'} 仅供探索，不作为买入或等待建议。`}});
+function exportCSV(){const rows=[['来源','报价时间','路线','方向','去返','出发日期','起飞','到达','次日','航班','航司','裸票','税费','含税','行李','原始页面'],...currentFlights.map(f=>[f.source,f.snapshot_at,f.route_id,f.direction,f.trip,f.depart_date,f.dep_time,f.arr_time,f.next_day?1:0,f.flight_no,f.airline,f.price,E.fee(f.snapshot_at,D.meta.fees),E.taxed(f,D.meta.fees),f.baggage||'待核验',f.source_url])];const csv='\uFEFF'+rows.map(r=>r.map(x=>{let s=String(x??'');if(/^[=+@\-]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'}).join(',')).join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download=`flight-quotes-${state.dir}-${D.meta.today}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+render();window.__flightDebug={state,get current(){return current},engine:E,applyWatch(w){state.dir=w.direction;state.route=w.route;state.date=w.date;state.out=w.hoursOut;state.back=w.hoursBack;state.mix=w.mix;render()}};
 })();
-</script>
-</body>
-</html>
+</script><script>(()=>{'use strict';
+ const D=window.FLIGHT_DATA;if(!D||!window.__flightDebug)return;
+ const $=id=>document.getElementById(id),local=location.hostname==='127.0.0.1'&&location.protocol==='http:',esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ let csrf='',cached=null,pending=null;
+ const money=n=>Number.isFinite(n)?'¥'+Math.round(n).toLocaleString('zh-CN'):'—';
+ function selection(){const s=window.__flightDebug.state;return {date:$('watch-date').value||s.date,direction:s.dir,route:s.route,hoursOut:s.out,hoursBack:s.back,mix:s.mix,target:$('watch-target').value===''?null:Number($('watch-target').value)}}
+ function sync(){const s=window.__flightDebug.state;$('watch-date').value=s.date;$('watch-summary').textContent=`${s.dir==='fwd'?'周五上海出发':'周五广深出发'} · ${s.route==='all'?'四线'+(s.mix?'可混搭':'固定往返'):s.route} · 去程 ${s.out.length} 个小时 / 返程 ${s.back.length} 个小时 · 广深跨城 +¥100`}
+ async function api(url,data){const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','X-Flight-CSRF':csrf},body:JSON.stringify(data)}),v=await r.json();if(!r.ok)throw Error(v.error||'请求失败');return v}
+ function status(text,error=false){$('watch-message').textContent=text;$('watch-message').style.color=error?'#ae5346':'#237b5b'}
+ function rows(v){cached=v;csrf=v.csrf;const labels={watching:'监测中',expired:'已结束',missing:'等待报价',stale:'等待新报价'};
+  $('watch-list').innerHTML=v.watches.length?`<table><thead><tr><th>监测周末</th><th>条件</th><th>当前比较价</th><th>目标价</th><th>状态</th><th>操作</th></tr></thead><tbody>${v.watches.map(w=>{const s=v.statuses.find(s=>s.id===w.id);return `<tr><td>${esc(w.date)}<small>${esc(w.direction==='fwd'?'上海出发':'广深出发')}</small></td><td>${esc(w.route==='all'?'四线'+(w.mix?'可混搭':'固定往返'):w.route)}<small>去/返 ${w.hoursOut.length}/${w.hoursBack.length} 小时</small></td><td>${money(s?.quote?.score)}<small>${s?.quote?'含税 '+money(s.quote.tax)+' + 跨城 '+money(s.quote.ground):''}</small></td><td>${w.target===null?'自动好价观察':money(w.target)}</td><td>${w.enabled===false?'已暂停':labels[s?.status]||'等待首次检查'}<small style="max-width:350px;white-space:normal">${esc(w.enabled===false?'':s?.reason||'已保存，等待检查')}</small></td><td>${w.enabled===false?'':`<button data-pause-watch="${w.id}" style="font-size:10px;padding:4px 8px">暂停</button>`}</td></tr>`}).join('')}</tbody></table>`:'<div class="empty" style="min-height:95px">还没有启用监测。选择周末和时段后，点击“启用此周末监测”。</div>';
+  $('watch-alerts').innerHTML=v.alerts.length?`<table><thead><tr><th>提醒时间</th><th>类型 / 周末</th><th>比较价</th><th>证据</th><th>桌面通知</th></tr></thead><tbody>${v.alerts.map(a=>`<tr><td class="mono">${esc(a.at.slice(5,16).replace('T',' '))}</td><td>${esc(a.title)}<small>${esc(a.date)}</small></td><td>${money(a.score)}</td><td style="white-space:normal;min-width:230px;max-width:600px">${esc(a.body)}</td><td>${a.delivery?.sent?'已提交给 Windows':'提交失败'}${a.delivery?.error?'<small>'+esc(a.delivery.error)+'</small>':''}</td></tr>`).join('')}</tbody></table>`:'<p class="fineprint">暂无价格提醒。首次观察只建立基线；不会把第一条报价称为“最低价”。</p>';
+  $('watch-status').textContent=`本机监测已连接 · ${v.watches.filter(w=>w.enabled!==false).length} 个启用中${v.checked_at?' · 上次检查 '+v.checked_at.slice(5,16).replace('T',' '):''}`;
+ }
+ async function refresh(){if(!local)return;try{const r=await fetch('/api/watches');if(!r.ok)throw Error('无法读取监测状态');rows(await r.json())}catch(e){status(e.message,true)}}
+ $('watch-date').min=D.weekends[0].out;$('watch-date').max=D.weekends.at(-1).out;$('watch-date').step=7;sync();
+ window.addEventListener('flight-render',sync);
+ if(local){$('watch-enable').textContent='启用此周末监测';$('watch-test').hidden=false;$('watch-refresh').hidden=false;refresh();setInterval(refresh,60000)}
+ else{$('watch-enable').textContent='在本机启用监测 ↗';$('watch-status').textContent='公开 / 离线页面 · 监测由你的 Windows 电脑运行';$('watch-list').innerHTML='<p class="fineprint">在这里选日期和时段，再打开本机面板保存。关闭网页后仍由计划任务检查；电脑需联网且登录 Windows。<a href="http://127.0.0.1:8765/#monitor" target="_blank" rel="noopener">打开本机监测与提醒记录 ↗</a></p>';$('watch-alerts').innerHTML='<p class="fineprint">提醒记录只保存在本机，点击上方链接查看。公开网站不包含你的监测清单。</p>'}
+ $('watch-enable').addEventListener('click',async()=>{try{const v=selection();if(!v.hoursOut.length||!v.hoursBack.length)throw Error('至少各选一个小时');if(new Date(v.date+'T12:00:00+08:00').getUTCDay()!==5)throw Error('请选择周五，周日自动返程');if(!local){window.open('http://127.0.0.1:8765/#watch='+encodeURIComponent(JSON.stringify(v)),'_blank','noopener');status('请在打开的本机面板确认启用。若未打开，运行“打开监测面板.ps1”。');return}if(!csrf)throw Error('本机服务尚未连接，请刷新后再试');await api('/api/watches',v);status('已启用：每小时检查本周末，达到目标或满足低位证据才提醒。');await refresh();setTimeout(refresh,2000)}catch(e){status(e.message,true)}});
+ $('watch-test').addEventListener('click',async()=>{try{await api('/api/test-notification',{});status('测试通知已提交给 Windows；如未弹出，请检查通知设置及勿扰模式。')}catch(e){status(e.message,true)}});
+ $('watch-refresh').addEventListener('click',async()=>{try{await api('/api/check',{});status('正在用最新已采报价检查。采集本身按每小时计划运行。');setTimeout(refresh,1500)}catch(e){status(e.message,true)}});
+ $('watch-list').addEventListener('click',async e=>{const id=e.target.closest('[data-pause-watch]')?.dataset.pauseWatch;if(id)try{await api('/api/pause',{id});await refresh()}catch(e){status(e.message,true)}});
+ if(local&&location.hash.startsWith('#watch=')){try{pending=JSON.parse(decodeURIComponent(location.hash.slice(7)));if(['fwd','rev'].includes(pending.direction)&&['all',...D.routes].includes(pending.route)&&Array.isArray(pending.hoursOut)&&Array.isArray(pending.hoursBack)){window.__flightDebug.applyWatch(pending);$('watch-date').value=pending.date;$('watch-target').value=pending.target??'';status('已带入公开页面选择的条件；点击“启用此周末监测”保存。');$('monitor').scrollIntoView();history.replaceState(null,'','#monitor')}}catch{status('带入的监测条件无效，请重新选择。',true)}}
+})();
+</script></body></html>
