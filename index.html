@@ -19,8 +19,8 @@
 <section class="panel section-space"><div class="section-top"><div><h2>价格观察矩阵</h2><p>行＝周五出发日，列＝购买时距离出发的天数；随当前时段重算。空白不插值。</p></div><span class="badge" id="heat-n"></span></div><div id="heat" class="table-wrap"></div><p class="fineprint">飞猪：每日选择覆盖最多的一批（并列取最接近09:30者），两程采集相差不超过40分钟。格内为观察到的最低含税往返价，不含跨城费；n 是独立报价日数。</p></section>
 <section class="panel section-space" id="details"><div class="section-top"><div><h2><span class="section-no">04</span>报价明细，可逐条核查</h2><p>列表报价不锁价。共享航班按营销航班号列出；n 为报价条目，不等于独立执飞航班数。</p></div><button id="export" style="font-size:11px">导出当前筛选 CSV ↗</button></div><details open><summary>十周周末明细</summary><div id="weekend-table" class="table-wrap"></div></details><details id="flight-detail"><summary>展开全部航班报价</summary><div id="all-flights"></div></details></section>
 <section class="panel section-space" id="method"><div class="section-top"><div><h2>每一个数字，都有来处</h2><p>方法、缺失与采集状态，和价格一起公开。</p></div><span class="badge">无模拟报价</span></div><div class="method-grid"><div><strong>01 · 我们实际比较什么</strong><p>飞猪公开列表中的直飞裸票价，加报价日适用的成人机建、燃油。两程单独购票，不代表航空公司的往返联票优惠。行李额未查明时显示“待核验”，不假设免费托运。</p></div><div><strong>02 · 混搭与地面费用</strong><p>可在浦东/虹桥、广州/深圳之间混搭。两程涉及不同广深机场时，全程另计一次 ¥100（你的预算）。其他接驳费未计入；不称为全程出行总成本。</p></div><div><strong>03 · 不混合两种历史</strong><p>Google 单独展示已核实周五去、周日回的往返含税历史。days_before 是距抓取日的天数，先还原购买日再计算 lead。平台和票价产品不同，不用 Google 分位数判断飞猪便宜与否。</p></div><div><strong>04 · 为什么不直接告诉你 T-14 买</strong><p>没有原始证据的 T-12～T-16、n=8、节省11.9% / 4.2%、MAPE 22.6% / MAE ¥483 均不作为本网站结论。择时窗口由新数据计算；独立周数、覆盖和真实模型误差始终可见。</p></div><div><strong>05 · 窗口、命中与置信度</strong><p>描述性窗口比较同一严格子集的3–10天连续区间，至少80%日覆盖；选均价距最佳≤2%的最窄区间。2%只表示价格接近，不表示统计等效。命中率仅对≥3桶有观察的行程计算；并列都记命中，各桶分母显示。</p></div><div><strong>06 · 缺失与新鲜度</strong><p>未抓到价格、页面阻断和无匹配报价分开记录，不补零，不推断无航班。报价超过3小时标记更新延迟或过期。离线页面读取保存的数据，不自动联网刷新。</p></div></div><details><summary>税费来源、采集状态与完整统计规则</summary><div class="source-list"><p>当前成人单程：裸票 + 机建 ¥50 + 燃油 ¥90。燃油按出票日期规则，历史未知费率留空。<a href="https://global.ceair.com/global/static/Announcement/AnnouncementMessage/notices/202610/t20261009_30517.html" target="_blank" rel="noopener">东航 2026-10-09 官方公告 ↗</a></p><p>原始 JSONL 与列表证据只留本机；公开仓库只含 index.html、data.js、.nojekyll 和 robots.txt。数据日期使用 Asia/Shanghai（UTC+08:00）。</p><p>择时样本充分性：至少8个满足严格覆盖的独立出发周，且≥200日级点、跨度≥30天标高；≥60点、≥14天标中；≥30点标偏低，否则低。这是样本充分性标记，不是预测成功概率。模型至少8个出发周与14个购买日才训练；T=0不取对数。</p><p>每日纵向样本选覆盖最多的一批，并列取距09:30最近者；同批次配对，两个单程采集相差≤40分钟。固定日级抽样减少每小时采样次数不同造成的最低值偏差。主图的十周走势是“现在看未来出发日期的报价”，不是未来购票价格预测。</p></div><div id="collection-status" class="table-wrap"></div></details></section>
-</main><footer class="footer"><span>周末航线 · WEEKEND FARE<br>上海 ⇄ 广州 / 深圳</span><span>双击桌面BAT启动 · 每两小时更新十周报价 · 每日补采历史<br><span id="footer-data"></span></span></footer></div>
-<script src="data.js"></script><script>(function(root,factory){if(typeof module==='object'&&module.exports)module.exports=factory();else root.FlightEngine=factory()})(typeof globalThis!=='undefined'?globalThis:this,function(){
+</main><footer class="footer"><span>周末航线 · WEEKEND FARE<br>上海 ⇄ 广州 / 深圳</span><span>双击桌面BAT启动 · 每两小时更新十周报价 · 每日补采历史<br><span id="footer-data"></span><br><span id="database-status" role="status">离线快照</span></span></footer></div>
+<script>window.FLIGHT_DATABASE=null;</script><script src="data.js"></script><script>(function(root,factory){if(typeof module==='object'&&module.exports)module.exports=factory();else root.FlightEngine=factory()})(typeof globalThis!=='undefined'?globalThis:this,function(){
 'use strict';
 const buckets=[[0,3],[4,7],[8,14],[15,21],[22,30],[31,45],[46,Infinity]];
 const labels=['0–3','4–7','8–14','15–21','22–30','31–45','46+'];
@@ -223,17 +223,41 @@ $('mix').addEventListener('change',e=>{state.mix=e.target.checked;render()});$('
 document.addEventListener('input',e=>{if(e.target.id==='lead-range'){const m=(state.source==='google'?D.googleModels:D.models)[state.dir],n=Number(e.target.value),v=E.predict(m?.model,state.route+'|'+state.dir,n),win=historyData().stats.window;const delta=v&&win?v/win.mean-1:null;$('model-output').textContent=`T-${n}：模型参考 ${money(v)}。${delta===null?'没有可比窗口，无法分档。':delta<=.02?'接近描述性窗口均价。':delta<=.1?'略高于描述性窗口均价。':'明显高于描述性窗口均价。'} 仅供探索，不作为买入或等待建议。`}});
 function exportCSV(){const rows=[['来源','报价时间','路线','方向','去返','出发日期','起飞','到达','次日','航班','航司','裸票','税费','含税','行李','原始页面'],...currentFlights.map(f=>[f.source,f.snapshot_at,f.route_id,f.direction,f.trip,f.depart_date,f.dep_time,f.arr_time,f.next_day?1:0,f.flight_no,f.airline,f.price,E.fee(f.snapshot_at,D.meta.fees),E.taxed(f,D.meta.fees),f.baggage||'待核验',f.source_url])];const csv='\uFEFF'+rows.map(r=>r.map(x=>{let s=String(x??'');if(/^[=+@\-]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'}).join(',')).join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download=`flight-quotes-${state.dir}-${D.meta.today}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 render();window.__flightDebug={state,get current(){return current},engine:E,applyWatch(w){state.dir=w.direction;state.route=w.route;state.date=w.date;state.out=w.hoursOut;state.back=w.hoursBack;state.mix=w.mix;render()}};
-// 在线页面检测文件版本后才加载；保留方向、路线、时段及尚未保存的监测表单。
+// Database is checked immediately on every online visit, independently of Pages deploys.
 if(/^https?:$/.test(location.protocol)){
  let version=null,refreshing=false;
+ const db=window.FLIGHT_DATABASE,status=$('database-status');
+ const label=t=>{if(status)status.textContent=t};
+ function apply(next){
+  if(!next?.meta||!Array.isArray(next.flights)||!Array.isArray(next.weekends))throw Error('invalid');
+  if(Date.parse(next.meta.generated_at)>Date.parse(D.meta.generated_at)){
+   D=next;window.FLIGHT_DATA=D;histCache.clear();
+   if(!D.weekends.some(w=>w.out===state.date))state.date=D.weekends[0]?.out;
+   render();window.dispatchEvent(new Event('flight-data-updated'));
+  }
+ }
+ function unpack(p){
+  if(p?.data?.meta?.schemaVersion!==2||!Array.isArray(p.pool))throw Error('schema');
+  const rows=(a,fields)=>a.map(row=>Object.fromEntries(fields.map((k,i)=>[k,Array.isArray(row[i])?p.pool[row[i][0]]:row[i]])));
+  return {...p.data,flights:rows(p.flights,p.fields),observations:rows(p.observations,p.fields),google:rows(p.google,p.googleFields)};
+ }
  async function refreshData(){if(refreshing||document.hidden)return;refreshing=true;try{
-  const response=await fetch('data.js',{method:'HEAD',cache:'no-store'});if(!response.ok)return;
-  const next=response.headers.get('etag')||response.headers.get('last-modified');if(!next)return;
-  if(version!==null&&version!==next){await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='data.js?v='+Date.now();script.onload=()=>{script.remove();resolve()};script.onerror=()=>{script.remove();reject(Error('数据更新暂时不可用'))};document.head.appendChild(script)});
-   if(window.FLIGHT_DATA?.meta?.generated_at!==D.meta.generated_at){D=window.FLIGHT_DATA;histCache.clear();render();window.dispatchEvent(new Event('flight-data-updated'))}
-  }version=next;
- }catch{/* 网络失败保留最近已成功加载的数据；报价新鲜度继续可见。 */}finally{refreshing=false}}
- refreshData();setInterval(refreshData,300000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshData()});
+  if(db){
+   label('正在核对数据库最新报价…');
+   const headers={apikey:db.publishableKey};if(db.publishableKey.startsWith('eyJ'))headers.Authorization='Bearer '+db.publishableKey;
+   const base=db.url+'/rest/v1/flight_dashboard?id=eq.latest&select=';
+   const get=async columns=>{const r=await fetch(base+columns,{headers,cache:'no-store',signal:AbortSignal.timeout(15000)});if(!r.ok)throw Error('HTTP '+r.status);const a=await r.json();if(a.length!==1)throw Error('empty');return a[0]};
+   const info=await get('generated_at');
+   if(Date.parse(info.generated_at)>Date.parse(D.meta.generated_at))apply(unpack((await get('generated_at,payload')).payload));
+   label('数据库已核对 · 数据版本 '+D.meta.generated_at.replace('T',' ').slice(0,19));
+  }else{
+   const r=await fetch('data.js',{method:'HEAD',cache:'no-store',signal:AbortSignal.timeout(15000)});if(!r.ok)throw Error('snapshot');
+   const next=r.headers.get('etag')||r.headers.get('last-modified');
+   if(version!==next||version===null){await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='data.js?v='+Date.now();script.onload=()=>{script.remove();resolve()};script.onerror=()=>{script.remove();reject(Error('snapshot'))};document.head.appendChild(script)});apply(window.FLIGHT_DATA);window.FLIGHT_DATA=D}version=next;
+   label('GitHub 快照 · 数据库尚未接入');
+  }
+ }catch{label('更新暂不可用 · 保留已加载快照，请查看报价时间')}finally{refreshing=false}}
+ refreshData();setInterval(refreshData,60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshData()});
 }
 })();
 </script><script>(()=>{'use strict';
