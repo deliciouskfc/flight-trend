@@ -689,6 +689,7 @@ const allHours=()=>Array.from({length:24},(_,i)=>i);
 const state={dir:'fwd',city:'CAN',route:'all',out:allHours(),back:allHours(),mix:true,date:D.weekends[0]?.out,source:D.google.length>=30?'google':'fliggy',mode:'roundtrip',onewayDay:'out',aircraft:'',baggageRequired:false};
 const destinationName=()=>shortPlaces[state.city];
 const directionName=dir=>dir==='fwd'?'上海 → '+destinationName():destinationName()+' → 上海';
+const routeTitle=city=>state.dir==='fwd'?'上海到'+shortPlaces[city]:shortPlaces[city]+'到上海';
 const today=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 const histCache=new Map();let current=[],currentFlights=[];
 function empty(title,detail){return `<div class="empty"><span class="glyph">— / —</span><strong>${esc(title)}</strong><span>${esc(detail)}</span></div>`}
@@ -712,7 +713,7 @@ function renderFilters(){
  for(const id of ['oneway-days','oneway-results']) $(id).hidden=!one;
  $('direction-label').textContent=one?'单程方向':'周五出发方向';
  $('brand-trip').textContent=one?'周五或周日出发':'周五出发，周日返回';
- const heading=state.dir==='fwd'?'上海到'+destinationName():destinationName()+'到上海';
+ const heading=routeTitle(state.city);
  $('hero-title').textContent=heading;
  $('footer-route').textContent=heading;
  document.querySelectorAll('[data-comparison-link]').forEach(link=>link.hash=one?'oneway-results':'weekends');
@@ -721,6 +722,7 @@ function renderFilters(){
    const attr=key==='oneDay'?'one-day':key;
    document.querySelectorAll('button[data-'+attr+']').forEach((button,index)=>{
      const active=button.dataset[key]===selected;
+     if(key==='city')button.textContent=routeTitle(button.dataset.city);
      if(key==='dir')button.textContent=directionName(button.dataset.dir);
      button.setAttribute('aria-pressed',active);
      if(active)button.parentElement.dataset.selected=index;
