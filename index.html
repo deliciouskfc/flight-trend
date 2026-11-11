@@ -209,9 +209,69 @@ body { background: var(--bg); font-size: 14px; }
 @media (prefers-reduced-motion:reduce) {
   #itinerary[data-fold-motion=opening] .flight-trace { animation: none; }
 }
+/* Atlas palettes, adapted for the dark fare dashboard. */
+:root {
+  --atlas-dark: #0d1b2a;
+  --atlas-strong: #1d4e89;
+  --atlas-accent: #8fb8de;
+  --atlas-paper: #f7f2ea;
+  --atlas-surface: #132132;
+  --atlas-out: #4b6583;
+  --atlas-back: #8fb8de;
+  --atlas-line: #b5daff;
+  --atlas-heat-hue: 216;
+}
+:root[data-atlas-theme="jade"] {
+  --atlas-dark: #0d1d1a;
+  --atlas-strong: #0f5d50;
+  --atlas-accent: #8dc9b5;
+  --atlas-paper: #e8f3ec;
+  --atlas-surface: #172822;
+  --atlas-out: #467b6c;
+  --atlas-back: #8dc9b5;
+  --atlas-line: #b3ead8;
+  --atlas-heat-hue: 155;
+}
+:root {
+  --ink: var(--atlas-paper);
+  --green: var(--atlas-accent);
+  --line: color-mix(in srgb,var(--atlas-accent) 24%,transparent);
+}
+a { color: var(--atlas-line); }
+.panel, .data-refresh-bar, .kpis { background: color-mix(in srgb,var(--atlas-surface) 94%,transparent); }
+.chart-inspector, .ticket, .week-picks button, .segmented, .history-callout, .model, .decision {
+  background: color-mix(in srgb,var(--atlas-dark) 86%,transparent);
+  border-color: var(--line);
+}
+.chart .line { stroke: var(--atlas-line); filter: none; }
+.legend i { background: var(--atlas-out); }
+.legend i.back { background: var(--atlas-back); }
+.legend i.sum { background: var(--atlas-line); }
+.chart-inspector .inspect-price, .kpi:last-child strong { color: var(--atlas-line); }
+.week-picks button.active, .route-tabs button.active, .segmented button.active, .chips button.active, .history-tabs button.active {
+  background: color-mix(in srgb,var(--atlas-strong) 62%,var(--atlas-dark));
+  border-color: var(--atlas-accent);
+  color: var(--atlas-paper);
+}
+.data-refresh-bar button { background: var(--atlas-accent); border-color: var(--atlas-accent); color: var(--atlas-dark); }
+.data-refresh-bar button:hover:not(:disabled) { background: var(--atlas-line); color: var(--atlas-dark); }
+.fold-card { --fold-light: var(--atlas-line); --fold-glow: color-mix(in srgb,var(--fold-light) 18%,transparent); }
+#itinerary, #history { --fold-light: var(--atlas-line); --fold-glow: color-mix(in srgb,var(--fold-light) 18%,transparent); }
+.flight-trace { stroke: var(--atlas-accent); }
+.flight-line circle { fill: var(--atlas-accent); }
+.flight-line .flight-traveler { fill: #fff; opacity: 0; }
+#nebula-canvas { filter: hue-rotate(-15deg); }
+:root[data-atlas-theme="jade"] #nebula-canvas { filter: hue-rotate(-90deg); }
+.atlas-theme { display: inline-flex; align-items: center; gap: 7px; pointer-events: auto; padding: 0 4px; color: var(--atlas-paper); font-size: 12px; }
+.atlas-theme::before { content: ''; width: 9px; height: 9px; background: var(--atlas-accent); border-radius: 50%; }
+.atlas-theme select { border-color: var(--line); background: var(--atlas-dark); color: var(--atlas-paper); }
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
+  .fold-card > summary > .atlas-spotlight { position: absolute; inset: 0; pointer-events: none; border-radius: inherit; opacity: 0; transition: opacity .24s ease; }
+  .fold-card > summary:hover > .atlas-spotlight { opacity: 1; background: radial-gradient(150px circle at var(--light-x,50%) var(--light-y,50%), color-mix(in srgb,var(--atlas-accent) 19%,transparent),transparent 100%); }
+}
 </style></head><body><div id="nebula-scene"><canvas id="nebula-canvas" aria-hidden="true"></canvas><div class="nebula-shade"></div><div class="nebula-controls"><button id="nebula-pause" aria-pressed="true">暂停星云</button><label class="nebula-extra">速度 <input id="nebula-speed" type="range" min="0.2" max="2" step="0.1" value="0.7"><output id="nebula-speed-value">0.7×</output></label><label class="nebula-extra">粒子 <select id="nebula-density"><option value="3500">3,500</option><option value="5000">5,000</option><option value="14000">14,000</option><option value="24000">24,000</option></select></label><button id="nebula-exit" hidden>返回机票看板 · Esc</button></div><div id="nebula-caption" class="nebula-caption" hidden><small>WEEKEND FARE / COSMIC INTERLUDE</small><h2>在出发之前，<br>看一会儿星空。</h2><p>移动鼠标探索视角 · 粒子仅为视觉效果，与航班数据无关</p></div></div><a class="skip-link" href="#main">跳到价格看板</a><div class="wrap">
 <header class="top"><div class="brand"><span class="mark" aria-hidden="true">↗</span><div>周末航线<small>周五出发，周日返回</small></div></div><nav aria-label="页面导航"><a href="#weekends">十周比价</a><a href="#itinerary">航班</a><a href="#history">购票时机</a><a href="#method">数据口径</a></nav><div class="live"><i class="dot"></i><span id="updated">正在读取本地数据</span></div></header>
-<main id="main"><section class="intro"><div><div class="eyebrow">SHANGHAI ⇄ GUANGZHOU / SHENZHEN</div><h1>上海 ⇄ 广深</h1><p>比较未来十周的直飞往返报价</p><div class="intro-actions"><button id="nebula-enter">沉浸星云</button><button id="page-nebula-toggle" class="page-nebula-toggle" aria-pressed="true">暂停背景动画</button></div></div><div class="intro-side"><strong id="range">未来 10 个周末</strong><br><span class="muted">1 位成人 · 经济舱 · 直飞 · 人民币</span><div class="route-trace" aria-hidden="true"><b id="route-origin">SHANGHAI</b><i></i><b id="route-destination">GUANGDONG</b></div></div></section><div class="data-refresh-bar" id="collection"><button id="data-refresh" type="button">重新爬取数据</button><span id="data-refresh-status" role="status" aria-live="polite">从飞猪重新采集公开报价</span><a href="http://127.0.0.1:8765/" target="_blank" rel="noopener">打开本机采集面板</a></div>
+<main id="main"><section class="intro"><div><div class="eyebrow">SHANGHAI ⇄ GUANGZHOU / SHENZHEN</div><h1>上海 ⇄ 广深</h1><p>比较未来十周的直飞往返报价</p><div class="intro-actions"><button id="nebula-enter">沉浸星云</button><button id="page-nebula-toggle" class="page-nebula-toggle" aria-pressed="true">暂停背景动画</button><label class="atlas-theme"><span>配色</span><select id="atlas-theme"><option value="cobalt">钴蓝釉</option><option value="jade">玉青</option></select></label></div></div><div class="intro-side"><strong id="range">未来 10 个周末</strong><br><span class="muted">1 位成人 · 经济舱 · 直飞 · 人民币</span><div class="route-trace" aria-hidden="true"><b id="route-origin">SHANGHAI</b><i></i><b id="route-destination">GUANGDONG</b></div></div></section><div class="data-refresh-bar" id="collection"><button id="data-refresh" type="button">重新爬取数据</button><span id="data-refresh-status" role="status" aria-live="polite">从飞猪重新采集公开报价</span><a href="http://127.0.0.1:8765/" target="_blank" rel="noopener">打开本机采集面板</a></div>
 <div id="fatal" class="alert" role="alert">未加载 data.js。请把它与 index.html 放在同一文件夹后重新打开。</div>
 <details id="filters" class="panel controls fold-card"><summary><span class="fold-heading"><strong>行程筛选</strong><span>方向、机场和起飞时段</span></span><span id="fold-filters-preview" class="fold-preview"></span><span class="fold-chevron" aria-hidden="true"></span></summary><div class="fold-content"><div class="control-top"><div class="segmented" id="directions" aria-label="出发方向"><button data-dir="fwd" class="active" aria-pressed="true">周五 上海 → 广深</button><button data-dir="rev" aria-pressed="false">周五 广深 → 上海</button></div><label class="check"><input id="mix" type="checkbox" checked>允许机场混搭 <span class="subtext">广深跨城 +¥100</span></label></div><div class="hours"><div id="hours-out"></div><div id="hours-back"></div></div><div class="filter-foot"><p>按起飞整点筛选。灰色小时＝本批次未观察到可选直飞报价，不等于机场无航班。</p><button id="reset" style="padding:3px 9px;font-size:10px">重置为全部时段</button></div></div></details>
 <div class="route-tabs" id="routes" aria-label="路线"></div><div id="warnings" role="status" class="alert"></div><section class="kpis" id="kpis" aria-label="价格概览"></section>
@@ -338,7 +398,7 @@ function comboChart(items,monthly=false){
  const w=width-left-right,h=height-top-bottom,step=w/Math.max(items.length,1),y=v=>top+h-v/max*h;
  let body='';for(let i=0;i<=4;i++){const v=max*i/4;body+=`<line class="axis" x1="${left}" x2="${width-right}" y1="${y(v)}" y2="${y(v)}"/><text x="${left-10}" y="${y(v)+4}" text-anchor="end">${Math.round(v)}</text>`}
  let segment=[];const flush=()=>{if(segment.length)body+=`<polyline class="line" points="${segment.join(' ')}"/>`;segment=[]};
- items.forEach((c,i)=>{const x=left+step*(i+.5),bw=Math.min(18,step*.21);if(c.score!==null){body+=`<rect x="${x-bw-2}" y="${y(c.out)}" width="${bw}" height="${y(0)-y(c.out)}" fill="#4e668c" rx="3"><title>去程含税 ${money(c.out)}；裸票 ${money(c.outBare)}；n=${c.n}</title></rect><rect x="${x+2}" y="${y(c.back)}" width="${bw}" height="${y(0)-y(c.back)}" fill="#a0b4d8" rx="3"><title>返程含税 ${money(c.back)}；裸票 ${money(c.backBare)}；n=${c.n}</title></rect>`;segment.push(`${x},${y(c.score)}`);body+=`<circle cx="${x}" cy="${y(c.score)}" r="3.7" fill="#9dbaff" stroke="#fff" stroke-width="1.5"><title>${esc(c.label)}：比较价 ${money(c.score)}；含税往返 ${money(c.tax)}；裸票 ${money(c.outBare+c.backBare)}；n=${c.n}</title></circle><text x="${x}" y="${y(c.score)-12}" text-anchor="middle" style="fill:#9dbaff;font-size:10px">${Math.round(c.score)}</text>`}else flush();body+=`<text x="${x}" y="${height-19}" text-anchor="middle">${esc(c.label)}</text>`});flush();
+ items.forEach((c,i)=>{const x=left+step*(i+.5),bw=Math.min(18,step*.21);if(c.score!==null){body+=`<rect x="${x-bw-2}" y="${y(c.out)}" width="${bw}" height="${y(0)-y(c.out)}" fill="var(--atlas-out)" rx="3"><title>去程含税 ${money(c.out)}；裸票 ${money(c.outBare)}；n=${c.n}</title></rect><rect x="${x+2}" y="${y(c.back)}" width="${bw}" height="${y(0)-y(c.back)}" fill="var(--atlas-back)" rx="3"><title>返程含税 ${money(c.back)}；裸票 ${money(c.backBare)}；n=${c.n}</title></rect>`;segment.push(`${x},${y(c.score)}`);body+=`<circle cx="${x}" cy="${y(c.score)}" r="3.7" fill="var(--atlas-line)" stroke="#fff" stroke-width="1.5"><title>${esc(c.label)}：比较价 ${money(c.score)}；含税往返 ${money(c.tax)}；裸票 ${money(c.outBare+c.backBare)}；n=${c.n}</title></circle><text x="${x}" y="${y(c.score)-12}" text-anchor="middle" style="fill:var(--atlas-line);font-size:10px">${Math.round(c.score)}</text>`}else flush();body+=`<text x="${x}" y="${height-19}" text-anchor="middle">${esc(c.label)}</text>`});flush();
  if(!items.some(c=>c.score!==null))body+=`<text x="480" y="105" text-anchor="middle">暂无符合条件的真实报价</text>`;
  return chartFrame(body,monthly?'月度含税均价':'未来十周含税票价，缺失周不连线');
 }
@@ -379,7 +439,7 @@ function render(){
  const statuses=E.group(D.collection,r=>r.source+'|'+r.status);$('collection-status').innerHTML=`<table><thead><tr><th>来源 / 状态</th><th>查询数 n</th><th>最近记录</th></tr></thead><tbody>${[...statuses].map(([k,a])=>`<tr><td>${esc(k.replace('|',' / '))}</td><td>${a.length}</td><td>${esc(a.map(r=>r.at).sort().at(-1))}${a[0].reason?'<small>'+esc(a[0].reason)+'</small>':''}</td></tr>`).join('')}</tbody></table>`;
  window.dispatchEvent(new Event('flight-render'));
 }
-function flightCard(f,label){return `<article class="ticket"><div class="ticket-top"><span>${label} · ${f.depart_date}</span><span class="mono">${esc(f.flight_no)}${f.codeshare?' · 共享':''}</span></div><div class="ticket-route"><div class="ticket-time"><strong>${esc(f.dep_time)}</strong><small>${esc(places[f.dep_code])} ${f.dep_code}</small></div><div class="flight-line" aria-hidden="true"><svg viewBox="0 0 180 32" preserveAspectRatio="none"><path class="flight-track" d="M3 25 C53 25 124 7 177 7"/><path class="flight-trace" d="M3 25 C53 25 124 7 177 7" pathLength="1"/><circle cx="3" cy="25" r="2.6"/><circle cx="177" cy="7" r="2.6"/></svg></div><div class="ticket-time"><strong>${esc(f.arr_time)}${f.next_day?'<sup style="font-size:11px">+1</sup>':''}</strong><small>${esc(places[f.arr_code])} ${f.arr_code}</small></div></div><div class="ticket-bottom"><div>${esc(f.airline)} · ${esc(f.aircraft||'机型待核验')}<br>托运行李：${esc(f.baggage||'待核验')}<br><a href="${esc(f.source_url)}" target="_blank" rel="noopener">到飞猪核价 ↗</a></div><div style="text-align:right"><b>${money(E.taxed(f,D.meta.fees))}</b><br>裸票 ${money(f.price)} + 税费 ${money(E.fee(f.snapshot_at,D.meta.fees))}<br><span class="mono">${f.snapshot_at.slice(5,16).replace('T',' ')} 报价</span></div></div></article>`}
+function flightCard(f,label){return `<article class="ticket"><div class="ticket-top"><span>${label} · ${f.depart_date}</span><span class="mono">${esc(f.flight_no)}${f.codeshare?' · 共享':''}</span></div><div class="ticket-route"><div class="ticket-time"><strong>${esc(f.dep_time)}</strong><small>${esc(places[f.dep_code])} ${f.dep_code}</small></div><div class="flight-line" aria-hidden="true"><svg viewBox="0 0 180 32" preserveAspectRatio="none"><path class="flight-track" d="M3 25 C53 25 124 7 177 7"/><path class="flight-trace" d="M3 25 C53 25 124 7 177 7" pathLength="1"/><circle cx="3" cy="25" r="2.6"/><circle cx="177" cy="7" r="2.6"/><circle class="flight-traveler" r="3.2"><animateMotion begin="indefinite" dur="0.65s" fill="freeze" path="M3 25 C53 25 124 7 177 7"/></circle></svg></div><div class="ticket-time"><strong>${esc(f.arr_time)}${f.next_day?'<sup style="font-size:11px">+1</sup>':''}</strong><small>${esc(places[f.arr_code])} ${f.arr_code}</small></div></div><div class="ticket-bottom"><div>${esc(f.airline)} · ${esc(f.aircraft||'机型待核验')}<br>托运行李：${esc(f.baggage||'待核验')}<br><a href="${esc(f.source_url)}" target="_blank" rel="noopener">到飞猪核价 ↗</a></div><div style="text-align:right"><b>${money(E.taxed(f,D.meta.fees))}</b><br>裸票 ${money(f.price)} + 税费 ${money(E.fee(f.snapshot_at,D.meta.fees))}<br><span class="mono">${f.snapshot_at.slice(5,16).replace('T',' ')} 报价</span></div></div></article>`}
 function renderTickets(w){
  $('ticket-caption').textContent=`${state.date} 周五出发 · ${w?.backDate||''} 周日返程 · ${w?.candidates.length||0} 个机场配对`;
  if(!w?.best){$('tickets').innerHTML=empty('没有符合条件的去返组合','两程必须都有报价且采集时间相近；试试其他周末或放宽时段。');$('decision').textContent='样本不足，暂不提供买入或等待建议。';$('combination-table').innerHTML='';return}
@@ -421,7 +481,7 @@ function renderHistory(H){
  const table=(rows)=>`<table><thead><tr><th>提前天数</th><th>含税桶均价</th><th>参与行程 n</th></tr></thead><tbody>${rows.map(r=>`<tr><td>T-${r.label}</td><td class="num">${money(r.mean)}</td><td>n=${r.n}</td></tr>`).join('')}</tbody></table>`;
  $('strict-table').innerHTML='<h3>严格覆盖子集 · 描述性对照</h3>'+table(s.strictTable)+`<details><summary>全样本脚注（不可把不同日期子集直接当配对）</summary>${table(s.full)}</details>`;
 }
-function renderHeat(){const p=E.dailyPairs(D.observations,opts(),D.meta);$('heat-n').textContent=`n=${new Set(p.map(p=>p.purchase_date)).size} 个报价日`;const min=Math.min(...p.map(p=>p.price)),max=Math.max(...p.map(p=>p.price));$('heat').innerHTML=`<table class="heat"><thead><tr><th>周五 → 周日</th>${E.labels.map(l=>`<th>T-${l}</th>`).join('')}</tr></thead><tbody>${D.weekends.map(w=>`<tr><td style="text-align:left"><span class="mono">${md(w.out)} → ${md(w.back)}</span></td>${E.buckets.map(([lo,hi])=>{const rows=p.filter(p=>p.date===w.out&&p.lead>=lo&&p.lead<=hi),value=rows.length?Math.min(...rows.map(p=>p.price)):null,n=new Set(rows.map(p=>p.purchase_date)).size;return `<td>${value===null?'<span class="cell nodata">—<small>n=0</small></span>':`<span class="cell" style="background:hsl(219 38% ${17+(1-(value-min)/(max-min||1))*15}%)">${money(value)}<small>n=${n}</small></span>`}</td>`}).join('')}</tr>`).join('')}</tbody></table>`}
+function renderHeat(){const p=E.dailyPairs(D.observations,opts(),D.meta);$('heat-n').textContent=`n=${new Set(p.map(p=>p.purchase_date)).size} 个报价日`;const min=Math.min(...p.map(p=>p.price)),max=Math.max(...p.map(p=>p.price));$('heat').innerHTML=`<table class="heat"><thead><tr><th>周五 → 周日</th>${E.labels.map(l=>`<th>T-${l}</th>`).join('')}</tr></thead><tbody>${D.weekends.map(w=>`<tr><td style="text-align:left"><span class="mono">${md(w.out)} → ${md(w.back)}</span></td>${E.buckets.map(([lo,hi])=>{const rows=p.filter(p=>p.date===w.out&&p.lead>=lo&&p.lead<=hi),value=rows.length?Math.min(...rows.map(p=>p.price)):null,n=new Set(rows.map(p=>p.purchase_date)).size;return `<td>${value===null?'<span class="cell nodata">—<small>n=0</small></span>':`<span class="cell" style="background:hsl(var(--atlas-heat-hue) 38% ${17+(1-(value-min)/(max-min||1))*15}%)">${money(value)}<small>n=${n}</small></span>`}</td>`}).join('')}</tr>`).join('')}</tbody></table>`}
 function renderDetails(weekly){$('weekend-table').innerHTML=`<table><thead><tr><th>周末</th><th>去程最低</th><th>返程最低</th><th>裸票合计</th><th>含税往返</th><th>跨城预算</th><th>比较价</th><th>样本 n</th></tr></thead><tbody>${weekly.map(w=>`<tr><td>${w.date}<small>→ ${w.backDate}</small></td>${w.best?`<td>${money(w.best.out.price)}<small>${w.best.out.flight_no} ${w.best.out.dep_time}</small></td><td>${money(w.best.back.price)}<small>${w.best.back.flight_no} ${w.best.back.dep_time}</small></td><td>${money(w.best.bare)}</td><td>${money(w.best.tax)}</td><td>${money(w.best.ground)}</td><td>${money(w.best.score)}</td><td>${w.n} 条报价</td>`:'<td colspan="7">当前筛选没有完整配对 · n=0</td>'}</tr>`).join('')}</tbody></table>`;if($('flight-detail').open)renderFlights();else $('all-flights').innerHTML=''}
 function renderFlights(){if(state.route==='all'){$('all-flights').innerHTML=empty('切换到具体路线，查看全部航班','总览保留混搭组合和周末比较；航班明细按原四条路线分别列出。');return}const header='<thead><tr><th>起飞 / 到达</th><th>航班 / 航司</th><th>机场</th><th>机型 / 行李</th><th>票价</th><th>含税</th><th>比本程最低</th><th>报价时间</th></tr></thead>';$('all-flights').innerHTML=D.weekends.map(w=>`<details><summary>${w.out} → ${w.back} · n=${currentFlights.filter(f=>f.weekend===w.out).length} 条</summary>${['out','back'].map(trip=>{const rows=currentFlights.filter(f=>f.weekend===w.out&&f.trip===trip).sort((a,b)=>a.dep_time.localeCompare(b.dep_time)),min=Math.min(...rows.map(f=>f.price));return `<h3>${trip==='out'?'周五去程':'周日返程'} · n=${rows.length}</h3><div class="table-wrap"><table>${header}<tbody>${rows.map(f=>`<tr><td class="num">${f.dep_time} → ${f.arr_time}${f.next_day?' +1天':''}</td><td>${esc(f.flight_no)}${f.codeshare?' 共享':''}<small>${esc(f.airline)}</small></td><td>${esc(f.dep_airport)}<small>→ ${esc(f.arr_airport)}</small></td><td>${esc(f.aircraft)}<small>托运行李 ${esc(f.baggage||'待核验')}</small></td><td>${money(f.price)}</td><td>${money(E.taxed(f,D.meta.fees))}</td><td>${money(f.price-min)}</td><td><a href="${esc(f.source_url)}" target="_blank" rel="noopener">${f.snapshot_at.slice(5,16).replace('T',' ')} ↗</a></td></tr>`).join('')||'<tr><td colspan="8">无匹配报价</td></tr>'}</tbody></table></div>`}).join('')}</details>`).join('')}
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.dir){state.dir=b.dataset.dir;state.out=allHours();state.back=allHours();render()}else if(b.dataset.route){state.route=b.dataset.route;state.out=allHours();state.back=allHours();render()}else if(b.dataset.hour){const t=b.dataset.trip,h=Number(b.dataset.hour);state[t]=state[t].includes(h)?state[t].filter(x=>x!==h):[...state[t],h];render()}else if(b.dataset.preset){const p=b.dataset.preset;state[b.dataset.trip]=allHours().filter(h=>p==='all'||p==='morning'&&h>=6&&h<12||p==='afternoon'&&h>=12&&h<18||p==='evening'&&h>=18||p==='after13'&&h>=13);render()}else if(b.dataset.week){state.date=b.dataset.week;render()}else if(b.dataset.source){state.source=b.dataset.source;render()}else if(b.id==='reset'){state.out=allHours();state.back=allHours();render()}else if(b.id==='export')exportCSV()});
@@ -556,6 +616,33 @@ request('flight_refresh_job?id=eq.1&select=request_id,status').then(([j])=>{if(j
   const cards = new Map();
   const deckCards = [...document.querySelectorAll('.module-deck > .fold-card')];
   const deckAnimations = new Map();
+  const themeSelect = byId('atlas-theme');
+  const pointerLight = matchMedia('(hover: hover) and (pointer: fine)');
+  const themeKey = 'weekend-fare-atlas-theme';
+  let itineraryDate = debug.state.date;
+
+  if (themeSelect) {
+    let saved;
+    try { saved = localStorage.getItem(themeKey); } catch {}
+    themeSelect.value = saved === 'jade' ? 'jade' : 'cobalt';
+    document.documentElement.dataset.atlasTheme = themeSelect.value;
+    themeSelect.addEventListener('change', () => {
+      document.documentElement.dataset.atlasTheme = themeSelect.value;
+      try { localStorage.setItem(themeKey, themeSelect.value); } catch {}
+    });
+  }
+
+  function playFlightPaths() {
+    if (reducedMotion.matches) return;
+    for (const [index, traveler] of [...itinerary.querySelectorAll('.flight-traveler')].entries()) {
+      const motion = traveler.querySelector('animateMotion');
+      if (typeof motion?.beginElementAt !== 'function') continue;
+      const delay = 120 + index * 85;
+      motion.beginElementAt(delay / 1000);
+      traveler.animate([{ opacity: 0 }, { opacity: 1, offset: .16 }, { opacity: 1, offset: .82 }, { opacity: 0 }],
+        { duration: 650, delay });
+    }
+  }
 
   function reflowDeck(change, animated) {
     if (!animated || !deckCards.length) {
@@ -588,6 +675,16 @@ request('flight_refresh_job?id=eq.1&select=request_id,status').then(([j])=>{if(j
   for (const card of document.querySelectorAll('.fold-card')) {
     const summary = card.querySelector(':scope > summary');
     const content = card.querySelector(':scope > .fold-content');
+    const spotlight = document.createElement('span');
+    spotlight.className = 'atlas-spotlight';
+    spotlight.setAttribute('aria-hidden', 'true');
+    summary.append(spotlight);
+    summary.addEventListener('pointermove', event => {
+      if (!pointerLight.matches || reducedMotion.matches) return;
+      const bounds = summary.getBoundingClientRect();
+      spotlight.style.setProperty('--light-x', (event.clientX - bounds.left) + 'px');
+      spotlight.style.setProperty('--light-y', (event.clientY - bounds.top) + 'px');
+    }, { passive: true });
     const viewport = document.createElement('div');
     viewport.className = 'fold-viewport';
     content.before(viewport);
@@ -656,6 +753,7 @@ request('flight_refresh_job?id=eq.1&select=request_id,status').then(([j])=>{if(j
     ], options);
     state.motion = [layout, reveal];
     if (expanded && !wasOpen) {
+      if (card === itinerary) playFlightPaths();
       const groups = [...content.children].filter(element => element.getBoundingClientRect().height).slice(0, 4);
       for (const [index, group] of groups.entries()) {
         state.motion.push(group.animate([
@@ -679,6 +777,8 @@ request('flight_refresh_job?id=eq.1&select=request_id,status').then(([j])=>{if(j
 
   function updatePreviews() {
     const { state, current } = debug;
+    if (state.date !== itineraryDate && itinerary.open) playFlightPaths();
+    itineraryDate = state.date;
     const trip = current.find(row => row.date === state.date)?.best;
     byId('fold-filters-preview').textContent =
       state.dir === 'fwd' ? '上海出发' : '广深出发';
