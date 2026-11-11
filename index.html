@@ -1001,11 +1001,13 @@ for(const [id,update] of [['aircraft',input=>state.aircraft=input.value],['bagga
 $('mix').addEventListener('change',e=>{state.mix=e.target.checked;render()});$('week-select').addEventListener('change',e=>{state.date=e.target.value;render()});$('flight-detail').addEventListener('toggle',()=>{if($('flight-detail').open)renderFlights()});
 document.addEventListener('input',e=>{if(e.target.id==='lead-range'){const m=(state.source==='google'?D.googleModels:D.models)[state.dir],n=Number(e.target.value),v=E.predict(m?.model,state.route+'|'+state.dir,n),win=historyData().stats.window;const delta=v&&win?v/win.mean-1:null;$('model-output').textContent=`T-${n}：模型参考 ${money(v)}。${delta===null?'没有可比窗口，无法分档。':delta<=.02?'接近描述性窗口均价。':delta<=.1?'略高于描述性窗口均价。':'明显高于描述性窗口均价。'} 仅供探索，不作为买入或等待建议。`}});
 function exportCSV(){const rows=[['来源','报价时间','路线','方向','去返','出发日期','起飞','到达','次日','航班','航司','机型','裸票','税费','含税','行李','原始页面'],...currentFlights.map(f=>[f.source,f.snapshot_at,f.route_id,f.direction,f.trip,f.depart_date,f.dep_time,f.arr_time,f.next_day?1:0,f.flight_no,f.airline,aircraftLabel(f),f.price,E.quoteFee(f,D.meta.fees),E.taxed(f,D.meta.fees),f.baggage||'待核验',f.source_url])];const csv='\uFEFF'+rows.map(r=>r.map(x=>{let s=String(x??'');if(/^[=+@\-]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'}).join(',')).join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download=`flight-quotes-${state.mode}-${state.dir}-${D.meta.today}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
-function setLookup(from,to){
+function setLookup(from,to,preferences={}){
  const sh=['SHANGHAI','PVG','SHA'];
  const quick=['SZX','CAN'];
  const reverse=quick.includes(from)&&sh.includes(to);
  const [a,b]=reverse?[to,from]:[from,to];
+ if(['out','back'].includes(preferences.onewayDay))state.onewayDay=preferences.onewayDay;
+ if(D.weekends.some(w=>w.out===preferences.date))state.date=preferences.date;
  Object.assign(state,{route:'all',dir:reverse?'rev':'fwd',out:allHours(),back:allHours(),aircraft:'',baggageRequired:false});
  if(sh.includes(a)&&quick.includes(b)){
    state.lookup=null;
@@ -1125,60 +1127,76 @@ SOFTWARE.
    displayPair();
    if(!debug.state.lookup&&selected){selected=null;token++;show('当前显示上海至广州或深圳的缓存报价。');}
  });
- async function readResult(a,b,id,initial){
+ function fliggyLink(a,b){
+   const link=document.createElement('a');
+   const date=debug.state.date;
+   const data=window.FLIGHT_DATA.weekends.find(w=>w.out===date);
+   const day=debug.state.mode==='oneway'?debug.state.onewayDay:'out';
+   const [dep,arr]=debug.state.dir==='rev'?[b,a]:[a,b];
+   const query=new URLSearchParams({tripType:'0',depCity:airports[dep][2],arrCity:airports[arr][2],depCityName:airports[dep][0],arrCityName:airports[arr][0],depDate:data?.[day]||date});
+   link.href='https://sjipiao.fliggy.com/homeow/trip_flight_search.htm?'+query;
+   link.textContent='到飞猪核价 ↗';
+   link.target='_blank';
+   link.rel='noopener';
+   return link;
+ }
+ function showWithSource(text,a,b){status.replaceChildren(text,fliggyLink(a,b));}
+ async function readResult(a,b,id,initial,retries=0){
+   const schedule=(delay,misses)=>setTimeout(()=>{if(id===token)readResult(a,b,id,false,misses)},delay);
    try{
      const endpoint='/api/lookup'+(initial?'':'?'+new URLSearchParams({from:a,to:b}));
-     const response=await fetch(endpoint,initial?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({from:a,to:b}),signal:AbortSignal.timeout(10000)}:{cache:'no-store',signal:AbortSignal.timeout(10000)});
+     const {date,mode,onewayDay}=debug.state;
+     const response=await fetch(endpoint,initial?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({from:a,to:b,date,mode,onewayDay}),signal:AbortSignal.timeout(10000)}:{cache:'no-store',signal:AbortSignal.timeout(10000)});
      const result=await response.json();
      if(id!==token||debug.state.lookup?.from!==a||debug.state.lookup?.to!==b)return;
-     if(!response.ok)throw Error(result.error);
+     if(!response.ok)throw Object.assign(Error(result.error),{retryable:response.status>=500});
      if(result.done!==lastDone){lastDone=result.done;debug.updateLookup(a,b,result.flights,result.weekends);}
      if(result.running){
-       show('飞猪查价 '+result.done+'/'+result.total+' · 已核验 '+result.flights.length+' 条。报价按核验进度显示。');
-       setTimeout(()=>{if(id===token)readResult(a,b,id,false)},3500);
+       const phase=[result.current_date,result.current_leg,result.stage||'等待飞猪返回航班列表'].filter(Boolean).join(' · ');
+       showWithSource(phase+'。已查 '+result.done+'/'+result.total+'，已核验 '+result.flights.length+' 条。',a,b);
+       schedule(2800,0);
      }else{
-       show(result.message||(result.flights.length?'已核验 '+result.flights.length+' 条报价'+(result.failed?' · '+result.failed+' 次查询未取得数据':'')+'。税费为预估，以售票页为准。':'本轮未取得可核验的直飞报价。'));
+       const count=result.flights.length?'已核验 '+result.flights.length+' 条报价。':'本轮未取得可核验的直飞报价。';
+       showWithSource(count+(result.message||'')+(result.failed?' '+result.failed+' 次未取得数据。':''),a,b);
      }
    }catch(error){
-     if(id===token)show(error.message==='Failed to fetch'?'本机查价服务暂不可用，请确认服务已启动。':error.message);
+     if(id!==token)return;
+     if(error.retryable!==false&&retries<2){
+       showWithSource('暂时读不到进度，正在重连本机查价服务。',a,b);
+       schedule(2500,retries+1);
+     }else showWithSource(error.retryable===false?error.message:'本机查价服务连接失败。请重新点击「查票价」。',a,b);
    }
  }
- function submit(a,b){
+ function submit(a,b,preferences){
    if(!a||!b){show('请从下拉列表选定机场，也可以输入完整三字码。');return;}
    const sh=['SHANGHAI','PVG','SHA'];
    if(a===b||sh.includes(a)&&sh.includes(b)){show('请选择不同的出发地和目的地。');return;}
    const id=++token;
    lastDone=-1;
-   const custom=debug.setLookup(a,b);
+   const custom=debug.setLookup(a,b,preferences);
    displayPair();
    if(!custom){selected=null;show('已切换到缓存报价。');return;}
    selected=[a,b];
    if(!local){
      const target=new URL('http://127.0.0.1:8766/');
-     target.hash='lookup='+[a,b,debug.state.mode].join(':');
+     target.hash='lookup='+[a,b,debug.state.mode,debug.state.onewayDay,debug.state.date].join(':');
      const link=document.createElement('a');
      link.href=target.href;
      link.textContent='在本机查价 ↗';
      link.target='_blank';
      link.rel='noopener';
-     const source=document.createElement('a');
-     const query=new URLSearchParams({tripType:'0',depCity:airports[a][2],arrCity:airports[b][2],depCityName:airports[a][0],arrCityName:airports[b][0],depDate:debug.state.date});
-     source.href='https://sjipiao.fliggy.com/homeow/trip_flight_search.htm?'+query;
-     source.textContent='到飞猪核价 ↗';
-     source.target='_blank';
-     source.rel='noopener';
-     status.replaceChildren('按需采集由本机服务执行。',link,source);
+     status.replaceChildren('按需采集由本机服务执行。',link,fliggyLink(a,b));
      if(!(navigator.userAgentData?.mobile??/Android|iPhone|iPad/i.test(navigator.userAgent)))window.open(target.href,'_blank','noopener');
      return;
    }
-   show('正在启动本机采集…');
+   showWithSource('正在启动本机采集，先查当前选中的日期。',a,b);
    readResult(a,b,id,true);
  }
  form.addEventListener('submit',e=>{e.preventDefault();submit(read(from),read(to));});
- const initial=location.hash.match(/^#lookup=([A-Z]+):([A-Z]+):(oneway|roundtrip)$/);
+ const initial=location.hash.match(/^#lookup=([A-Z]+):([A-Z]+):(oneway|roundtrip)(?::(out|back):(\d{4}-\d\d-\d\d))?$/);
  if(local&&initial&&Object.hasOwn(airports,initial[1])&&Object.hasOwn(airports,initial[2])){
    if(initial[3]!==debug.state.mode)document.querySelector('[data-mode="'+initial[3]+'"]').click();
-   submit(initial[1],initial[2]);
+   submit(initial[1],initial[2],{onewayDay:initial[4],date:initial[5]});
  }
 })();
 </script><script>(()=>{'use strict';
