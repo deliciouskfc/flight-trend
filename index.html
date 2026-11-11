@@ -60,22 +60,82 @@ body { background: var(--bg); font-size: 14px; }
 .week-picks { margin-top: 16px; }
 .week-picks button { background: #0e1522; }
 .week-picks button.active { background: #223451; }
-.fold-card { padding: 0; margin: 10px 0 0; scroll-margin-top: 16px; }
-.fold-card > summary { display: grid; grid-template-columns: minmax(0,1fr) auto 30px; gap: 16px; align-items: center; padding: 15px 20px; border-radius: 11px; min-height: 62px; cursor: pointer; transition: background 160ms; }
+.fold-card {
+  --fold-light: #91b9ff;
+  --fold-glow: #91b9ff2b;
+  padding: 0;
+  margin: 10px 0 0;
+  scroll-margin-top: 16px;
+  position: relative;
+  transition: border-color 320ms var(--motion), box-shadow 420ms var(--motion);
+}
+#itinerary { --fold-light: #97decf; --fold-glow: #97decf26; }
+#history { --fold-light: #c2adf7; --fold-glow: #c2adf726; }
+.fold-card > summary {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto 30px;
+  gap: 16px;
+  align-items: center;
+  padding: 15px 20px;
+  border-radius: 11px;
+  min-height: 62px;
+  cursor: pointer;
+  position: relative;
+  transition: background 240ms var(--motion);
+}
 .fold-card > summary::-webkit-details-marker { display: none; }
 .fold-card > summary::after { content: none; }
-.fold-card > summary:hover, .fold-card[open] > summary { background: #9dbaff0a; }
+.fold-card > summary:hover { background: #9dbaff0c; }
+.fold-card:has(> summary:hover), .fold-card[data-expanded=true] { border-color: var(--fold-glow); }
+.fold-card[data-expanded=true] { box-shadow: 0 0 22px var(--fold-glow), inset 0 1px 0 var(--fold-glow); }
+.fold-card[data-expanded=true] > summary { background: linear-gradient(95deg,var(--fold-glow),transparent 72%); }
 .fold-card[open] > summary { border-radius: 11px 11px 0 0; }
 .fold-heading { display: flex; align-items: baseline; flex-wrap: wrap; column-gap: 14px; row-gap: 2px; }
 .fold-heading strong { font-size: 16px; font-weight: 600; color: var(--ink); }
 .fold-heading > span { color: var(--muted); font-size: 12px; }
 .fold-preview { font-size: 12px; color: #b8ccf2; text-align: right; }
-.fold-chevron { justify-self: end; display: grid; width: 29px; height: 29px; place-items: center; border: 1px solid #a5c5ff36; border-radius: 7px; }
-.fold-chevron::before { content: ''; width: 7px; height: 7px; border: solid #c0d4f8; border-width: 0 1.5px 1.5px 0; transform: translateY(-2px) rotate(45deg); transition: transform 220ms var(--motion); }
-.fold-card[open] > summary .fold-chevron::before { transform: translateY(2px) rotate(225deg); }
+.fold-chevron {
+  justify-self: end;
+  display: grid;
+  width: 29px;
+  height: 29px;
+  place-items: center;
+  position: relative;
+  border: 1px solid #a5c5ff36;
+  border-radius: 7px;
+  color: #bfd1ef;
+  transition: color 280ms var(--motion), background 280ms var(--motion), border-color 280ms var(--motion), transform 300ms var(--motion);
+}
+.fold-chevron::before, .fold-chevron::after { content: ''; position: absolute; width: 11px; height: 1.5px; border-radius: 2px; background: currentColor; }
+.fold-chevron::after { transform: rotate(90deg); transition: transform 360ms var(--motion), opacity 260ms; }
+.fold-card[data-expanded=true] > summary .fold-chevron {
+  color: var(--fold-light);
+  background: var(--fold-glow);
+  border-color: var(--fold-light);
+  transform: rotate(180deg);
+}
+.fold-card[data-expanded=true] > summary .fold-chevron::after { transform: rotate(0); opacity: 0; }
+.fold-card[data-fold-motion] > .fold-viewport { overflow: clip; }
+.fold-card > summary::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  inset-inline: 0;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  transform: scaleX(.06);
+  transform-origin: left;
+  background: linear-gradient(90deg,var(--fold-light),var(--fold-glow) 65%,transparent);
+}
+.fold-card[data-fold-motion=opening] > summary::before { animation: fold-edge 480ms var(--motion); }
+@keyframes fold-edge {
+  0% { opacity: 0; transform: scaleX(.06); }
+  24% { opacity: 1; }
+  100% { opacity: 0; transform: scaleX(1); }
+}
 .fold-content { padding: 18px 20px 22px; border-top: 1px solid var(--line); min-width: 0; }
-.fold-card[open] > .fold-content { animation: fold-enter 240ms var(--motion) both; }
-@keyframes fold-enter { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
+.fold-content { transform-origin: center top; }
 .fold-content .section-top { align-items: center; margin-bottom: 14px; }
 .fold-content .section-top:has(> div:only-child > p:empty) { display: none; }
 .grid-two { gap: 10px; margin-top: 0; align-items: start; grid-template-columns: 1fr 1fr; }
@@ -108,7 +168,8 @@ body { background: var(--bg); font-size: 14px; }
   #view-itinerary { grid-column: 1 / -1; }
 }
 @media(prefers-reduced-motion:reduce) {
-  .fold-card[open] > .fold-content { animation: none; }
+  .fold-card, .fold-card > summary, .fold-chevron, .fold-chevron::after { transition: none; }
+  .fold-card[data-fold-motion=opening] > summary::before { animation: none; }
 }
 </style></head><body><div id="nebula-scene"><canvas id="nebula-canvas" aria-hidden="true"></canvas><div class="nebula-shade"></div><div class="nebula-controls"><button id="nebula-pause" aria-pressed="true">暂停星云</button><label class="nebula-extra">速度 <input id="nebula-speed" type="range" min="0.2" max="2" step="0.1" value="0.7"><output id="nebula-speed-value">0.7×</output></label><label class="nebula-extra">粒子 <select id="nebula-density"><option value="3500">3,500</option><option value="5000">5,000</option><option value="14000">14,000</option><option value="24000">24,000</option></select></label><button id="nebula-exit" hidden>返回机票看板 · Esc</button></div><div id="nebula-caption" class="nebula-caption" hidden><small>WEEKEND FARE / COSMIC INTERLUDE</small><h2>在出发之前，<br>看一会儿星空。</h2><p>移动鼠标探索视角 · 粒子仅为视觉效果，与航班数据无关</p></div></div><a class="skip-link" href="#main">跳到价格看板</a><div class="wrap">
 <header class="top"><div class="brand"><span class="mark" aria-hidden="true">↗</span><div>周末航线<small>周五出发，周日返回</small></div></div><nav aria-label="页面导航"><a href="#weekends">十周比价</a><a href="#itinerary">航班</a><a href="#history">购票时机</a><a href="#method">数据口径</a></nav><div class="live"><i class="dot"></i><span id="updated">正在读取本地数据</span></div></header>
@@ -448,9 +509,91 @@ request('flight_refresh_job?id=eq.1&select=request_id,status').then(([j])=>{if(j
   'use strict';
   const byId = id => document.getElementById(id);
   const itinerary = byId('itinerary');
-  const focusLink = byId('view-itinerary');
   const debug = window.__flightDebug;
   if (!itinerary || !debug) return;
+
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const cards = new Map();
+
+  for (const card of document.querySelectorAll('.fold-card')) {
+    const summary = card.querySelector(':scope > summary');
+    const content = card.querySelector(':scope > .fold-content');
+    const viewport = document.createElement('div');
+    viewport.className = 'fold-viewport';
+    content.before(viewport);
+    viewport.append(content);
+    const state = { card, summary, content, viewport, expanded: card.open, motion: [], endHeight: 0 };
+    cards.set(card, state);
+    summary.setAttribute('aria-expanded', String(state.expanded));
+    summary.addEventListener('click', event => {
+      event.preventDefault();
+      setExpanded(card, !state.expanded);
+    });
+    new ResizeObserver(() => {
+      if (state.expanded && state.motion.length && Math.abs(content.offsetHeight - state.endHeight) > 1) {
+        setExpanded(card, true, { resize: true });
+      }
+    }).observe(content);
+  }
+
+  function settle(state) {
+    state.card.open = state.expanded;
+    for (const animation of state.motion) animation.cancel();
+    state.motion = [];
+    state.card.removeAttribute('data-fold-motion');
+  }
+
+  function setExpanded(card, expanded, { resize = false, immediate = false } = {}) {
+    const state = cards.get(card);
+    if (!state || (state.expanded === expanded && !resize)) return;
+    const { summary, viewport, content } = state;
+    const wasOpen = card.open;
+    const height = wasOpen ? viewport.getBoundingClientRect().height : 0;
+    const opacity = wasOpen ? Number(getComputedStyle(content).opacity) : 0;
+    const transform = wasOpen ? getComputedStyle(content).transform : 'translateY(-16px) scale(.985)';
+    const reversing = state.motion.length > 0;
+    for (const animation of state.motion) animation.cancel();
+    state.motion = [];
+
+    state.expanded = expanded;
+    card.dataset.expanded = String(expanded);
+    summary.setAttribute('aria-expanded', String(expanded));
+    if (!expanded && content.contains(document.activeElement)) summary.focus();
+    viewport.inert = !expanded;
+    if (immediate || reducedMotion.matches || !viewport.animate) {
+      settle(state);
+      return;
+    }
+
+    card.open = true;
+    const endHeight = expanded ? content.offsetHeight : 0;
+    state.endHeight = endHeight;
+    card.dataset.foldMotion = expanded ? 'opening' : 'closing';
+    const duration = resize || reversing ? 290 : expanded ? 480 : 340;
+    const options = { duration, fill: 'both', easing: 'cubic-bezier(.21,.82,.26,1)' };
+    const layout = viewport.animate([{ height: height + 'px' }, { height: endHeight + 'px' }], options);
+    const reveal = content.animate([
+      { opacity, transform },
+      { opacity: expanded ? 1 : 0, transform: expanded ? 'none' : 'translateY(-10px) scale(.99)' },
+    ], options);
+    state.motion = [layout, reveal];
+    if (expanded && !wasOpen) {
+      const groups = [...content.children].filter(element => element.getBoundingClientRect().height).slice(0, 4);
+      for (const [index, group] of groups.entries()) {
+        state.motion.push(group.animate([
+          { translate: '0 10px', opacity: .35 },
+          { translate: '0 0', opacity: 1 },
+        ], { ...options, duration: 290, delay: 55 + index * 38 }));
+      }
+    }
+    layout.finished.then(() => {
+      if (state.motion[0] === layout) settle(state);
+    }, () => {});
+  }
+
+  reducedMotion.addEventListener('change', event => {
+    if (event.matches) for (const state of cards.values()) settle(state);
+  });
 
   function updatePreviews() {
     const { state, current } = debug;
@@ -464,33 +607,32 @@ request('flight_refresh_job?id=eq.1&select=request_id,status').then(([j])=>{if(j
     byId('fold-history-preview').textContent = windowTitle || '';
   }
 
-  function openHash() {
+  function openHash(immediate = false) {
     const id = location.hash.slice(1);
     if (!id || id.startsWith('watch=')) return;
     const target = byId(id);
     if (!target) return;
     const card = target.closest('.fold-card');
-    if (card) card.open = true;
+    if (card) setExpanded(card, true, { immediate });
   }
 
   document.addEventListener('click', event => {
     const anchor = event.target.closest('a[href^="#"]');
     const target = anchor && byId(anchor.hash.slice(1));
     const card = target?.closest('.fold-card');
-    if (card) card.open = true;
+    if (card) setExpanded(card, true);
   });
   document.addEventListener('click', event => {
     if (event.target.closest('[data-week], [data-chart-date], [data-week-step]')) {
-      itinerary.open = true;
+      setExpanded(itinerary, true);
     }
   });
   document.addEventListener('keydown', event => {
-    if (event.target.matches('[data-chart-date]') && ['ArrowLeft', 'ArrowRight', 'Enter', ' '].includes(event.key)) itinerary.open = true;
+    if (event.target.matches('[data-chart-date]') && ['ArrowLeft', 'ArrowRight', 'Enter', ' '].includes(event.key)) setExpanded(itinerary, true);
   }, true);
-  focusLink?.addEventListener('click', () => { itinerary.open = true; });
-  window.addEventListener('hashchange', openHash);
+  window.addEventListener('hashchange', () => openHash());
   window.addEventListener('flight-render', updatePreviews);
-  openHash();
+  openHash(true);
   updatePreviews();
 })();
 </script></body></html>
