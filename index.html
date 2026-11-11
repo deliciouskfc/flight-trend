@@ -769,6 +769,10 @@ request('flight_refresh_job?id=eq.1&select=request_id,status').then(([j])=>{if(j
 
   reducedMotion.addEventListener('change', event => {
     if (event.matches) {
+      for (const traveler of itinerary.querySelectorAll('.flight-traveler')) {
+        for (const animation of traveler.getAnimations()) animation.cancel();
+        traveler.querySelector('animateMotion')?.endElement();
+      }
       for (const animation of deckAnimations.values()) animation.cancel();
       deckAnimations.clear();
       for (const state of cards.values()) settle(state);
