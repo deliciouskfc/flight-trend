@@ -579,7 +579,24 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 }
 .device-head .map-caption { margin-inline-start: .65em; color: var(--muted); font-size: 10px; }
 
-.data-refresh-bar .refresh-progress:not([hidden]) { flex-basis: 100%; width: 100%; height: 7px; accent-color: var(--atlas-strong); }
+.data-refresh-bar { display: grid; grid-template-columns: auto minmax(0,1fr) auto; column-gap: 12px; row-gap: 10px; }
+.refresh-meta { display: flex; align-items: baseline; gap: 10px; min-width: 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
+#data-refresh-status { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#data-refresh-status[data-error=true] { color: #984a2d; }
+.refresh-count { flex: none; margin-inline-start: auto; color: var(--atlas-strong); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.refresh-count[hidden] { display: none; }
+.refresh-local { display: inline-flex; align-items: center; gap: 4px; }
+.data-refresh-bar .refresh-progress:not([hidden]) { display: block; grid-column: 1 / -1; width: 100%; height: 6px; appearance: none; border: 0; border-radius: 999px; overflow: hidden; background: var(--line); color: var(--atlas-strong); }
+.refresh-progress::-webkit-progress-bar { background: var(--line); }
+.refresh-progress::-webkit-progress-value { background: var(--atlas-strong); border-radius: 999px; }
+.refresh-progress::-moz-progress-bar { background: var(--atlas-strong); border-radius: 999px; }
+@media (max-width: 560px) {
+  .data-refresh-bar { column-gap: 8px; }
+  .data-refresh-bar button { padding-inline: 10px; }
+  .refresh-meta { gap: 6px; font-size: 11px; }
+  .data-refresh-bar > .refresh-local { justify-content: center; min-width: 24px; min-height: 32px; font-size: 15px; }
+  .refresh-local > span:first-child { display: none; }
+}
 </style></head><body><a class="skip-link" href="#main">跳到价格看板</a><div class="wrap">
 <header class="top"><div class="brand"><span class="mark" aria-hidden="true">↗</span><div>周末航线<small id="brand-trip">周五出发，周日返回</small></div></div><nav aria-label="页面导航"><a href="#oneway-results" data-comparison-link>十周比价</a><a href="#itinerary" data-roundtrip-link>航班</a><a href="#history" data-roundtrip-link>购票时机</a><a href="#method" data-roundtrip-link>数据口径</a></nav><div class="live"><i class="dot"></i><span id="updated">正在读取本地数据</span></div></header>
 <main id="main"><section class="intro"><div><div class="journey-toggle hero-routes" role="group" aria-label="选择航线" data-selected="1"><button type="button" data-city="CAN" aria-pressed="false">上海 → 广州</button><button type="button" data-city="SZX" aria-pressed="true">上海 → 深圳</button></div><h1 id="hero-title">上海 → 深圳</h1><p id="hero-description">比较未来十周的单程和往返直飞报价</p><div class="intro-actions"><a class="hero-cta" href="#oneway-results" data-comparison-link>看十周票价 <span aria-hidden="true">↘</span></a><label class="atlas-theme"><span>配色</span><select id="atlas-theme"><option value="cobalt">钴蓝釉</option><option value="jade" selected>玉青</option><option value="papier">纸蓝</option></select></label></div></div><div class="intro-side">
@@ -597,7 +614,16 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     <g class="map-flight"><circle r="10"/><path d="M8 0 Q8 1 5 1.5 L2 1.5 -2 7 -4 7 -2 1.5 -6 1.5 -7 3.5 -8 3.5 -7 0 -8 -3.5 -7 -3.5 -6 -1.5 -2 -1.5 -4 -7 -2 -7 2 -1.5 5 -1.5 Q8 -1 8 0Z"/></g>
   </svg>
   </div>
-</div><div class="range-line"><strong id="range">未来 10 个周末</strong><span>1 位成人 · 经济舱 · 直飞 · 人民币</span></div></div></section><div class="data-refresh-bar" id="collection"><button id="data-refresh" type="button">重新爬取数据</button><span id="data-refresh-status" role="status" aria-live="polite">从飞猪重新采集公开报价</span><progress id="data-refresh-progress" class="refresh-progress" aria-label="已检查的航班查询数" hidden></progress><a href="http://127.0.0.1:8765/" target="_blank" rel="noopener">打开本机采集面板</a></div>
+</div><div class="range-line"><strong id="range">未来 10 个周末</strong><span>1 位成人 · 经济舱 · 直飞 · 人民币</span></div></div></section>
+<div class="data-refresh-bar" id="collection">
+  <button id="data-refresh" type="button">重新爬取数据</button>
+  <div class="refresh-meta" role="status">
+    <span id="data-refresh-status">飞猪公开报价 · 未来十周</span>
+    <span class="refresh-count" id="data-refresh-count" hidden></span>
+  </div>
+  <a class="refresh-local" href="http://127.0.0.1:8765/" target="_blank" rel="noopener" aria-label="打开本机采集面板" title="打开本机采集面板"><span>本机采集面板</span><span aria-hidden="true">↗</span></a>
+  <progress id="data-refresh-progress" class="refresh-progress" value="0" max="1" aria-label="已检查的航班查询数" hidden></progress>
+</div>
 <div id="fatal" class="alert" role="alert">未加载 data.js。请把它与 index.html 放在同一文件夹后重新打开。</div>
 <div class="journey-controls" id="trip-search">
   <div class="journey-field"><span>行程</span><div class="journey-toggle" role="group" aria-label="行程类型" data-selected="1"><button type="button" data-mode="roundtrip" aria-pressed="false">往返</button><button type="button" data-mode="oneway" aria-pressed="true">单程</button></div></div>
@@ -1243,31 +1269,60 @@ $('weekly-chart').addEventListener('pointerleave',()=>view(window.__flightDebug.
 document.addEventListener('keydown',e=>{const t=e.target.closest?.('[data-chart-date]');if(!t)return;if(e.key==='Enter'||e.key===' '){e.preventDefault();choose(t.dataset.chartDate);document.querySelector('[data-chart-date="'+t.dataset.chartDate+'"]')?.focus()}if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();const dates=window.FLIGHT_DATA.weekends.map(w=>w.out),i=dates.indexOf(t.dataset.chartDate),date=dates[(i+(e.key==='ArrowRight'?1:-1)+dates.length)%dates.length];choose(date);document.querySelector('[data-chart-date="'+date+'"]')?.focus()}});
 window.addEventListener('flight-render',paint);window.addEventListener('flight-data-updated',()=>{paint();const n=$('update-feedback');n.textContent='已载入数据库新版本 · 请留意各航班报价时间';n.hidden=false;clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>n.hidden=true,5000)});paint();setInterval(()=>{if(!document.hidden)paint()},60000);
 })();
-</script><nav class="mobile-dock" aria-label="快捷导航"><a href="#oneway-results" data-comparison-link>十周比价</a><a href="#filters">筛选</a><a href="#monitor" data-roundtrip-link>价格提醒</a></nav><script>(()=>{'use strict';const button=document.getElementById('data-refresh'),message=document.getElementById('data-refresh-status'),db=window.FLIGHT_DATABASE,progress=document.getElementById('data-refresh-progress');if(!button)return;let polling=null,checking=false,currentId=null,lastResponse=Date.now();
+</script><nav class="mobile-dock" aria-label="快捷导航"><a href="#oneway-results" data-comparison-link>十周比价</a><a href="#filters">筛选</a><a href="#monitor" data-roundtrip-link>价格提醒</a></nav><script>(()=>{'use strict';const button=document.getElementById('data-refresh'),message=document.getElementById('data-refresh-status'),db=window.FLIGHT_DATABASE,progress=document.getElementById('data-refresh-progress'),quoteCount=document.getElementById('data-refresh-count');if(!button)return;let polling=null,checking=false,currentId=null,lastResponse=Date.now();
+const number=new Intl.NumberFormat('zh-CN');
 const keyHeaders=()=>{const h={apikey:db.publishableKey,'Content-Type':'application/json'};if(db.publishableKey.startsWith('eyJ'))h.Authorization='Bearer '+db.publishableKey;return h};
 async function request(path,options={}){if(!db)throw Error('not_configured');const r=await fetch(db.url+'/rest/v1/'+path,{...options,headers:keyHeaders(),cache:'no-store',signal:AbortSignal.timeout(15000)});if(!r.ok)throw Error('HTTP '+r.status);return r.json()}
-function label(text,error=false){if(message.textContent!==text)message.textContent=text;message.dataset.error=String(error)}
-function showProgress(text){
- if(!progress)return;
- const count=/航班采集 (\d+)\/(\d+)/.exec(text||'');
- if(count&&Number(count[2])>0){
-  progress.max=Number(count[2]);
-  progress.value=Number(count[1]);
- }else progress.removeAttribute('value');
+function label(text,error=false,detail=text){
+ if(message.textContent!==text)message.textContent=text;
+ message.title=detail;
+ message.dataset.error=String(error);
+}
+function showCount(quotes,prefix='已采集'){
+ if(!quoteCount)return;
+ const text=prefix+' '+number.format(quotes)+' 条';
+ if(quoteCount.textContent!==text)quoteCount.textContent=text;
+ quoteCount.hidden=false;
+}
+function resetProgress(){
+ progress.max=1;
+ progress.value=0;
+ progress.hidden=false;
+ showCount(0);
+}
+function showJobProgress(job){
+ const detail=job.message||'正在准备采集';
+ if(job.status==='queued'){
+  resetProgress();
+  label('等待本机执行',false,detail);
+  return;
+ }
+ const counts=/航班采集 (\d+)\/(\d+) · 已取得 (\d+) 条/.exec(detail);
+ if(counts&&Number(counts[2])>0){
+  progress.max=Number(counts[2]);
+  progress.value=Number(counts[1]);
+  showCount(Number(counts[3]));
+  label('已查 '+counts[1]+'/'+counts[2],false,detail);
+ }else label(detail);
  progress.hidden=false;
 }
-function stop(){if(progress)progress.hidden=true;clearInterval(polling);polling=null;button.disabled=false;button.removeAttribute('aria-busy');button.textContent='重新爬取数据'}
+function stop(){progress.hidden=true;if(quoteCount)quoteCount.hidden=true;clearInterval(polling);polling=null;button.disabled=false;button.removeAttribute('aria-busy');button.textContent='重新爬取数据'}
 async function observe(){if(checking||document.hidden)return;checking=true;try{const [job]=await request('flight_refresh_job?id=eq.1&select=request_id,status,worker_seen,message,new_quotes');lastResponse=Date.now();if(!job||currentId&&job.request_id!==currentId){stop();label('采集任务状态已变化，请重新检查。',true);return}
  if(job.status==='queued'||job.status==='running'){
   const online=job.worker_seen&&Date.now()-Date.parse(job.worker_seen)<90000;
   if(!online){stop();label('采集电脑暂时离线。请在电脑上启动“机票采集服务”后重试。',true);return}
-  currentId=job.request_id;button.disabled=true;button.setAttribute('aria-busy','true');button.textContent=job.status==='queued'?'等待开始…':'正在爬取…';label(job.message);showProgress(job.message);if(!polling)polling=setInterval(observe,5000)
+  currentId=job.request_id;button.disabled=true;button.setAttribute('aria-busy','true');button.textContent=job.status==='queued'?'等待中…':'采集中…';showJobProgress(job);if(!polling)polling=setInterval(observe,5000)
  }
- else if(job.status==='completed'){stop();const ok=await window.refreshFlightData?.();label(job.message+(ok?'；页面已核对最新数据。':'；新数据载入失败，请刷新页面。'),!ok)}
+ else if(job.status==='completed'){
+  const ok=await window.refreshFlightData?.();
+  stop();
+  label(ok?'采集完成':'新报价载入失败',!ok,job.message+(ok?'；页面已核对最新数据。':'；请刷新页面重试。'));
+  if(Number.isInteger(job.new_quotes))showCount(job.new_quotes,'已更新');
+ }
  else if(job.status==='failed'){stop();label(job.message,true)}
  }catch{if(Date.now()-lastResponse>=90000){stop();label('无法连接采集状态，可重新点击检查。已提交的任务仍可能在后台执行。',true)}else label('暂时无法读取采集进度，正在重连。',true)}finally{checking=false}}
-button.textContent='重新爬取数据';label('点击后重新抓取未来十周报价；采集电脑需在线，全量采集通常需要十几分钟。');
-button.addEventListener('click',async()=>{button.disabled=true;button.setAttribute('aria-busy','true');button.textContent='正在启动…';label('正在提交新的报价采集请求…');showProgress();try{const r=await request('rpc/request_flight_collection',{method:'POST',body:'{}'});if(!r.accepted){stop();if(r.reason==='worker_offline')label('采集电脑未在线，无法启动爬虫。请先启动电脑上的“机票采集服务”。',true);else label('刚刚已经采集过，为避免频繁请求，请间隔五分钟再试。');return}currentId=r.job.request_id;lastResponse=Date.now();label(r.merged?'已有一轮采集正在执行，正在接入进度…':'采集请求已提交，等待执行…');await observe();if(!polling&&button.disabled)polling=setInterval(observe,5000)}catch{stop();label('启动爬虫失败，请检查网络或采集服务配置后重试。',true)}});
+button.textContent='重新爬取数据';label('飞猪公开报价 · 未来十周',false,'采集电脑需在线，全量采集通常需要十几分钟。');
+button.addEventListener('click',async()=>{button.disabled=true;button.setAttribute('aria-busy','true');button.textContent='正在启动…';label('正在提交采集');resetProgress();try{const r=await request('rpc/request_flight_collection',{method:'POST',body:'{}'});if(!r.accepted){stop();if(r.reason==='worker_offline')label('采集电脑未在线，无法启动爬虫。请先启动电脑上的“机票采集服务”。',true);else label('刚刚已经采集过，为避免频繁请求，请间隔五分钟再试。');return}currentId=r.job.request_id;lastResponse=Date.now();label(r.merged?'正在接入采集':'等待本机执行');await observe();if(!polling&&button.disabled)polling=setInterval(observe,5000)}catch{stop();label('启动爬虫失败，请检查网络或采集服务配置后重试。',true)}});
 // Reopening a page follows an active shared job, without creating another collection.
 request('flight_refresh_job?id=eq.1&select=request_id,status').then(([j])=>{if(j&&['queued','running'].includes(j.status)){currentId=j.request_id;lastResponse=Date.now();observe();if(!polling)polling=setInterval(observe,5000)}}).catch(()=>{});
 })();
