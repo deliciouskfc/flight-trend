@@ -726,8 +726,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 <section class="panel section-space rail-panel" id="rail" aria-labelledby="rail-heading" hidden>
   <div class="section-top">
     <div>
-      <h2 id="rail-heading">动车票对比<span class="rail-tag">默认卧铺</span></h2>
-      <p id="rail-caption">12306 公开票价与当日机票全天最低含税并列</p>
+      <h2 id="rail-heading">动车票对比<span class="rail-tag">默认动卧</span></h2>
+      <p id="rail-caption">12306 动车组公开票价与当日机票全天最低含税并列</p>
     </div>
     <span class="badge" id="rail-badge"></span>
   </div>
@@ -1676,20 +1676,28 @@ request('flight_refresh_job?id=eq.1&select=request_id,status').then(([j])=>{if(j
 })();
 </script><script>(function(root,factory){if(typeof module==='object'&&module.exports)module.exports=factory();else root.RailEngine=factory()})(typeof globalThis!=='undefined'?globalThis:this,function(){
 'use strict';
-// 12306 席别名称 → 归一化席位类。页面按“卧铺 / 二等座 / 一等座 / 全部”比较，不按车次类型猜测。
+// 12306 席别名称 → 归一化席位类。
+// sleeper 只收动车组卧铺：动卧、高级动卧、一等卧、二等卧；K/T/Z 普速的硬卧/软卧/高级软卧单独归为 conventional，不参与对比。
 const SEAT_CLASS={
   '商务座':'business','特等座':'first','一等座':'first','二等座':'second','无座':'second','硬座':'second','软座':'second',
-  '高级软卧':'sleeper','软卧':'sleeper','高级动卧':'sleeper','动卧':'sleeper','一等卧':'sleeper','二等卧':'sleeper','硬卧':'sleeper',
-  '一人软包':'sleeper','家庭私享包厢':'sleeper'
+  '高级动卧':'sleeper','动卧':'sleeper','一等卧':'sleeper','二等卧':'sleeper',
+  '高级软卧':'conventional','软卧':'conventional','硬卧':'conventional',
+  '一人软包':'conventional','家庭私享包厢':'conventional'
 };
-// 卧铺优先：默认席别为卧铺时，同一车次先看“一等卧/软卧”，再看“二等卧/硬卧”，最后才是高级动卧这类高价席位。
 const CLASS_DEFS=[
-  {key:'sleeper',label:'卧铺',caption:'默认'},
-  {key:'second',label:'二等座',caption:'高铁动车'},
-  {key:'first',label:'一等座',caption:'高铁动车'},
-  {key:'business',label:'商务座',caption:'高铁动车'}
+  {key:'sleeper',label:'卧铺',caption:'默认 · 动卧'},
+  {key:'second',label:'二等座',caption:'动车组'},
+  {key:'first',label:'一等座',caption:'动车组'},
+  {key:'business',label:'商务座',caption:'动车组'}
 ];
-const SEAT_PREFERENCE=['一等卧','软卧','动卧','二等卧','硬卧','高级软卧','高级动卧'];
+const SEAT_PREFERENCE=['二等卧','动卧','一等卧','高级动卧'];
+// 车次首字母区分动车组与普速；页面只比较动车组，普速卧铺不进卧铺对比。
+function trainType(code){
+  const c=String(code||'').trim().toUpperCase();
+  return /^[GDC]/.test(c)?'emu':'conventional';
+}
+function isEmu(code){return trainType(code)==='emu'}
+function emuOnly(records){return (records||[]).filter(r=>isEmu(r.train_code))}
 function seatClass(seat){return SEAT_CLASS[String(seat||'').trim()]||'other'}
 function seatPreference(seat){const i=SEAT_PREFERENCE.indexOf(String(seat||'').trim());return i<0?SEAT_PREFERENCE.length:i}
 // 无座与二等座同价，展示和取价都用有座席位优先，避免把“无座”当成二等座标题价。
@@ -1747,6 +1755,7 @@ function toRecord(raw,ctx){
     snapshot_at:ctx.snapshot_at,batch_id:ctx.batch_id,source:'12306-pc',source_url:ctx.source_url,evidence:'aria-label',
     travel_date:ctx.travel_date,trip:ctx.trip,pair:ctx.pair,direction:ctx.direction,
     train_no:/^[a-z0-9]+$/i.test(String(raw.rowId||''))?String(raw.rowId):null,train_code:String(raw.code||'').trim(),
+    train_type:trainType(raw.code),
     from_station:String(raw.from||'').trim(),to_station:String(raw.to||'').trim(),
     dep_time:raw.dep,arr_time:raw.arr,day_offset:dayOffset,duration_min:duration,
     seats
@@ -1827,7 +1836,7 @@ function doorToDoor(minutes,buffers){
   if(!Number.isFinite(minutes))return null;
   return minutes+(buffers||0);
 }
-return {SEAT_CLASS,CLASS_DEFS,seatClass,seatPreference,seatDisplayRank,parseSeatLabel,parseDayOffset,durationMinutes,formatDuration,toRecord,bestSeat,bestFor,uniqueTrains,median,referenceFrom,planJobs,dayPlus,buildUrl,doorToDoor,clock};
+return {SEAT_CLASS,CLASS_DEFS,seatClass,seatPreference,seatDisplayRank,trainType,isEmu,emuOnly,parseSeatLabel,parseDayOffset,durationMinutes,formatDuration,toRecord,bestSeat,bestFor,uniqueTrains,median,referenceFrom,planJobs,dayPlus,buildUrl,doorToDoor,clock};
 });
 </script><script>/* 动车对比：把 12306 公开票价与当日机票全天最低含税并列。默认席别为卧铺。 */
 (() => {
@@ -1866,7 +1875,8 @@ function legMeta(trip) {
     : { trip, label: '周日 返程', short: '返程', direction: 'rev' };
 }
 function rowsFor(pair, date, trip) {
-  return (rail.records || []).filter(r => r.pair === pair.key && r.travel_date === date && r.trip === trip);
+  // 只比较动车组：K/T/Z 普速的硬卧、软卧不进入卧铺或座席对比。
+  return (rail.records || []).filter(r => r.pair === pair.key && r.travel_date === date && r.trip === trip && R.isEmu(r.train_code));
 }
 function jobStatus(pair, date, trip) {
   const direction = trip === 'out' ? 'fwd' : 'rev';
@@ -1993,11 +2003,11 @@ function renderRows(pair, date, trip) {
   });
   const bestRow = rows.find(r => seatChip(r, state.cls));
   const bestPrice = bestRow ? seatChip(bestRow, state.cls).price : null;
-  $('rail-count').textContent = rows.length ? `${esc(legMeta(trip).short)} · ${rows.length} 趟 · ${esc(clsLabel())}最低 ${money(bestPrice)}` : esc(legMeta(trip).short) + ' · 无车次';
+  $('rail-count').textContent = rows.length ? `${esc(legMeta(trip).short)} · 动车组 ${rows.length} 趟 · ${esc(clsLabel())}最低 ${money(bestPrice)}` : esc(legMeta(trip).short) + ' · 无动车组车次';
   if (!rows.length) {
     const status = jobStatus(pair, date, trip), ref = referenceFor(pair, trip);
-    const reason = status.status === 'failed' ? '本次采集失败，未写入旧数据以外的新报价。' : status.status === 'closed' || status.status === 'not_on_sale' ? `12306 预售期约 ${meta.presaleDays} 天（含当日），该日期尚未开售。` : '本次未取到可读车次。';
-    $('rail-rows').innerHTML = `<div class="empty rail-empty"><span class="glyph">— / —</span><strong>${esc(md(date))} 没有可核验的${esc(clsLabel())}车次</strong><span>${esc(reason)}${ref ? ` 同席别最近可售日最低 ${money(ref.price)}（${ref.n} 个可售日，${esc(ref.seat)}）。` : ''}</span></div>`;
+    const reason = status.status === 'failed' ? '本次采集失败，未写入旧数据以外的新报价。' : status.status === 'closed' || status.status === 'not_on_sale' ? `12306 预售期约 ${meta.presaleDays} 天（含当日），该日期尚未开售。` : '本次未取到可读的动车组车次。';
+    $('rail-rows').innerHTML = `<div class="empty rail-empty"><span class="glyph">— / —</span><strong>${esc(md(date))} 没有可核验的${esc(clsLabel())}动车组车次</strong><span>${esc(reason)}${ref ? ` 动车组同席别最近可售日最低 ${money(ref.price)}（${ref.n} 个可售日，${esc(ref.seat)}）。` : ''}</span></div>`;
     return;
   }
   const heads = [['车次', ''], ['上下车站', 'where'], ['出发 → 到达', ''], ['历时', 'dur'], ['卧铺', 'sleeper'], ['二等座', 'second'], ['一等座', 'first'], ['商务座', 'business'], ['来源', '']];
@@ -2040,10 +2050,10 @@ function renderNotes() {
   const records = rail.records?.length || 0;
   $('rail-note').innerHTML = `
     <div><strong>01 · 两边各算什么</strong>机票＝飞猪公开直飞裸票＋机建${money(fee.adultAirportConstruction)}＋燃油${money(fuel?.over800km)}，当日该城市方向全天最低，与上方筛选无关。动车＝12306 公开售票页显示的执行票价，不加站际交通；两边都不计市内交通。</div>
-    <div><strong>02 · 默认卧铺</strong>卧铺合并 二等卧/硬卧/一等卧/软卧/动卧/高级动卧，取同车次最低一类。G/D 车若无卧铺则不出现在卧铺对比里，可切到二等座查看同等车次。</div>
+    <div><strong>02 · 只看动车组卧铺</strong>卧铺＝动车组卧铺：动卧、高级动卧、一等卧、二等卧，取同车次最低一类。K/T/Z 普速的硬卧、软卧、高级软卧不在对比里，也不参与参考价；座席对比同样只取 G/D/C 车次。</div>
     <div><strong>03 · 未开售与参考价</strong>12306 预售期约 ${meta.presaleDays} 天（含当日${probe?.lastOnSale ? '，本轮实测：' + (probe.lastOnSale === 'on-sale' ? '售至 ' + meta.lastSaleDate : '边界未确认') : ''}）。超出预售的周末没有真实票价，标出的“参考”来自最近可售日同席别最低价，不是承诺价。</div>
     <div><strong>04 · 门到门参考</strong>机票另加 值机安检＋落地取行李 ${meta.doorToDoor?.flightMinutes ?? 150} 分钟，动车另加 进站安检＋出站 ${meta.doorToDoor?.railMinutes ?? 60} 分钟；仅用于比较时间成本，不含市内交通与候车浮动。</div>
-    <div><strong>05 · 采集口径</strong>只读 12306 车票查询结果页的车次与席别 aria-label，不登录、不提交订单、不绕过验证。本轮取到 ${records} 条车次记录，采集时间 ${esc(at)}。</div>
+    <div><strong>05 · 采集口径</strong>只读 12306 车票查询结果页的车次与席别 aria-label，不登录、不提交订单、不绕过验证；显示时只保留 G/D/C 动车组。本轮取到 ${records} 条车次记录，采集时间 ${esc(at)}。</div>
     <div><strong>06 · 余票</strong>“有/候补/数字”是查询当时的余票状态，会实时变化；票价也可能随浮动票价规则调整，以 12306 下单页为准。</div>`;
   $('rail-foot').textContent = `动车票对比完全跟随“${esc(pairLabel())}”这条城市对；切换上方城市或周末即可对比其它组合。数据来源：中国铁路12306 公开车票查询页。`;
 }
@@ -2063,7 +2073,7 @@ function render() {
   if (!weekend) { section.hidden = true; return; }
   const city = pair.city;
   section.hidden = false;
-  $('rail-caption').textContent = `12306 公开票价 vs 当日机票全天最低含税 · ${pair.from} ⇄ ${pair.to}`;
+  $('rail-caption').textContent = `12306 动车组公开票价 vs 当日机票全天最低含税 · ${pair.from} ⇄ ${pair.to}`;
   const openCount = (D.weekends || []).filter(w => saleOpen(w.out)).length;
   $('rail-badge').textContent = `12306 已开售 ${openCount}/${D.weekends.length} 周`;
   renderClsToggle();
